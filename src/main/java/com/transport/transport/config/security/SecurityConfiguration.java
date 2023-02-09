@@ -39,8 +39,10 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers(EndpointConstant.Authentication.AUTHENTICATION_ENDPOINT + "/**")
-                .permitAll()
+                .antMatchers(EndpointConstant.Authentication.AUTHENTICATION_ENDPOINT + "/**").permitAll()
+                .antMatchers("/api/test");
+
+        http.authorizeHttpRequests()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -52,7 +54,6 @@ public class SecurityConfiguration {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         http.logout().logoutUrl("/api/logout");
         return http.build();
     }
