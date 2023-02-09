@@ -1,9 +1,12 @@
 package com.transport.transport.model.response.account;
 
+import com.transport.transport.common.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Date;
 
 @Data
 @Builder
@@ -11,7 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String type = "Bearer";
-    private String token;
+    private String username;
+    private RoleEnum roleName;
     private String name;
-    private String role;
+    private String avatarImage;
+    private Date dateOfBirth;
+    private String email;
+    private String phone;
+    private String gender;
+    private String status;
+    private String token;
 }

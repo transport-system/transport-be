@@ -30,7 +30,6 @@ public class Company {
     @Column(name = "rating_score")
     private double rating;
 
-
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "company_vehicle",

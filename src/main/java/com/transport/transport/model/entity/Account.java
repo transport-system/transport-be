@@ -3,7 +3,6 @@ package com.transport.transport.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.transport.transport.common.RoleEnum;
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,9 +13,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter @Setter
+@Builder
 @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Builder
 @Table(name = "accounts",
         uniqueConstraints =
         @UniqueConstraint(columnNames = {"email", "phone", "username"}))
@@ -30,8 +29,9 @@ public class Account implements UserDetails {
 
     @Column(name = "password")
     private String password;
-
+    @Column(name = "firstname")
     private String firstname;
+    @Column(name = "lastname")
     private String lastname;
     private String email;
 
@@ -51,7 +51,7 @@ public class Account implements UserDetails {
     private String status = "PENDING";
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "name")
+    @Column(name = "Role")
     private RoleEnum role;
 
     @JsonBackReference
@@ -68,14 +68,12 @@ public class Account implements UserDetails {
             orphanRemoval = true)
     private List<Booking> bookings;
 
-
     @JsonBackReference
     @OneToOne(mappedBy = "account",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Company company;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

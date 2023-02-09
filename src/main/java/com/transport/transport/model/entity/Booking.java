@@ -66,7 +66,7 @@ public class Booking {
     private List<Trip> trips;
 
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "booking",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,

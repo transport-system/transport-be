@@ -38,6 +38,7 @@ public class Vehicle {
     @JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
     private Trip trip;
 
+
     @JsonBackReference
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeSeat> seats;

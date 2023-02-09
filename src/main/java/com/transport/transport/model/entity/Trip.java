@@ -53,7 +53,8 @@ public class Trip {
     @Column(name = "status")
     private String status;
 
-    @JsonBackReference
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "trip",
             cascade = CascadeType.ALL,
             orphanRemoval = true,

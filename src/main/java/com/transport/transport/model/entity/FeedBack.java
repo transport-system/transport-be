@@ -41,18 +41,14 @@ public class FeedBack {
     @JoinColumn(name = "booking_id", referencedColumnName = "booking_id")
     private Booking booking;
 
-
     @JsonBackReference
     @OneToMany(mappedBy = "backFeedback", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FeedBack> replies;
-
-
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply", referencedColumnName = "feedback_id")
     private FeedBack backFeedback;
-
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)

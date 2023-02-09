@@ -29,7 +29,6 @@ public class Route {
     @JoinColumn(name = "city_departure_id", referencedColumnName = "city_id")
     private City city2;
 
-
     @JsonBackReference
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Trip> trips;

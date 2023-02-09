@@ -25,11 +25,13 @@ public class VehicleType {
     @Column(name = "type_name")
     private String typeName;
 
+
     @JsonBackReference
     @ManyToMany(mappedBy = "vehicles",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private List<Company> companies;
+
 
     @JsonBackReference
     @OneToMany(mappedBy = "vehicleType",

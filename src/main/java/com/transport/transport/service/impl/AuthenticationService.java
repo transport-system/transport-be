@@ -30,18 +30,13 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .avatarImage(request.getAvatarImage())
+                .dateOfBirth(request.getDateOfBirth())
                 .gender(request.getGender())
                 .status(request.getStatus())
                 .role(RoleEnum.USER)
                 .build();
         repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .name(user.getUsername())
-                .type("Bearer")
-                .role(user.getRole().name())
-                .build();
+        return getAuthenticationResponse(user);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -53,12 +48,23 @@ public class AuthenticationService {
         );
         var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
+        return getAuthenticationResponse(user);
+    }
+
+    private AuthenticationResponse getAuthenticationResponse(Account user) {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
-                .name(user.getUsername())
+                .username(user.getUsername())
+                .name(user.getFirstname() + " " + user.getLastname())
                 .type("Bearer")
-                .role(user.getRole().name())
+                .avatarImage(user.getAvatarImage())
+                .dateOfBirth(user.getDateOfBirth())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .status(user.getStatus())
+                .roleName(RoleEnum.USER)
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import com.transport.transport.model.entity.Account;
 
 import java.util.Optional;
 
+
 public interface AccountService {
-    Account save(Account account);
+    Optional<Account> save(Account account);
 }

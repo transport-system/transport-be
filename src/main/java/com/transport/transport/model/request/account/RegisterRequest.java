@@ -2,6 +2,8 @@ package com.transport.transport.model.request.account;
 
 import lombok.*;
 
+import java.sql.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,6 +17,7 @@ public class RegisterRequest {
     private String email;
     private String phone;
     private String avatarImage;
+    private Date dateOfBirth;
     private String gender;
     private String status = "PENDING";
 }

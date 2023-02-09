@@ -1,15 +1,15 @@
 package com.transport.transport.model.request.account;
 
-import lombok.*;
-
-import javax.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AuthenticationRequest {
-    @NotEmpty
     private String username;
-    String password;
+    private String password;
 }
