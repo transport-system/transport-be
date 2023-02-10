@@ -13,12 +13,12 @@ public final class EndpointConstant {
         public static final String LOGIN_ENDPOINT = AUTHENTICATION_ENDPOINT + "/login";
         public static final String LOGOUT_ENDPOINT = AUTHENTICATION_ENDPOINT + "/logout";
         public static final String REGISTER_ENDPOINT = AUTHENTICATION_ENDPOINT + "/register";
-        public static final String REFRESH_TOKEN_ENDPOINT = AUTHENTICATION_ENDPOINT + "/refresh-token";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Account {
         public static final String ACCOUNT_ENDPOINT = ROOT_ENDPOINT + "/accounts";
+        public static final String ACCOUNT_CHANGE_ENDPOINT = ACCOUNT_ENDPOINT + "/change";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

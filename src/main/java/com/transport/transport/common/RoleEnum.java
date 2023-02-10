@@ -1,14 +1,8 @@
 package com.transport.transport.common;
 
-import org.springframework.security.core.GrantedAuthority;
 
-public enum RoleEnum implements GrantedAuthority {
+public enum RoleEnum  {
     USER,
     ADMIN,
     COMPANY;
-
-    @Override
-    public String getAuthority() {
-        return this.name();
-    }
 }

@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-import static com.transport.transport.utils.ConvertUtils.convertToTime;
 
 public class ConfigurationMapping {
     static Long mapDateToLong(Date date) {
@@ -29,13 +28,6 @@ public class ConfigurationMapping {
         return new Timestamp(time);
     }
 
-    static Time mapLongToTime(Long milliseconds) {
-        if (milliseconds != null) {
-            return convertToTime(milliseconds);
-        } else {
-            return null;
-        }
-    }
 
     static Long mapTimeToLong(Time time) {
         if (time != null) {
