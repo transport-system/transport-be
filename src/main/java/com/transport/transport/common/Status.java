@@ -39,13 +39,9 @@ public class Status {
         INACTIVE
     }
     public enum Trip {
-        PENDING,
-        REQUEST,
-        DONE,
-        REJECTED,
-        UNAVAILABLE,
+
         EXPIRED,
-        ACCEPT
+        ACTIVE
     }
 
 }

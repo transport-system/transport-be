@@ -1,20 +1,18 @@
 package com.transport.transport.model.request.trip;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TripRequest {
+public class UpdateTrip {
     @NotBlank
     private String employeeName;
     @NotNull
@@ -25,16 +23,7 @@ public class TripRequest {
     private String image;
     @NotBlank
     private String description;
-    @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date timeArrival;
-    @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date timeReturn;
-    @NotNull
-    private Long vehicleId;
-    @NotNull
-    private Long routeId;
-    @NotNull
-    private Long companyId;
+    @NotBlank
+    private String status;
+
 }

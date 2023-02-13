@@ -1,7 +1,16 @@
 package com.transport.transport.model.response.trip;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.sql.Date;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TripResponse {
     private Long Id;
     private String employeeName;
