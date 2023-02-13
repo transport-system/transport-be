@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CompanyResponse {
-    private Long id;
+    private Long companyId;
     private AccountResponse account;
     private String name;
     private String description;

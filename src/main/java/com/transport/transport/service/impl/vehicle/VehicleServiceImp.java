@@ -56,7 +56,7 @@ public class VehicleServiceImp implements VehicleService {
         if (vehicle == null) {
             throw new NotFoundException("Vehicle not found: " + id);
         }
-        vehicle.setStatus(Status.Vehicle.INACTIVE);
+        vehicle.setStatus(Status.Vehicle.INACTIVE.name());
         repository.save(vehicle);
     }
 
@@ -68,31 +68,38 @@ public class VehicleServiceImp implements VehicleService {
     @Override
     public Vehicle addVehicle(VehicleRequest vehicleRequest) {
         Vehicle vehicle = new Vehicle();
-        vehicle.setStatus(Status.Vehicle.INACTIVE);
+        vehicle.setStatus(Status.Vehicle.INACTIVE.name());
         if (repository.existsByLicensePlates(vehicleRequest.getLicensePlates())) {
             throw new NotFoundException("Vehicle license plates already exists: " + vehicleRequest.getLicensePlates());
-        } else if (vehicleRequest.getVehicle_type_name().equalsIgnoreCase("bus")) {
+        } else if (vehicleRequest.getVehicle_type().equalsIgnoreCase("bus")) {
             vehicle.setVehicle_type_name(VehicleType.BUS.name());
             vehicle.setTotalSeat(40);
-        } else if (vehicleRequest.getVehicle_type_name().equalsIgnoreCase("limousine")) {
+        } else if (vehicleRequest.getVehicle_type().equalsIgnoreCase("limousine")) {
             vehicle.setVehicle_type_name(VehicleType.LIMOUSINE.name());
             vehicle.setTotalSeat(9);
         } else {
-            throw new NotFoundException("Vehicle type not found: " + vehicleRequest.getVehicle_type_name());
+            throw new NotFoundException("Vehicle type not found: " + vehicleRequest.getVehicle_type());
         }
         vehicleMapper.addVehicleFromVehicleRequest(vehicleRequest, vehicle);
         return repository.save(vehicle);
     }
 
     @Override
-    public List<Vehicle> getVehiclesByStatus(Status.Vehicle status) {
+    public List<Vehicle> getVehiclesByStatus(String status) {
+        List<Vehicle> vehicles = repository.getVehiclesByStatus(status).stream().toList();
+        if (vehicles.equals(status.equalsIgnoreCase("inactive"))) {
+            return repository.getVehiclesByStatus(Status.Vehicle.INACTIVE);
+        } else if (vehicles.equals(status.equalsIgnoreCase("active"))) {
+            return repository.getVehiclesByStatus(Status.Vehicle.ACTIVE);
+        }
         return repository.getVehiclesByStatus(status);
+
     }
 
     @Override
     public Vehicle updateStatusInActive(Long id, VehicleRequest request) {
         Vehicle vehicle = findById(id);
-        vehicle.setStatus(Status.Vehicle.ACTIVE);
+        vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         repository.save(vehicle);
         return vehicle;
     }

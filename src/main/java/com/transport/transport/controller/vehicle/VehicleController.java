@@ -32,10 +32,10 @@ public class VehicleController {
 
     @GetMapping("/{status}")
     public ResponseEntity<?> findVehiclesByStatus(
-            @PathVariable(name = "status") Status.Vehicle status) {
+            @PathVariable(name = "status") String status) {
         List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);
         List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
-        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by Status Successfully", status, response), null, 200);
+        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by Status Successfully",status,response), null, 200);
     }
 
     @DeleteMapping("/{id}")
@@ -50,7 +50,8 @@ public class VehicleController {
             @PathVariable(name = "id") Long id, @RequestBody VehicleRequest request) {
         Vehicle vehicle = vehicleService.updateStatusInActive(id, request);
         VehicleResponse response = vehicleMapper.mapToVehicleResponse(vehicle);
-        return new ResponseEntity<>(new VehicleResponseMsg("Status change Active Successfully", response), null, 200);
+        return new ResponseEntity<>(new VehicleResponseMsg("Status change Active Successfully",
+                response), null, 200);
     }
 
 }

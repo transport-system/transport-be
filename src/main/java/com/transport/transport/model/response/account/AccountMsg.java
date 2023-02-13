@@ -15,8 +15,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountMsg {
     private String message;
-    private RoleEnum role;
-    private Status.Account status;
+    private String role;
+    private String status;
     private List<AccountResponse> list;
     private AccountResponse data;
 
@@ -30,7 +30,7 @@ public class AccountMsg {
         this.data = accountResponse;
     }
 
-    public AccountMsg(String message, RoleEnum role, Status.Account status, List<AccountResponse> list) {
+    public AccountMsg(String message, String role, String status, List<AccountResponse> list) {
         this.message = message;
         this.role = role;
         this.status = status;

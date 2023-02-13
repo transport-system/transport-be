@@ -21,5 +21,5 @@ public interface AccountService extends CRUDService<Account> {
     Account changePassword(Long id, ChangePasswordRequest changePasswordRequest);
     Account updateProfile(Long id, UpdateRequest updateRequest);
 
-    List<Account> findAccountByRoleAndStatus(RoleEnum roleEnum, Status.Account status);
+    List<Account> findAccountByRoleAndStatus(String role, String status);
 }

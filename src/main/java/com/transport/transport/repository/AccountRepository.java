@@ -28,8 +28,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE CONCAT(a.lastname, ' ', a.firstname) LIKE %?1%")
     List<Account> searchAccountsByFullName(String search, Pageable pageable);
 
-    List<Account> getAccountsByRoleAndStatus(RoleEnum roleEnum, Status.Account status);
+    List<Account> getAccountsByRoleAndStatus(String role, String status);
 
-
+    List<Account> getAccountsByRole(String role);
+    List<Account> findAccountByStatus(String status);
 
 }

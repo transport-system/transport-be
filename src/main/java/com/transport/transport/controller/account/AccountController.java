@@ -64,10 +64,10 @@ public class AccountController {
 
     @GetMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT + "/{role}/{status}")
     public ResponseEntity<?> findAccountByRoleAndStatus(
-            @PathVariable(name = "role") RoleEnum role,
-            @PathVariable(name = "status") Status.Account status) {
+            @PathVariable(name = "role") String role,
+            @PathVariable(name = "status") String status) {
         List<Account> accounts = accountService.findAccountByRoleAndStatus(role, status);
         List<AccountResponse> response = accountMapper.mapAccountResponseFromAccount(accounts);
-        return new ResponseEntity<>(new AccountMsg("GET Role vs Status Successfully", role, status, response), null, 200);
+         return new ResponseEntity<>(new AccountMsg("GET Role vs Status Successfully", role,status,response), null, 200);
     }
 }

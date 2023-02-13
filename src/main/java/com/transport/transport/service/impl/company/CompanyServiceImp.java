@@ -45,9 +45,10 @@ public class CompanyServiceImp implements CompanyService {
     public void delete(Long id) {
 
         Company company = repository.findById(id).orElseThrow(() -> new NotFoundException("Company not found: " + id));
-
         Account account = company.getAccount();
-        account.setStatus(Status.Account.INACTIVE);
+
+        account.setStatus(Status.Account.INACTIVE.name());
+
         accountRepository.save(account);
     }
 
@@ -68,15 +69,14 @@ public class CompanyServiceImp implements CompanyService {
     public Company registerCompany(CompanyRequest request) {
         Account account = addNewAccount(request);
         Company company = repository.findCompanyByAccount_Username(request.getUsername());
-            if (company != null) {
-                throw new NotFoundException("Company not found: " + account.getUsername());
-            }
-
-            company = new Company();
-            company.setAccount(account);
-            mapper.registerCompanyFromCompanyRequest(request, company);
-            return repository.save(company);
+        if (company != null) {
+            throw new NotFoundException("Company not found: " + account.getUsername());
         }
+        company = new Company();
+        company.setAccount(account);
+        mapper.registerCompanyFromCompanyRequest(request, company);
+        return repository.save(company);
+    }
 
     @Override
     public Account addNewAccount(CompanyRequest request) {
@@ -94,7 +94,7 @@ public class CompanyServiceImp implements CompanyService {
             long milliseconds = request.getDateOfBirth();
             Date dob = ConvertUtils.getDate(milliseconds);
             account.setDateOfBirth(dob);
-            account.setRole(RoleEnum.valueOf(RoleEnum.COMPANY.name()));
+            account.setRole(RoleEnum.COMPANY.name());
             return accountRepository.save(account);
         }
     }

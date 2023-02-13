@@ -48,7 +48,7 @@ public class AccountServiceImp implements AccountService {
     public Account updateStatus(Long id) {
         if (repository.existsById(id)) {
             Account account = repository.findById(id).get();
-            account.setStatus(Status.Account.ACTIVE);
+            account.setStatus(Status.Account.ACTIVE.name());
             save(account);
             return account;
         } else {
@@ -66,7 +66,7 @@ public class AccountServiceImp implements AccountService {
     public void delete(Long id) {
         Account account = repository.findById(id).orElse(null);
         if (account != null) {
-            account.setStatus(Status.Account.INACTIVE);
+            account.setStatus(Status.Account.INACTIVE.name());
             repository.save(account);
         }
     }
@@ -110,7 +110,7 @@ public class AccountServiceImp implements AccountService {
             Date dob = ConvertUtils.getDate(milliseconds);
             account.setDateOfBirth(dob);
 
-            account.setRole(RoleEnum.valueOf(RoleEnum.USER.name()));
+            account.setRole(String.valueOf(RoleEnum.valueOf(RoleEnum.USER.name())));
 
 
             return repository.save(account);
@@ -170,10 +170,28 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public List<Account> findAccountByRoleAndStatus(RoleEnum roleEnum, Status.Account status) {
-        return repository.getAccountsByRoleAndStatus(roleEnum, status);
-    }
+    public List<Account> findAccountByRoleAndStatus(String role, String status) {
 
+        List<Account> rolesList = repository.getAccountsByRole(role).stream().toList();
+        List<Account> statusList = repository.getAccountsByRole(status).stream().toList();
+        if (rolesList.equals(role.equalsIgnoreCase("admin"))) {
+            return repository.getAccountsByRoleAndStatus(RoleEnum.ADMIN.name(), status);
+        } else if (rolesList.equals(role.equalsIgnoreCase("user"))
+                && statusList.equals(status.equalsIgnoreCase("active"))) {
+            return repository.getAccountsByRoleAndStatus(RoleEnum.USER.name(), Status.Account.ACTIVE.name());
+        }
+        else if (rolesList.equals(role.equalsIgnoreCase("company"))
+                && statusList.equals(status.equalsIgnoreCase("active"))) {
+            return repository.getAccountsByRoleAndStatus(RoleEnum.COMPANY.name(), Status.Account.ACTIVE.name());
+        }
+        else if (rolesList.equals(role.equalsIgnoreCase("company"))
+                && statusList.equals(status.equalsIgnoreCase("inactive"))) {
+            return repository.getAccountsByRoleAndStatus(RoleEnum.COMPANY.name(), Status.Account.INACTIVE.name());
+        }
+
+        return repository.getAccountsByRoleAndStatus(role, status);
+
+    }
 
 
 }

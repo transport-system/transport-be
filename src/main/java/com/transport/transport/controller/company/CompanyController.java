@@ -31,21 +31,21 @@ public class CompanyController {
     public ResponseEntity<?> getAllCompany() {
         List<Company> companies = companyService.findAll();
         List<CompanyResponse> response = companyMapper.mapToCompanyResponse(companies);
-        return new ResponseEntity<>(response, null, 200);
+        return new ResponseEntity<>(new CompanyResponseMsg("Get ALL Company",response), null, 200);
     }
 
     @GetMapping( "/{id}")
     public ResponseEntity<?> getCompany(@PathVariable(name = "id") Long id) {
         Company company = companyService.findById(id);
         CompanyResponse response = companyMapper.mapToCompanyResponse(company);
-        return new ResponseEntity<>(response, null, 200);
+        return new ResponseEntity<>(new CompanyResponseMsg("Get  Company Id",response), null, 200);
     }
 
     @GetMapping( "vehicle/{id}")
     public ResponseEntity<?> getVehicleFromCompany(@PathVariable(name = "id") Long id) {
         List<Vehicle> vehicles = vehicleService.findAllByCompanyId(id);
         List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
-        return new ResponseEntity<>(response, null, 200);
+        return new ResponseEntity<>(new CompanyResponseMsg("Get Company id with Vehicles",id,response), null, 200);
     }
 
 
@@ -61,6 +61,6 @@ public class CompanyController {
     @DeleteMapping( "/{id}")
     public ResponseEntity<?> deleteCompany(@PathVariable(name = "id") Long id) {
         companyService.delete(id);
-        return new ResponseEntity<>(new CompanyResponseMsg("Delete successfully"), null, 204);
+        return new ResponseEntity<>("Delete successfully", null, 200);
     }
 }

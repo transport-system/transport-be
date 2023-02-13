@@ -17,6 +17,6 @@ public class VehicleResponse {
     private Long id;
     private int totalSeat;
     private String licensePlates;
-    private Status.Vehicle status;
-    private String vehicle_type_name;
+    private String status;
+    private String vehicle_type;
 }

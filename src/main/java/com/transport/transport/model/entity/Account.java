@@ -42,13 +42,11 @@ public class Account {
 
     @Column(name = "gender")
     private String gender;
-    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status.Account status;
+    private String status;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private RoleEnum role;
+    private String role;
 
     @JsonBackReference
     @OneToMany(mappedBy = "account",

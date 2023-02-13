@@ -12,11 +12,11 @@ import java.util.List;
 public interface VehicleMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "companyId", target = "company.id")
-    @Mapping(source = "vehicle_type_name", target = "vehicle_type_name", ignore = true)
+    @Mapping(source = "vehicle_type", target = "vehicle_type_name")
     void addVehicleFromVehicleRequest(VehicleRequest vehicleRequest, @MappingTarget Vehicle company);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "vehicle_type_name", target = "vehicle_type_name", ignore = true)
+    @Mapping(source = "vehicle_type_name", target = "vehicle_type")
     @Mapping(source = "id", target = "id")
     VehicleResponse mapToVehicleResponse(Vehicle vehicle);
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     boolean existsByCompanyName(String name);
 
-    @Query("SELECT c FROM Company c WHERE c.account.username = ?1")
+   // @Query("SELECT c FROM Company c WHERE c.account.username = ?1")
     Company findCompanyByAccount_Username(String username);
 
     @Query("SELECT c FROM Company c WHERE c.account.id = ?1")

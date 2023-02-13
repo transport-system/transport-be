@@ -50,7 +50,8 @@ public class Trip {
 
 
     @Column(name = "status")
-    private Status.Trip status;
+    //@Enumerated(EnumType.STRING)
+    private String status;
 
 
     @JsonManagedReference
