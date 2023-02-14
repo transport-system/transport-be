@@ -1,4 +1,5 @@
 package com.transport.transport.service.impl.trip;
+
 import com.transport.transport.common.Status;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.entity.Route;
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TripServiceImp implements TripService {
-    public java.sql.Date date(){
+    public java.sql.Date date() {
         Date date = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -31,6 +32,7 @@ public class TripServiceImp implements TripService {
         java.sql.Date sqlDate = new java.sql.Date(TimeDeparture.getTime());
         return sqlDate;
     }
+
     private final TripRepository tripRepo;
     private final RouteRepository routeRepository;
     private final CompanyRepository companyRepository;
@@ -46,9 +48,10 @@ public class TripServiceImp implements TripService {
         return null;
     }
 
+
     @Override
-    public Trip findById(Long Id) {
-        return tripRepo.findById(Id).get();
+    public Trip findById(Long id) {
+        return tripRepo.findById(id).get();
     }
 
     @Override
@@ -68,22 +71,30 @@ public class TripServiceImp implements TripService {
 
     @Override
     public List<Trip> findByTimeArrival(Date date) {
-        if (tripRepo.findByTimeArrival(date).isEmpty()){
-            throw new RuntimeException("Not have Trip in /" + date +" /");
+        if (tripRepo.findByTimeArrival(date).isEmpty()) {
+            throw new RuntimeException("Not have Trip in /" + date + " /");
         }
         return tripRepo.findByTimeArrival(date);
     }
+
     @Override
     public List<Trip> findByStatus(String status) {
-        if (tripRepo.findByStatus(status).isEmpty()){
+        List<Trip> statusList = tripRepo.getTripsByStatus(status).stream().toList();
+        if (tripRepo.findByStatus(status).isEmpty()) {
             throw new RuntimeException("Status not Exist");
+        } else if (statusList.equals(status.equalsIgnoreCase("active"))) {
+            return tripRepo.getTripsByStatus(Status.Trip.ACTIVE.name());
+        } else if (statusList.equals(status.equalsIgnoreCase("EXPIRED"))) {
+            return tripRepo.getTripsByStatus(Status.Trip.EXPIRED.name());
         }
-        return tripRepo.findByStatus(status);
+        return tripRepo.getTripsByStatus(status);
     }
+
     @Override
     public List<Trip> sortTripByTimeArrival() {
         return tripRepo.findAll(Sort.by(Sort.Direction.ASC, "TimeArrival"));
     }
+
     @Override
     public Trip createrTrip(TripRequest trip) {
         Trip newTrip = new Trip();
@@ -92,7 +103,7 @@ public class TripServiceImp implements TripService {
         newTrip.setPrice(trip.getPrice());
         newTrip.setImage(trip.getImage());
         newTrip.setDescription(trip.getDescription());
-        if (trip.getTimeArrival().after(trip.getTimeReturn())){
+        if (trip.getTimeArrival().after(trip.getTimeReturn())) {
             throw new RuntimeException("TIME ERROR");
         }
         newTrip.setTimeDeparture(TimeDeparture);
@@ -104,10 +115,10 @@ public class TripServiceImp implements TripService {
         Company company = companyRepository.findById(trip.getCompanyId()).get();
         newTrip.setCompany(company);
         Vehicle vehicle = vehicleRepository.findById(trip.getVehicleId()).get();
-        if(vehicle.getCompany().getId().equals(company.getId())){
+        if (vehicle.getCompany().getId().equals(company.getId())) {
             newTrip.setVehicle(vehicle);
             newTrip.setMaxSeat(vehicle.getTotalSeat());
-        }else {
+        } else {
             throw new RuntimeException("Vehicale not exist in Company");
         }
         return tripRepo.save(newTrip);
@@ -120,10 +131,10 @@ public class TripServiceImp implements TripService {
         tripU.setPrice(trip.getPrice());
         tripU.setImage(trip.getImage());
         tripU.setDescription(trip.getDescription());
-        if(trip.getStatus().equalsIgnoreCase("EXPRIED")){
+        if (trip.getStatus().equalsIgnoreCase("EXPRIED")) {
             tripU.setStatus(Status.Trip.EXPIRED.name());
         }
-        if(trip.getStatus().equalsIgnoreCase("ACTIVE")){
+        if (trip.getStatus().equalsIgnoreCase("ACTIVE")) {
             tripU.setStatus(Status.Trip.ACTIVE.name());
         }
         return tripRepo.save(tripU);

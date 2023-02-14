@@ -87,7 +87,9 @@ public class VehicleServiceImp implements VehicleService {
     @Override
     public List<Vehicle> getVehiclesByStatus(String status) {
         List<Vehicle> vehicles = repository.getVehiclesByStatus(status).stream().toList();
-        if (vehicles.equals(status.equalsIgnoreCase("inactive"))) {
+        if (repository.getVehiclesByStatus(status).isEmpty()) {
+            throw new RuntimeException("Status not Exist");
+        } else if (vehicles.equals(status.equalsIgnoreCase("inactive"))) {
             return repository.getVehiclesByStatus(Status.Vehicle.INACTIVE);
         } else if (vehicles.equals(status.equalsIgnoreCase("active"))) {
             return repository.getVehiclesByStatus(Status.Vehicle.ACTIVE);

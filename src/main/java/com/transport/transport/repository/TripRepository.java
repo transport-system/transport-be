@@ -9,7 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface TripRepository extends JpaRepository<Trip,Long> {
+public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findByTimeArrival(Date date);
+
     List<Trip> findByStatus(String status);
+
+    List<Trip> getTripsByStatus(String status);
+
 }

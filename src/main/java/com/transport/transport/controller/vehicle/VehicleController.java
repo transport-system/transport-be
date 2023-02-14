@@ -1,7 +1,6 @@
 package com.transport.transport.controller.vehicle;
 
 import com.transport.transport.common.EndpointConstant;
-import com.transport.transport.common.Status;
 import com.transport.transport.mapper.VehicleMapper;
 import com.transport.transport.model.entity.Vehicle;
 import com.transport.transport.model.request.vehicle.VehicleRequest;
