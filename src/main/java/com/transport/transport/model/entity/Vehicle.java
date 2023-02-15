@@ -1,9 +1,6 @@
 package com.transport.transport.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.transport.transport.common.Status;
-import com.transport.transport.common.VehicleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +28,6 @@ public class Vehicle {
     private String licensePlates;
 
     @Column(name = "status")
-    //@Enumerated(EnumType.STRING)
     private String status;
 
     @Column(name = "vehicle_type_name")

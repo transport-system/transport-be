@@ -4,7 +4,7 @@ import com.transport.transport.utils.Trimmable;
 import lombok.*;
 
 import javax.validation.constraints.*;
-import java.sql.Date;
+
 
 @Data
 @AllArgsConstructor

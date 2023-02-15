@@ -22,7 +22,6 @@ public interface AccountMapper {
     @Mapping(target = "dateOfBirth", ignore = true)
     void updateAccountFromUpdateRequest(@MappingTarget Account account, UpdateRequest updateRequest);
 
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @InheritConfiguration(name = "mapAccountResponseFromAccount")
     List<AccountResponse> mapAccountResponseFromAccount(List<Account> account);

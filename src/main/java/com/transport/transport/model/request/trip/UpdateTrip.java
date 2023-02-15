@@ -31,5 +31,4 @@ public class UpdateTrip {
     @NotNull
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     private Timestamp timeArrival;
-
 }

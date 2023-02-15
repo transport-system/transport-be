@@ -1,7 +1,5 @@
 package com.transport.transport.repository;
 
-import com.transport.transport.common.RoleEnum;
-import com.transport.transport.common.Status;
 import com.transport.transport.model.entity.Account;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,11 +14,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsername(String username);
 
     List<Account> findAllByStatusIsNotNull(Pageable pageable);
-
     Account findAccountByUsernameAndStatus(String username, String status);
 
     boolean existsByUsername(String username);
-
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String username);

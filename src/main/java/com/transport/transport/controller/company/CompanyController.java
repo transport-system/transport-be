@@ -61,6 +61,6 @@ public class CompanyController {
     @DeleteMapping( "/{id}")
     public ResponseEntity<?> deleteCompany(@PathVariable(name = "id") Long id) {
         companyService.delete(id);
-        return new ResponseEntity<>("Delete successfully", null, 200);
+        return new ResponseEntity<>(new CompanyResponseMsg("Delete successfully"), null, 204);
     }
 }

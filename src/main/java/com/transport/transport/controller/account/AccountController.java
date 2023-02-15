@@ -1,8 +1,6 @@
 package com.transport.transport.controller.account;
 
 import com.transport.transport.common.EndpointConstant;
-import com.transport.transport.common.RoleEnum;
-import com.transport.transport.common.Status;
 import com.transport.transport.mapper.AccountMapper;
 import com.transport.transport.model.entity.Account;
 import com.transport.transport.model.request.account.ChangePasswordRequest;
@@ -25,6 +23,13 @@ import java.util.List;
 public class AccountController {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
+
+    @GetMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT + "/{id}")
+    public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
+        Account account = accountService.findById(id);
+        AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
+        return new ResponseEntity<>(new AccountMsg("Get account success", response), null, 200);
+    }
 
     @PostMapping(path = EndpointConstant.Authentication.LOGIN_ENDPOINT)
     public ResponseEntity<?> checkLogin(@Valid @RequestBody LoginRequest loginRequest) {
@@ -66,6 +71,6 @@ public class AccountController {
             @PathVariable(name = "status") String status) {
         List<Account> accounts = accountService.findAccountByRoleAndStatus(role, status);
         List<AccountResponse> response = accountMapper.mapAccountResponseFromAccount(accounts);
-         return new ResponseEntity<>(new AccountMsg("GET Role vs Status Successfully", role,status,response), null, 200);
+        return new ResponseEntity<>(new AccountMsg("GET Role vs Status Successfully", role, status, response), null, 200);
     }
 }

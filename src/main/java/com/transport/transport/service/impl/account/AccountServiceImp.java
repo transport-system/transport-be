@@ -109,8 +109,7 @@ public class AccountServiceImp implements AccountService {
             long milliseconds = registerRequest.getDateOfBirth();
             Date dob = ConvertUtils.getDate(milliseconds);
             account.setDateOfBirth(dob);
-
-            account.setRole(String.valueOf(RoleEnum.valueOf(RoleEnum.USER.name())));
+            account.setRole(RoleEnum.USER.name());
 
 
             return repository.save(account);
@@ -192,6 +191,4 @@ public class AccountServiceImp implements AccountService {
         return repository.getAccountsByRoleAndStatus(role, status);
 
     }
-
-
 }

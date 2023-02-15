@@ -1,6 +1,5 @@
 package com.transport.transport.controller.trip;
 import com.transport.transport.common.EndpointConstant;
-import com.transport.transport.common.Status;
 import com.transport.transport.mapper.TripMapper;
 import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.trip.TripRequest;
@@ -33,7 +32,7 @@ public class TripController {
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(tripService.findById(id), HttpStatus.OK);
     }
-    @GetMapping("/status/{status}")
+    @GetMapping("status/{status}")
     public ResponseEntity<?> getByStatus(@PathVariable(name = "status") String status) {
         return new ResponseEntity<>(tripService.findByStatus(status), HttpStatus.OK);
     }

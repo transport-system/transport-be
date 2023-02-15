@@ -29,7 +29,7 @@ public class VehicleController {
         return new ResponseEntity<>(new VehicleResponseMsg("Create Vehicles success", res), null, 200);
     }
 
-    @GetMapping("status/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<?> findVehiclesByStatus(
             @PathVariable(name = "status") String status) {
         List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);

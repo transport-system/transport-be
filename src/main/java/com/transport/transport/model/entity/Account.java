@@ -1,8 +1,6 @@
 package com.transport.transport.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.transport.transport.common.RoleEnum;
-import com.transport.transport.common.Status;
 import lombok.*;
 import javax.persistence.*;
 import java.sql.Date;
@@ -42,6 +40,7 @@ public class Account {
 
     @Column(name = "gender")
     private String gender;
+
     @Column(name = "status")
     private String status;
 

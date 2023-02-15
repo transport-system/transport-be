@@ -44,5 +44,4 @@ public final class EndpointConstant {
     public static final class Trip {
         public static final String TRIP_ENDPOINT = ROOT_ENDPOINT + "/trip";
     }
-
 }
