@@ -1,6 +1,6 @@
 package com.transport.transport.service.impl.vehicle;
 
-import com.transport.transport.common.Status;
+import  com.transport.transport.common.Status;
 import com.transport.transport.common.VehicleType;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.VehicleMapper;
@@ -11,8 +11,6 @@ import com.transport.transport.repository.VehicleRepository;
 import com.transport.transport.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -33,7 +31,7 @@ public class VehicleServiceImp implements VehicleService {
     public List<Vehicle> findAllByCompanyId(Long id) {
         if (!companyRepository.existsById(id)) {
             throw new NotFoundException("Company not found: " + id);
-        } else if (repository.findAllByCompany_Id(id).isEmpty()) {
+        } else if (repository.findVehicleByCompanyId(id).isEmpty()) {
             throw new NotFoundException("Company not have vehicle");
         }
         return repository.findAllByCompany_Id(id);
@@ -90,9 +88,9 @@ public class VehicleServiceImp implements VehicleService {
         if (repository.getVehiclesByStatus(status).isEmpty()) {
             throw new RuntimeException("Status not Exist");
         } else if (vehicles.equals(status.equalsIgnoreCase("inactive"))) {
-            return repository.getVehiclesByStatus(Status.Vehicle.INACTIVE);
+            return repository.getVehiclesByStatus(Status.Vehicle.INACTIVE.name());
         } else if (vehicles.equals(status.equalsIgnoreCase("active"))) {
-            return repository.getVehiclesByStatus(Status.Vehicle.ACTIVE);
+            return repository.getVehiclesByStatus(Status.Vehicle.ACTIVE.name());
         }
         return repository.getVehiclesByStatus(status);
 
@@ -106,5 +104,18 @@ public class VehicleServiceImp implements VehicleService {
         return vehicle;
     }
 
+    @Override
+    public List<Vehicle> findVehiclesByName(String name) {
+        List<Vehicle> typeName = repository.findVehicleByVehicle_type_name(name).stream().toList();
+        if (repository.findVehicleByVehicle_type_name(name).isEmpty()) {
+            throw new RuntimeException("Type name is not Exist");
+        } else if (typeName.equals(name.equalsIgnoreCase("bus"))) {
+            repository.findVehicleByVehicle_type_name(VehicleType.BUS.name());
+        } else if (typeName.equals(name.equalsIgnoreCase("limousine"))) {
+            repository.findVehicleByVehicle_type_name(VehicleType.LIMOUSINE.name());
 
+        }
+        return repository.findVehicleByVehicle_type_name(name);
+
+    }
 }

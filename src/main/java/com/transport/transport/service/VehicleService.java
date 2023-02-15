@@ -1,6 +1,5 @@
 package com.transport.transport.service;
 
-import com.transport.transport.common.Status;
 import com.transport.transport.model.entity.Vehicle;
 import com.transport.transport.model.request.vehicle.VehicleRequest;
 
@@ -14,4 +13,5 @@ public interface VehicleService extends CRUDService<Vehicle> {
     List<Vehicle> getVehiclesByStatus(String vehicle);
     Vehicle updateStatusInActive(Long id, VehicleRequest request);
 
+    List<Vehicle> findVehiclesByName(String name);
 }

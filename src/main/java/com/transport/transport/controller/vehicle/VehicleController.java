@@ -29,12 +29,12 @@ public class VehicleController {
         return new ResponseEntity<>(new VehicleResponseMsg("Create Vehicles success", res), null, 200);
     }
 
-    @GetMapping("/{status}")
+    @GetMapping("/get-status/{status}")
     public ResponseEntity<?> findVehiclesByStatus(
             @PathVariable(name = "status") String status) {
         List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);
         List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
-        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by Status Successfully",status,response), null, 200);
+        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by Status Successfully", status, response), null, 200);
     }
 
     @DeleteMapping("/{id}")
@@ -53,4 +53,11 @@ public class VehicleController {
                 response), null, 200);
     }
 
+    @GetMapping("/get-name/{name}")
+    public ResponseEntity<?> findVehiclesByTypeName(
+            @PathVariable(name = "name") String name) {
+        List<Vehicle> vehicles = vehicleService.findVehiclesByName(name);
+        List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
+        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by name Successfully", name, response), null, 200);
+    }
 }

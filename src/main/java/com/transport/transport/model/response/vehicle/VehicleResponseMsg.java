@@ -15,8 +15,9 @@ import java.util.List;
 public class VehicleResponseMsg {
     private String message;
     private VehicleResponse data;
-    private String status;
+    private String name;
     private List<VehicleResponse> list;
+
 
     public VehicleResponseMsg(String message, VehicleResponse data) {
         this.message = message;
@@ -27,9 +28,10 @@ public class VehicleResponseMsg {
         this.message = message;
     }
 
-    public VehicleResponseMsg(String message, String status, List<VehicleResponse> list) {
+    public VehicleResponseMsg(String message, String name, List<VehicleResponse> list) {
         this.message = message;
-        this.status = status;
+        this.name = name;
         this.list = list;
     }
+
 }

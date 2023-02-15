@@ -118,6 +118,7 @@ public class TripServiceImp implements TripService {
         if (vehicle.getCompany().getId().equals(company.getId())) {
             newTrip.setVehicle(vehicle);
             newTrip.setMaxSeat(vehicle.getTotalSeat());
+
         } else {
             throw new RuntimeException("Vehicale not exist in Company");
         }
