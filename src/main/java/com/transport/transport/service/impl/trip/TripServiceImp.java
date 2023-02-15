@@ -115,9 +115,12 @@ public class TripServiceImp implements TripService {
         Company company = companyRepository.findById(trip.getCompanyId()).get();
         newTrip.setCompany(company);
         Vehicle vehicle = vehicleRepository.findById(trip.getVehicleId()).get();
-        if (vehicle.getCompany().getId().equals(company.getId())) {
+        if (vehicle.getCompany().getId().equals(company.getId()) && vehicle.getStatus().equals(Status.Vehicle.ACTIVE)) {
             newTrip.setVehicle(vehicle);
             newTrip.setMaxSeat(vehicle.getTotalSeat());
+
+        } else if (vehicle.getCompany().getId().equals(company.getId()) && vehicle.getStatus().equals(Status.Vehicle.INACTIVE)) {
+            throw new RuntimeException("Vehicale is INACTIVE");
 
         } else {
             throw new RuntimeException("Vehicale not exist in Company");
