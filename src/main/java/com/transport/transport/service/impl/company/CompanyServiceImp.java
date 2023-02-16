@@ -4,14 +4,12 @@ import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.CompanyMapper;
-import com.transport.transport.mapper.VehicleMapper;
 import com.transport.transport.model.entity.Account;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.request.company.CompanyRequest;
 import com.transport.transport.model.request.company.CompanyUpdateRequest;
 import com.transport.transport.repository.AccountRepository;
 import com.transport.transport.repository.CompanyRepository;
-import com.transport.transport.repository.VehicleRepository;
 import com.transport.transport.service.CompanyService;
 import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
@@ -101,6 +99,5 @@ public class CompanyServiceImp implements CompanyService {
             return accountRepository.save(account);
         }
     }
-
 }
 

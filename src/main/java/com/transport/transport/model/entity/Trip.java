@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -37,20 +38,19 @@ public class Trip {
     private String description;
 
     @Column(name = "time_departure")
-    private Date timeDeparture;
+    private Timestamp timeDeparture;
 
     @Column(name = "time_arrival")
-    private Date timeArrival;
+    private Timestamp timeArrival;
 
     @Column(name = "time_return")
-    private Date timeReturn;
+    private Timestamp timeReturn;
 
     @Column(name = "max_seat")
     private int maxSeat;
 
 
     @Column(name = "status")
-    //@Enumerated(EnumType.STRING)
     private String status;
 
 

@@ -38,7 +38,7 @@ public class RegisterRequest implements Trimmable {
 
     private String avatarImage;
 
-    private long dateOfBirth;
+    private Long dateOfBirth;
 
     @NotEmpty(message = "Gender is required")
     private String gender;

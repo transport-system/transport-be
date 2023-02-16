@@ -116,6 +116,5 @@ public class VehicleServiceImp implements VehicleService {
 
         }
         return repository.findVehicleByVehicle_type_name(name);
-
     }
 }

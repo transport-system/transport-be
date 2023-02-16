@@ -15,5 +15,5 @@ public class UpdateRequest implements Trimmable {
 
     private String avatarImage;
 
-    private long dateOfBirth;
+    private Long dateOfBirth;
 }

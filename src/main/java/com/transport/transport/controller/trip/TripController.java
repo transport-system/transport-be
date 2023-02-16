@@ -29,15 +29,15 @@ public class TripController {
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(tripService.getAllTrip(), HttpStatus.OK);
     }
-    @GetMapping("/getId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(tripService.findById(id), HttpStatus.OK);
     }
-    @GetMapping("/getStatus/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<?> getByStatus(@PathVariable(name = "status") String status) {
         return new ResponseEntity<>(tripService.findByStatus(status), HttpStatus.OK);
     }
-    @GetMapping("/time-date/{date}")
+    @GetMapping("/date/{date}")
     public ResponseEntity<?> getByArrival(@PathVariable(name = "date") String date) throws ParseException {
         Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         return new ResponseEntity<>(tripService.findByTimeArrival(date1), HttpStatus.OK);

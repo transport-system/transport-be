@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -19,8 +18,9 @@ public class TripResponse {
     private double price;
     private String image;
     private String description;
-    private Date timeArrival;
-    private Date timeReturn;
+    private Timestamp timeArrival;
+    private Timestamp timeDeparture;
+    private Timestamp timeReturn;
     private int maxSeat;
     private String status;
 

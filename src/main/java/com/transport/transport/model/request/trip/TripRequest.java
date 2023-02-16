@@ -7,7 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -26,15 +26,17 @@ public class TripRequest {
     @NotBlank
     private String description;
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date timeArrival;
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    private Timestamp timeDeparture;
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date timeReturn;
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    private Timestamp timeArrival;
     @NotNull
     private Long vehicleId;
     @NotNull
-    private Long routeId;
+    private String cityDeparture;
+    @NotNull
+    private String cityArrival;
     @NotNull
     private Long companyId;
 }

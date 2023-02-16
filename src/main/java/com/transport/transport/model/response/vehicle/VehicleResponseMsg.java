@@ -1,7 +1,6 @@
 package com.transport.transport.model.response.vehicle;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.transport.transport.common.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +14,8 @@ import java.util.List;
 public class VehicleResponseMsg {
     private String message;
     private VehicleResponse data;
-    private String name;
+    private String status;
     private List<VehicleResponse> list;
-
 
     public VehicleResponseMsg(String message, VehicleResponse data) {
         this.message = message;
@@ -28,10 +26,9 @@ public class VehicleResponseMsg {
         this.message = message;
     }
 
-    public VehicleResponseMsg(String message, String name, List<VehicleResponse> list) {
+    public VehicleResponseMsg(String message, String status, List<VehicleResponse> list) {
         this.message = message;
-        this.name = name;
+        this.status = status;
         this.list = list;
     }
-
 }

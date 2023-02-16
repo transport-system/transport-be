@@ -1,6 +1,4 @@
 package com.transport.transport.service;
-
-;
 import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
@@ -16,6 +14,6 @@ public interface TripService extends CRUDService<Trip>{
     Trip createrTrip(TripRequest trip);
     Trip updateTrip(UpdateTrip trip, Long Id);
     List<Trip> findByStatus(String status);
-
+    Trip changeStatus(Long id, String status);
     List<Trip> sortTripByTimeArrival();
 }

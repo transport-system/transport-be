@@ -39,9 +39,9 @@ public class Status {
         INACTIVE
     }
     public enum Trip {
-
-        EXPIRED,
-        ACTIVE
+        ACTIVE,
+        DOING,
+        INACTIVE
     }
 
 }

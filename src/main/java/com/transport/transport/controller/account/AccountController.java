@@ -31,8 +31,7 @@ public class AccountController {
 
         if (accountService.login(loginRequest)) {
             Account account = accountService.findByUsername(loginRequest.getUsername());
-            AccountResponse accountResponse = accountMapper.mapAccountResponseFromAccount(account);
-            return new ResponseEntity<>(new AccountMsg("Login success", accountResponse), null, 200);
+            return new ResponseEntity<>(new AccountMsg("Login success"), null, 200);
         } else {
             return new ResponseEntity<>(new AccountMsg("username or password invalid"), null, 400);
         }
@@ -50,7 +49,6 @@ public class AccountController {
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request,
                                             @PathVariable(name = "id") Long id) {
         Account account = accountService.changePassword(id, request);
-        AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
         return new ResponseEntity<>(new MsgResponse("Change successfully"), null, 200);
     }
 
