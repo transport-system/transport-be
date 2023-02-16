@@ -22,6 +22,8 @@ target/
 *.ipr
 
 ### NetBeans ###
+/META-INF
+/out
 /nbproject/private/
 /nbbuild/
 /dist/
