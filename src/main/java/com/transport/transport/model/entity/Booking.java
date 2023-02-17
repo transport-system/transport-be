@@ -24,15 +24,6 @@ public class Booking {
     @Column(name = "booking_id")
     private Long id;
 
-    @Column(name = "appointment_date")
-    private Timestamp appointmentDate;
-
-    @Column(name = "expire_appointment_date")
-    private Timestamp expireAppointmentDate;
-
-    @Column(name = "appointment_status")
-    private Boolean appointmentStatus;
-
     @Column(name = "create_booking_time")
     private Timestamp createBookingTime;
 
@@ -51,30 +42,26 @@ public class Booking {
     @Column(name = "rejected_note")
     private String rejectedNote;
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<FreeSeat> freeSeats;
 
-
-    @JsonManagedReference
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "booking_detail",
-            joinColumns = @JoinColumn(name = "booking_id", referencedColumnName = "booking_id"),
-            inverseJoinColumns = @JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
-    )
-    private List<Trip> trips;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id", referencedColumnName = "trip_id")
+    private Trip trip;
 
 
     @JsonBackReference
-    @OneToMany(mappedBy = "booking",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            orphanRemoval = true)
-    private List<FeedBack> feedBacks;
-
-    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    private Customer customer;
 }

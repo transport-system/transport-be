@@ -30,13 +30,18 @@ public class AccountController {
         AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
         return new ResponseEntity<>(new AccountMsg("Get account success", response), null, 200);
     }
+    @GetMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT )
+    public List<Account> getAll() {
+        return accountService.findAll();
+    }
 
     @PostMapping(path = EndpointConstant.Authentication.LOGIN_ENDPOINT)
     public ResponseEntity<?> checkLogin(@Valid @RequestBody LoginRequest loginRequest) {
 
         if (accountService.login(loginRequest)) {
             Account account = accountService.findByUsername(loginRequest.getUsername());
-            return new ResponseEntity<>(new AccountMsg("Login success"), null, 200);
+            AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
+            return new ResponseEntity<>(new AccountMsg("Login success", response), null, 200);
         } else {
             return new ResponseEntity<>(new AccountMsg("username or password invalid"), null, 400);
         }

@@ -21,8 +21,8 @@ public class FreeSeat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "seat")
-    private int seat;
+    @Column(name = "seat_number")
+    private int seatNumber;
 
     @Column(name = "status")
     private String status;
@@ -32,7 +32,7 @@ public class FreeSeat {
     @JoinColumn(name = "booking_id", referencedColumnName = "booking_id")
     private Booking booking;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
     private Vehicle vehicle;

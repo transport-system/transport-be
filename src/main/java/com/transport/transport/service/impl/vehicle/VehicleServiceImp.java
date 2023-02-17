@@ -71,10 +71,10 @@ public class VehicleServiceImp implements VehicleService {
             throw new NotFoundException("Vehicle license plates already exists: " + vehicleRequest.getLicensePlates());
         } else if (vehicleRequest.getVehicle_type().equalsIgnoreCase("bus")) {
             vehicle.setVehicle_type_name(VehicleType.BUS.name());
-            vehicle.setTotalSeat(40);
+            vehicle.setSeatCapacity(40);
         } else if (vehicleRequest.getVehicle_type().equalsIgnoreCase("limousine")) {
             vehicle.setVehicle_type_name(VehicleType.LIMOUSINE.name());
-            vehicle.setTotalSeat(9);
+            vehicle.setSeatCapacity(9);
         } else {
             throw new NotFoundException("Vehicle type not found: " + vehicleRequest.getVehicle_type());
         }

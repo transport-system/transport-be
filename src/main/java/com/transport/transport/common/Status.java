@@ -35,6 +35,7 @@ public class Status {
     }
 
     public enum Vehicle {
+        DOING,
         ACTIVE,
         INACTIVE
     }

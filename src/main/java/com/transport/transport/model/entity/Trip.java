@@ -44,15 +44,15 @@ public class Trip {
     @Column(name = "time_return")
     private Timestamp timeReturn;
 
-    @Column(name = "max_seat")
-    private int maxSeat;
+    @Column(name = "seat_quantity")
+    private int seatQuantity;
 
 
     @Column(name = "status")
     private String status;
 
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
     private Vehicle vehicle;
@@ -63,14 +63,14 @@ public class Trip {
     @JoinColumn(name = "route_id", referencedColumnName = "route_id")
     private Route route;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id", referencedColumnName = "company_id")
     private Company company;
 
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "trips",
+    @OneToMany(mappedBy = "trip",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     private List<Booking> bookings;

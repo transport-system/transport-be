@@ -1,6 +1,7 @@
 package com.transport.transport.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +25,10 @@ public class City {
     @Column(name = "city_name")
     private String city;
 
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "city1", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Route> route1;
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "city2", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Route> route2;
 }

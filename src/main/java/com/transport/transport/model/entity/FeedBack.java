@@ -36,21 +36,21 @@ public class FeedBack {
     private String status;
 
 
-    @JsonManagedReference
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "booking_id", referencedColumnName = "booking_id")
-    private Booking booking;
-
     @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", referencedColumnName = "company_id")
+    private Company company;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "backFeedback", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FeedBack> replies;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply", referencedColumnName = "feedback_id")
     private FeedBack backFeedback;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;

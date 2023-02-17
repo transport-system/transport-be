@@ -1,6 +1,7 @@
 package com.transport.transport.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
 import java.sql.Date;
@@ -47,14 +48,14 @@ public class Account {
     @Column(name = "role")
     private String role;
 
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "account",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<FeedBack> feedBacks;
 
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "account",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,

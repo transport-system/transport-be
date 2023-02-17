@@ -1,5 +1,6 @@
 package com.transport.transport.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,12 +31,12 @@ public class Company {
     @Column(name = "rating_score")
     private double rating;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY
             ,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Trip> trips;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
@@ -44,4 +45,9 @@ public class Company {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY
             ,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vehicle> vehicles;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY
+            ,cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedBack> feedBacks;
 }
