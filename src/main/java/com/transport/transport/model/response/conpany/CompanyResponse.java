@@ -18,4 +18,5 @@ public class CompanyResponse {
     private String name;
     private String description;
     private double rating;
+    private String role;
 }

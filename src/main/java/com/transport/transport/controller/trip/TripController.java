@@ -57,11 +57,11 @@ public class TripController {
     public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByIdOfCompany(CompanyId, id), HttpStatus.OK);
     }
-    @GetMapping("/Company/status/{CompanyId}&{status}")
+    @GetMapping("/Company/status/{CompanyId}/{status}")
     public ResponseEntity<?> getByStatusOfCompany(@PathVariable(name = "status") String status, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByStatusOfCompany(CompanyId,status), HttpStatus.OK);
     }
-    @GetMapping("/Company/date/{CompanyId}&{date}")
+    @GetMapping("/Company/date/{CompanyId}/{date}")
     public ResponseEntity<?> getByArrivalOfCompany(@PathVariable(name = "date") Timestamp date, @PathVariable(name = "CompanyId") Long CompanyId) throws ParseException {
         return new ResponseEntity<>(tripService.findByTimeArrivalOfCompany(CompanyId, date), HttpStatus.OK);
     }
@@ -78,14 +78,14 @@ public class TripController {
     public ResponseEntity<?> getbycompanyIdandVehicleStatus(@PathVariable(name = "coId")Long companyId, @PathVariable(name = "veStatus") String veId) {
         return new ResponseEntity<>(tripService.findAllByCompany_IdAndVehicle_Status(companyId,veId), HttpStatus.OK);
     }
-    @GetMapping("/Company/{arrival}&{departure}")
+    @GetMapping("/Company/{arrival}/{departure}")
     public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "arrival") String arrival, @PathVariable(name = "departure") String departure) {
         return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure), HttpStatus.OK);
     }
 
 
     //Customer
-    @GetMapping("/Customer/{arrival}&{departure}")
+    @GetMapping("/Customer/{arrival}/{departure}")
     public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival, @PathVariable(name = "departure") String departure) {
         return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure), HttpStatus.OK);
     }

@@ -29,6 +29,7 @@ public interface CompanyMapper {
     @Mapping(source = "companyName", target = "name")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "id", target = "companyId")
+    @Mapping(source = "account.role", target = "role")
     CompanyResponse mapToCompanyResponse(Company company);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

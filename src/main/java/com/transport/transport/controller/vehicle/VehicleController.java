@@ -37,7 +37,7 @@ public class VehicleController {
         return new ResponseEntity<>(new VehicleResponseMsg("Status change Inactive Successfully"), null, 200);
     }
 //=======================================================================================================================================================================
-    @PatchMapping("/COMPANY/{id}&{companyid}")
+    @PatchMapping("/COMPANY/{id}/{companyid}")
     public ResponseEntity<?> updateVehiclesByStatus(
             @PathVariable(name = "id") Long id, @RequestBody VehicleRequest request,@PathVariable(name = "companyid")Long companyid) {
         Vehicle vehicle = vehicleService.updateStatusInActivebyCompanyId(id, request,companyid);

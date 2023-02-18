@@ -64,13 +64,13 @@ public class CompanyController {
         return new ResponseEntity<>(vehicleService.getVehicleIdAndCompanyId(companyId, id), HttpStatus.OK);
     }
 
-    @GetMapping("/vehicle/name/{name}&{companyId}")
+    @GetMapping("/vehicle/name/{name}/{companyId}")
     public ResponseEntity<?> getVehicleNameFromCompanyId(@PathVariable(name = "companyId") Long companyId, @PathVariable(name = "name") String name) {
 
         return new ResponseEntity<>(vehicleService.getVehiclenameAndCompanyId(name,companyId), HttpStatus.OK);
     }
 
-    @GetMapping("/vehicle/status/{status}&{companyId}")
+    @GetMapping("/vehicle/status/{status}/{companyId}")
     public ResponseEntity<?> getVehicleStatusFromCompanyId(@PathVariable(name = "companyId") Long companyId, @PathVariable(name = "status") String name) {
 
         return new ResponseEntity<>(vehicleService.findAllByStatusAndCompany_Id(name,companyId), HttpStatus.OK);
