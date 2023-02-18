@@ -13,6 +13,7 @@ public interface AccountMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "dateOfBirth", ignore = true)
+    @Mapping(source = "account.role",target = "roleName")
     AccountResponse mapAccountResponseFromAccount(Account account);
 
 
