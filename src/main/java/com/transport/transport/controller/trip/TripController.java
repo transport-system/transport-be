@@ -53,7 +53,7 @@ public class TripController {
     public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(tripService.getAllTripOfCompany(id), HttpStatus.OK);
     }
-    @GetMapping("/Company/{CompanyId}&{id}")
+    @GetMapping("/Company/{CompanyId}/{id}")
     public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByIdOfCompany(CompanyId, id), HttpStatus.OK);
     }
@@ -68,6 +68,19 @@ public class TripController {
     @GetMapping("/Company/sort/{CompanyId}")
     public ResponseEntity<?> sortByTimeArrivalOfCompany(@PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.sortTripByTimeArrivalOfCompany(CompanyId), HttpStatus.OK);
+    }
+    @GetMapping("/Company/Vehicle/{id}/{coId}/{veId}")
+    public ResponseEntity<?> getbyIdcompanyandVehicle(@PathVariable(name = "coId") Long companyId,@PathVariable(name = "id")Long id, @PathVariable(name = "veId") Long veId) {
+        return new ResponseEntity<>(tripService.findAllByIdAndCompany_IdAndVehicle_Id(id,companyId,veId), HttpStatus.OK);
+    }
+
+    @GetMapping("/Company/Vehicle/status/{coId}/{veStatus}")
+    public ResponseEntity<?> getbycompanyIdandVehicleStatus(@PathVariable(name = "coId")Long companyId, @PathVariable(name = "veStatus") String veId) {
+        return new ResponseEntity<>(tripService.findAllByCompany_IdAndVehicle_Status(companyId,veId), HttpStatus.OK);
+    }
+    @GetMapping("/Company/{arrival}&{departure}")
+    public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "arrival") String arrival, @PathVariable(name = "departure") String departure) {
+        return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure), HttpStatus.OK);
     }
 
 

@@ -41,7 +41,7 @@ public class Company {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY
             ,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vehicle> vehicles;

@@ -12,10 +12,12 @@ import java.util.List;
 public interface AccountMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "dateOfBirth", ignore = true)
     AccountResponse mapAccountResponseFromAccount(Account account);
 
-    @Mapping(target = "dateOfBirth", ignore = true)
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "dateOfBirth", ignore = true)
     void registerAccountFromRegisterRequest(@MappingTarget Account account, RegisterRequest registerRequest);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

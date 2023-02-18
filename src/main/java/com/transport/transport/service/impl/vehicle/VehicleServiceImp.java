@@ -1,9 +1,10 @@
 package com.transport.transport.service.impl.vehicle;
 
-import  com.transport.transport.common.Status;
+import com.transport.transport.common.Status;
 import com.transport.transport.common.VehicleType;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.VehicleMapper;
+import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.entity.Vehicle;
 import com.transport.transport.model.request.vehicle.VehicleRequest;
 import com.transport.transport.repository.CompanyRepository;
@@ -11,6 +12,7 @@ import com.transport.transport.repository.VehicleRepository;
 import com.transport.transport.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -69,14 +71,14 @@ public class VehicleServiceImp implements VehicleService {
         vehicle.setStatus(Status.Vehicle.INACTIVE.name());
         if (repository.existsByLicensePlates(vehicleRequest.getLicensePlates())) {
             throw new NotFoundException("Vehicle license plates already exists: " + vehicleRequest.getLicensePlates());
-        } else if (vehicleRequest.getVehicle_type().equalsIgnoreCase("bus")) {
-            vehicle.setVehicle_type_name(VehicleType.BUS.name());
+        } else if (vehicleRequest.getVehicleType().equalsIgnoreCase("bus")) {
+            vehicle.setVehicleType(VehicleType.BUS.name());
             vehicle.setSeatCapacity(40);
-        } else if (vehicleRequest.getVehicle_type().equalsIgnoreCase("limousine")) {
-            vehicle.setVehicle_type_name(VehicleType.LIMOUSINE.name());
+        } else if (vehicleRequest.getVehicleType().equalsIgnoreCase("limousine")) {
+            vehicle.setVehicleType(VehicleType.LIMOUSINE.name());
             vehicle.setSeatCapacity(9);
         } else {
-            throw new NotFoundException("Vehicle type not found: " + vehicleRequest.getVehicle_type());
+            throw new NotFoundException("Vehicle type not found: " + vehicleRequest.getVehicleType());
         }
         vehicleMapper.addVehicleFromVehicleRequest(vehicleRequest, vehicle);
         return repository.save(vehicle);
@@ -97,11 +99,31 @@ public class VehicleServiceImp implements VehicleService {
     }
 
     @Override
-    public Vehicle updateStatusInActive(Long id, VehicleRequest request) {
+    public Vehicle updateStatusInActivebyCompanyId(Long id, VehicleRequest request, Long companyId) {
         Vehicle vehicle = findById(id);
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new NotFoundException("Company not found: " + companyId));
         vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         repository.save(vehicle);
         return vehicle;
+    }
+
+    @Override
+    public Vehicle getVehicleIdAndCompanyId(Long companyid, Long id) {
+
+        return repository.findAllByIdAndCompany_Id(companyid, id);
+    }
+
+    @Override
+    public List<Vehicle> getVehiclenameAndCompanyId(String name, Long companyId) {
+
+        return repository.findAllByVehicleTypeAndCompany_Id(name, companyId);
+    }
+
+    @Override
+    public List<Vehicle> findAllByStatusAndCompany_Id(String status, Long companyId) {
+
+        return repository.findAllByStatusAndCompany_Id(status, companyId);
     }
 
     @Override

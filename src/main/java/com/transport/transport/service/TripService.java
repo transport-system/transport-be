@@ -30,4 +30,8 @@ public interface TripService{
     //--------------------------------------------------------
     Trip createrTrip(TripRequest trip);
     Trip updateTrip(UpdateTrip trip, Long Id);
+
+    Trip findAllByIdAndCompany_IdAndVehicle_Id(Long id, Long coId,Long veId);
+    List<Trip> findAllByCompany_IdAndVehicle_Status(Long coId,String veStatus);
+
 }

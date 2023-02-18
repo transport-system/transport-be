@@ -12,12 +12,13 @@ import java.util.List;
 public interface VehicleMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "companyId", target = "company.id")
-    @Mapping(source = "vehicle_type", target = "vehicle_type_name")
+    @Mapping(source = "vehicleType", target = "vehicleType")
     void addVehicleFromVehicleRequest(VehicleRequest vehicleRequest, @MappingTarget Vehicle company);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "vehicle_type_name", target = "vehicle_type")
-    @Mapping(source = "id", target = "id")
+    @Mapping(source = "vehicleType", target = "vehicleType")
+    @Mapping(source = "id", target = "vehicleId")
+    @Mapping(source = "seatCapacity", target = "totalSeat")
     VehicleResponse mapToVehicleResponse(Vehicle vehicle);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

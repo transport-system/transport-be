@@ -31,4 +31,9 @@ public class VehicleResponseMsg {
         this.status = status;
         this.list = list;
     }
+
+    public VehicleResponseMsg(String message, List<VehicleResponse> list) {
+        this.message = message;
+        this.list = list;
+    }
 }

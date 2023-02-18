@@ -35,7 +35,7 @@ public class CompanyRequest implements Trimmable {
     @Pattern(regexp = "(0)+(\\d){9}", message = "is invalid")
     private String phone;
     private String avatarImage;
-    private Long dateOfBirth;
+    private long dateOfBirth;
 
     @NotEmpty(message = "Gender is required")
     private String gender;

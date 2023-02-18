@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Vehicle", uniqueConstraints = @UniqueConstraint(columnNames = {"license_plates"}))
+@Table(name = "vehicle", uniqueConstraints = @UniqueConstraint(columnNames = {"license_plates"}))
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class Vehicle {
     private String status;
 
     @Column(name = "vehicle_type_name")
-    private String vehicle_type_name;
+    private String vehicleType;
 
     @JsonBackReference
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -43,7 +43,7 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeSeat> seats;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", referencedColumnName = "company_id")
     private Company company;

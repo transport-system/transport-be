@@ -29,13 +29,6 @@ public class VehicleController {
         return new ResponseEntity<>(new VehicleResponseMsg("Create Vehicles success", res), null, 200);
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<?> findVehiclesByStatus(
-            @PathVariable(name = "status") String status) {
-        List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);
-        List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
-        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by Status Successfully",status,response), null, 200);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteVehiclesByStatus(
@@ -43,21 +36,37 @@ public class VehicleController {
         vehicleService.delete(id);
         return new ResponseEntity<>(new VehicleResponseMsg("Status change Inactive Successfully"), null, 200);
     }
-
-    @PatchMapping("/{id}")
+//=======================================================================================================================================================================
+    @PatchMapping("/COMPANY/{id}&{companyid}")
     public ResponseEntity<?> updateVehiclesByStatus(
-            @PathVariable(name = "id") Long id, @RequestBody VehicleRequest request) {
-        Vehicle vehicle = vehicleService.updateStatusInActive(id, request);
+            @PathVariable(name = "id") Long id, @RequestBody VehicleRequest request,@PathVariable(name = "companyid")Long companyid) {
+        Vehicle vehicle = vehicleService.updateStatusInActivebyCompanyId(id, request,companyid);
         VehicleResponse response = vehicleMapper.mapToVehicleResponse(vehicle);
         return new ResponseEntity<>(new VehicleResponseMsg("Status change Active Successfully",
                 response), null, 200);
     }
 
+
+
+//===================================================================================================================
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
+        List<Vehicle> vehicles = vehicleService.findAll();
+        List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
+        return new ResponseEntity<>(new VehicleResponseMsg("Get All Successfully", response), null, 200);
+    }
     @GetMapping("/name/{name}")
     public ResponseEntity<?> findVehiclesByTypeName(
             @PathVariable(name = "name") String name) {
         List<Vehicle> vehicles = vehicleService.findVehiclesByName(name);
         List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
         return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by name Successfully", name, response), null, 200);
+    }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<?> findVehiclesByStatus(
+            @PathVariable(name = "status") String status) {
+        List<Vehicle> vehicles = vehicleService.getVehiclesByStatus(status);
+        List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);
+        return new ResponseEntity<>(new VehicleResponseMsg("Get Vehicle by Status Successfully",status,response), null, 200);
     }
 }

@@ -115,7 +115,6 @@ public class TripServiceImp implements TripService {
     }
     @Override
     public Trip findByIdOfCompany(Long companyId, Long Id) {
-
         return tripRepo.findAllByCompanyIdAndId(companyId, Id);
     }
     @Override
@@ -204,6 +203,17 @@ public class TripServiceImp implements TripService {
         tripU.setTimeReturn(timeReturn(trip.getTimeDeparture()));
         autoUpdateTrip();
         return tripRepo.save(tripU);
+    }
+
+    @Override
+    public Trip findAllByIdAndCompany_IdAndVehicle_Id(Long id, Long coId, Long veId) {
+
+        return tripRepo.findAllByIdAndCompany_IdAndVehicle_Id(id,coId,veId);
+    }
+
+    @Override
+    public List<Trip> findAllByCompany_IdAndVehicle_Status(Long coId, String veStatus) {
+        return tripRepo.findAllByCompany_IdAndVehicle_Status(coId,veStatus);
     }
 
     @Override

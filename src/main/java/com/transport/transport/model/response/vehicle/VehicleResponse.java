@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VehicleResponse {
-    private Long id;
+    private Long vehicleId;
     private int totalSeat;
     private String licensePlates;
     private String status;
-    private String vehicle_type;
+    private String vehicleType;
 }

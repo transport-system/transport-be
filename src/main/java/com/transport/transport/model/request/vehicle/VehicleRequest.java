@@ -13,7 +13,7 @@ public class VehicleRequest {
     @NotBlank
     private String licensePlates;
     @NotBlank
-    private String vehicle_type;
+    private String vehicleType;
     private Long companyId;
     private String status;
 }
