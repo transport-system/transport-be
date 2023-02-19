@@ -19,4 +19,6 @@ public class VehicleResponse {
     private String licensePlates;
     private String status;
     private String vehicleType;
+
+
 }

@@ -1,11 +1,13 @@
 package com.transport.transport.model.response.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.transport.transport.model.entity.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Getter
@@ -16,14 +18,14 @@ import java.util.Date;
 public class AccountResponse {
     private Long id;
     private String username;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank
     private String roleName;
     private String firstname;
     private String lastname;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String avatarImage;
     private Date dateOfBirth;
     private String email;
     private String phone;
     private String gender;
+    private Long companyId;
 }

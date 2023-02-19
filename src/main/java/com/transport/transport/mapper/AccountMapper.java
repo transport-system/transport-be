@@ -14,6 +14,7 @@ public interface AccountMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "dateOfBirth", ignore = true)
     @Mapping(source = "account.role",target = "roleName")
+    @Mapping(source = "company.id",target = "companyId")
     AccountResponse mapAccountResponseFromAccount(Account account);
 
 
