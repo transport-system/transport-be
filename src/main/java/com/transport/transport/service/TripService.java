@@ -1,4 +1,5 @@
 package com.transport.transport.service;
+import com.transport.transport.model.entity.City;
 import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
@@ -17,7 +18,7 @@ public interface TripService{
     List<Trip> sortTripByTimeArrival();
 
     //Get of User
-    List<Trip> findbyArrivalAndDepature(String arival, String depature);
+    List<Trip> findbyArrivalAndDepature(String arival, String depature, String date);
 
     //Get of Company
     List<Trip> getAllTripOfCompany(Long companyId);
@@ -27,11 +28,9 @@ public interface TripService{
     Trip changeStatus(Long id, String status);
     List<Trip> sortTripByTimeArrivalOfCompany(Long companyId);
 
-    //--------------------------------------------------------
     Trip createrTrip(TripRequest trip);
     Trip updateTrip(UpdateTrip trip, Long Id);
 
-    Trip findAllByIdAndCompany_IdAndVehicle_Id(Long id, Long coId,Long veId);
-    List<Trip> findAllByCompany_IdAndVehicle_Status(Long coId,String veStatus);
+    public City addCity(String city);
 
 }

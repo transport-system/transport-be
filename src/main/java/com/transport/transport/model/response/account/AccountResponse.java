@@ -16,7 +16,7 @@ import java.util.Date;
 public class AccountResponse {
     private Long id;
     private String username;
-    private String roleName;
+    private String role;
     private String firstname;
     private String lastname;
     private String avatarImage;

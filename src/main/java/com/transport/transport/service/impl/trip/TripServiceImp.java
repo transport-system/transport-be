@@ -2,12 +2,10 @@ package com.transport.transport.service.impl.trip;
 
 import com.transport.transport.common.Status;
 import com.transport.transport.exception.NotFoundException;
-import com.transport.transport.model.entity.Company;
-import com.transport.transport.model.entity.Route;
-import com.transport.transport.model.entity.Trip;
-import com.transport.transport.model.entity.Vehicle;
+import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
+import com.transport.transport.repository.CityRepository;
 import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.repository.TripRepository;
 import com.transport.transport.repository.VehicleRepository;
@@ -18,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 
@@ -28,6 +27,8 @@ public class TripServiceImp implements TripService {
     private final TripRepository tripRepo;
     private final CompanyRepository companyRepository;
     private final VehicleRepository vehicleRepository;
+    private final CityRepository cityRepository;
+
     public void autoUpdateTrip() {
         List<Trip> tripCheck = tripRepo.findAll();
         for (Trip trip : tripCheck) {
@@ -57,18 +58,32 @@ public class TripServiceImp implements TripService {
         Timestamp returnTime = new Timestamp(c.getTimeInMillis());
         return returnTime;
     }
+    public String checkDate(Timestamp date1){
+        Date date2 = new Date(date1.getTime());
+        SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = sm.format(date2);
+        return strDate;
+    }
+
+
     //Get of User
     @Override
-    public List<Trip> findbyArrivalAndDepature(String arrival, String depature) {
-        List<Trip> listAll = getAllTrip();
-        List<Trip> list = null;
+    public List<Trip> findbyArrivalAndDepature(String arrival, String departure,String date){
+        List<Trip> listAll = tripRepo.findAll();
+        List<Trip> list = new ArrayList<>();
         for(Trip listCheck: listAll){
             if(listCheck.getStatus().equalsIgnoreCase("ACTIVE")) {
-                if (listCheck.getRoute().getCity2().getCity().equalsIgnoreCase(arrival)
-                        && listCheck.getRoute().getCity1().getCity().equalsIgnoreCase(depature)) {
-                    list.add(listCheck);
+                if (listCheck.getRoute().getCity2().getCity().equalsIgnoreCase(departure)
+                        && listCheck.getRoute().getCity1().getCity().equalsIgnoreCase(arrival)) {
+                    String date1 = checkDate(listCheck.getTimeDeparture());
+                    if(date1.equalsIgnoreCase(date)){
+                        list.add(listCheck);
+                    }
                 }
             }
+        }
+        if(list == null || list.size() == 0){
+            throw new RuntimeException("Not Found Trip");
         }
         return list;
     }
@@ -106,7 +121,6 @@ public class TripServiceImp implements TripService {
     }
     @Override
     public List<Trip> sortTripByTimeArrival() {
-
         return tripRepo.findAll(Sort.by(Sort.Direction.ASC, "TimeArrival"));
     }
 
@@ -121,6 +135,7 @@ public class TripServiceImp implements TripService {
     }
     @Override
     public Trip findByIdOfCompany(Long companyId, Long Id) {
+
         return tripRepo.findAllByCompanyIdAndId(companyId, Id);
     }
     @Override
@@ -167,8 +182,19 @@ public class TripServiceImp implements TripService {
         if (trip.getCityArrival().equalsIgnoreCase(trip.getCityDeparture())) {
             throw new RuntimeException("City Departure cannot like City Arrival");
         }
-        Route route = routeService.create(trip.getCityDeparture(), trip.getCityArrival());
-        newTrip.setRoute(route);
+        List<Route> route = routeService.allRoute();
+        Route checkroute = new Route();
+        for (Route route1: route){
+            if(route1.getCity1().getCity().equalsIgnoreCase(trip.getCityArrival()) &&
+                    route1.getCity2().getCity().equalsIgnoreCase(trip.getCityDeparture())){
+                newTrip.setRoute(route1);
+                break;
+            }
+        }
+        if(newTrip.getRoute() == null){
+            throw new RuntimeException("Not exsit route");
+        }
+
 
         //set Company
         Company company = companyRepository.findById(trip.getCompanyId()).get();
@@ -181,7 +207,7 @@ public class TripServiceImp implements TripService {
                 newTrip.setVehicle(vehicle);
                 newTrip.setSeatQuantity(vehicle.getSeatCapacity());
                 //Change status of vehicle
-                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+                vehicle.setStatus(Status.Vehicle.INACTIVE.name());
             } else {
                 throw new RuntimeException("Vehicle is INACTIVE");
             }
@@ -212,17 +238,6 @@ public class TripServiceImp implements TripService {
     }
 
     @Override
-    public Trip findAllByIdAndCompany_IdAndVehicle_Id(Long id, Long coId, Long veId) {
-
-        return tripRepo.findAllByIdAndCompany_IdAndVehicle_Id(id,coId,veId);
-    }
-
-    @Override
-    public List<Trip> findAllByCompany_IdAndVehicle_Status(Long coId, String veStatus) {
-        return tripRepo.findAllByCompany_IdAndVehicle_Status(coId,veStatus);
-    }
-
-    @Override
     public Trip changeStatus(Long id,String status) {
         Trip trip = tripRepo.findById(id).get();
         if (status.equalsIgnoreCase("ACTIVE")) {
@@ -235,5 +250,12 @@ public class TripServiceImp implements TripService {
             trip.setStatus(Status.Trip.DOING.name());
         }
         return trip;
+    }
+
+    @Override
+    public City addCity(String city){
+        City newCity = new City();
+        newCity.setCity(city);
+        return cityRepository.save(newCity);
     }
 }

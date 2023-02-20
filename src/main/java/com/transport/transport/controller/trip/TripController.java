@@ -1,4 +1,5 @@
 package com.transport.transport.controller.trip;
+
 import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.mapper.TripMapper;
 import com.transport.transport.model.entity.Trip;
@@ -15,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +27,10 @@ public class TripController {
 
     //Trip Of Admin
     @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(tripService.getAllTrip(), HttpStatus.OK);
+    public ResponseEntity<TripMsg> getAll() {
+        List<Trip> trip = tripService.getAllTrip();
+        List<TripResponse> list =  tripMapper.mapToTripResponse(trip);
+        return new ResponseEntity<>(new TripMsg("List", list), HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
@@ -57,11 +59,11 @@ public class TripController {
     public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByIdOfCompany(CompanyId, id), HttpStatus.OK);
     }
-    @GetMapping("/Company/status/{CompanyId}&{status}")
+    @GetMapping("/Company/status/{CompanyId}/{status}")
     public ResponseEntity<?> getByStatusOfCompany(@PathVariable(name = "status") String status, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByStatusOfCompany(CompanyId,status), HttpStatus.OK);
     }
-    @GetMapping("/Company/date/{CompanyId}&{date}")
+    @GetMapping("/Company/date/{CompanyId}/{date}")
     public ResponseEntity<?> getByArrivalOfCompany(@PathVariable(name = "date") Timestamp date, @PathVariable(name = "CompanyId") Long CompanyId) throws ParseException {
         return new ResponseEntity<>(tripService.findByTimeArrivalOfCompany(CompanyId, date), HttpStatus.OK);
     }
@@ -69,27 +71,15 @@ public class TripController {
     public ResponseEntity<?> sortByTimeArrivalOfCompany(@PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.sortTripByTimeArrivalOfCompany(CompanyId), HttpStatus.OK);
     }
-    @GetMapping("/Company/Vehicle/{id}/{coId}/{veId}")
-    public ResponseEntity<?> getbyIdcompanyandVehicle(@PathVariable(name = "coId") Long companyId,@PathVariable(name = "id")Long id, @PathVariable(name = "veId") Long veId) {
-        return new ResponseEntity<>(tripService.findAllByIdAndCompany_IdAndVehicle_Id(id,companyId,veId), HttpStatus.OK);
-    }
-
-    @GetMapping("/Company/Vehicle/status/{coId}/{veStatus}")
-    public ResponseEntity<?> getbycompanyIdandVehicleStatus(@PathVariable(name = "coId")Long companyId, @PathVariable(name = "veStatus") String veId) {
-        return new ResponseEntity<>(tripService.findAllByCompany_IdAndVehicle_Status(companyId,veId), HttpStatus.OK);
-    }
-    @GetMapping("/Company/{arrival}&{departure}")
-    public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "arrival") String arrival, @PathVariable(name = "departure") String departure) {
-        return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure), HttpStatus.OK);
-    }
 
 
     //Customer
-    @GetMapping("/Customer/{arrival}&{departure}")
-    public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival, @PathVariable(name = "departure") String departure) {
-        return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure), HttpStatus.OK);
+    @GetMapping("/Customer/{arrival}/{departure}/{date}")
+    public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival,
+                                                  @PathVariable(name = "departure") String departure,
+                                                  @PathVariable(name = "date") String date){
+        return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure,date), HttpStatus.OK);
     }
-
 
     //===========================================================================================================
     @PostMapping("/create")
@@ -105,5 +95,10 @@ public class TripController {
         Trip trip = tripService.updateTrip(request, id);
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
         return new ResponseEntity<>(new TripMsg("update success", response), null, 200);
+    }
+
+    @PostMapping("/city/{city}")
+    public ResponseEntity<?> addCity(@PathVariable(name = "city") String city) {
+        return new ResponseEntity<>(tripService.addCity(city), HttpStatus.OK);
     }
 }

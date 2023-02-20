@@ -9,6 +9,8 @@ import com.transport.transport.service.RouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RouteServiceImp implements RouteService {
@@ -25,5 +27,9 @@ public class RouteServiceImp implements RouteService {
         routeNew.setCity1(arrivalCity);
         routeNew.setCity1(departureCity);
         return routeRepository.save(routeNew);
+    }
+    @Override
+    public List<Route> allRoute() {
+        return routeRepository.findAll();
     }
 }
