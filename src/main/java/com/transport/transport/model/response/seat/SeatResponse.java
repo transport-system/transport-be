@@ -1,0 +1,20 @@
+package com.transport.transport.model.response.seat;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class SeatResponse {
+    private Long seatId;
+    private Integer seatNumber;
+    private String status;
+    private Long bookingId;
+    private Long vehicleId;
+}

@@ -1,0 +1,32 @@
+package com.transport.transport.common;
+
+public enum Message {
+    //OK
+    SUCCESS_FUNCTION,
+
+    //BAD_REQUEST
+    INVALID_STATUS,
+
+    //BAD_REQUEST
+    PARAMS_MISSING,
+
+    //BAD_REQUEST
+    DATE_ERROR,
+
+    //BAD_REQUEST
+    UPDATE_FAIL,
+
+    //BAD_REQUEST
+
+    //BAD_REQUEST
+
+    //INTERNAL_SERVER_ERROR
+    ERROR_SENDMAIL,
+
+    //INTERNAL_SERVER_ERROR
+    ERROR_SEND_NOTIFICATION,
+
+    //BAD_REQUEST
+
+    //BAD_REQUEST
+}
