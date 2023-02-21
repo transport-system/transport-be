@@ -1,5 +1,6 @@
 package com.transport.transport.service;
 import com.transport.transport.model.entity.City;
+import com.transport.transport.model.entity.Route;
 import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
@@ -32,6 +33,7 @@ public interface TripService{
     Trip updateTrip(UpdateTrip trip, Long Id);
 
     public City addCity(String city);
+    public Route addRoute(Long arrivalId, Long departureId);
 
     //Get of vehicle
     Trip getTripByVehicleId(Long vehicleId);

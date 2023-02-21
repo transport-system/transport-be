@@ -5,10 +5,7 @@ import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
-import com.transport.transport.repository.CityRepository;
-import com.transport.transport.repository.CompanyRepository;
-import com.transport.transport.repository.TripRepository;
-import com.transport.transport.repository.VehicleRepository;
+import com.transport.transport.repository.*;
 import com.transport.transport.service.RouteService;
 import com.transport.transport.service.TripService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +25,7 @@ public class TripServiceImp implements TripService {
     private final CompanyRepository companyRepository;
     private final VehicleRepository vehicleRepository;
     private final CityRepository cityRepository;
+    private final RouteRepository routeRepository;
 
     public void autoUpdateTrip() {
         List<Trip> tripCheck = tripRepo.findAll();
@@ -257,6 +255,17 @@ public class TripServiceImp implements TripService {
         City newCity = new City();
         newCity.setCity(city);
         return cityRepository.save(newCity);
+    }
+
+
+    @Override
+    public Route addRoute(Long arrivalId, Long departureId){
+        Route route = new Route();
+        City arrival = cityRepository.findById(arrivalId).get();
+        City departure = cityRepository.findById(departureId).get();
+        route.setCity1(arrival);
+        route.setCity2(departure);
+        return routeRepository.save(route);
     }
 
     @Override

@@ -101,4 +101,10 @@ public class TripController {
     public ResponseEntity<?> addCity(@PathVariable(name = "city") String city) {
         return new ResponseEntity<>(tripService.addCity(city), HttpStatus.OK);
     }
+
+    @PostMapping("/addRoute/{arrival}/{departure}")
+    public ResponseEntity<?> addRoute(@PathVariable(name = "arrival") Long arrival,
+                                      @PathVariable(name = "departure") Long departure ) {
+        return new ResponseEntity<>(tripService.addRoute(arrival, departure), HttpStatus.OK);
+    }
 }
