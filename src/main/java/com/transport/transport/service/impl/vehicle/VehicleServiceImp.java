@@ -121,10 +121,8 @@ public class VehicleServiceImp implements VehicleService {
     }
 
     @Override
-    public Vehicle updateStatusInActivebyCompanyId(Long id, VehicleRequest request, Long companyId) {
+    public Vehicle updateStatusActive(Long id) {
         Vehicle vehicle = findById(id);
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new NotFoundException("Company not found: " + companyId));
         vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         repository.save(vehicle);
         return vehicle;
