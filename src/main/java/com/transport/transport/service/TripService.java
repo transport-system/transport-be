@@ -17,10 +17,10 @@ public interface TripService{
     List<Trip> findByStatus(String status);
     List<Trip> sortTripByTimeArrival();
 
-    //Get of User
+    //Get of user
     List<Trip> findbyArrivalAndDepature(String arival, String depature, String date);
 
-    //Get of Company
+    //Get of company
     List<Trip> getAllTripOfCompany(Long companyId);
     Trip findByIdOfCompany(Long companyId, Long Id);
     List<Trip> findByTimeArrivalOfCompany(Long companyId,Timestamp date);
@@ -33,4 +33,6 @@ public interface TripService{
 
     public City addCity(String city);
 
+    //Get of vehicle
+    Trip getTripByVehicleId(Long vehicleId);
 }

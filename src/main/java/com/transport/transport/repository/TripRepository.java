@@ -10,11 +10,11 @@ import java.util.List;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
+    Trip findAllByCompanyIdAndId(Long companyId, Long id);
+    Trip findByVehicleId(Long id);
     List<Trip> findByTimeArrival(Date date);
-    List<Trip> findByStatus(String status);
     List<Trip> getTripsByStatus(String status);
     List<Trip> findAllByCompanyId(Long id);
-    Trip findAllByCompanyIdAndId(Long companyId, Long id);
     List<Trip> findAllByCompanyIdAndTimeArrival(Long companyId, Timestamp date);
     List<Trip> findAllByCompanyIdAndStatus(Long companyId, String status);
 

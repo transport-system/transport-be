@@ -2,16 +2,19 @@ package com.transport.transport.service.impl.vehicle;
 
 import com.transport.transport.common.Status;
 import com.transport.transport.common.VehicleType;
+import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.VehicleMapper;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.entity.FreeSeat;
+import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.entity.Vehicle;
 import com.transport.transport.model.request.vehicle.VehicleRequest;
 import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.repository.SeatRepository;
 import com.transport.transport.repository.VehicleRepository;
 import com.transport.transport.service.SeatService;
+import com.transport.transport.service.TripService;
 import com.transport.transport.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ public class VehicleServiceImp implements VehicleService {
     private final VehicleMapper vehicleMapper;
     private final CompanyRepository companyRepository;
     private final SeatRepository seatRepository;
-    private final SeatService seatService;
+    private final TripService tripService;
 
     @Override
     public List<Vehicle> findAll() {
@@ -121,9 +124,17 @@ public class VehicleServiceImp implements VehicleService {
     }
 
     @Override
-    public Vehicle updateStatusActive(Long id) {
+    public Vehicle updateStatus(Long id) {
         Vehicle vehicle = findById(id);
-        vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+        Trip trip = tripService.getTripByVehicleId(vehicle.getId());
+        if (trip.getStatus().equalsIgnoreCase(Status.Trip.DOING.name()) ||
+                trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
+            throw new BadRequestException("You can not update status vehicle when trip is not active");
+        } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
+            vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+        } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
+            vehicle.setStatus(Status.Vehicle.INACTIVE.name());
+        }
         repository.save(vehicle);
         return vehicle;
     }

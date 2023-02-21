@@ -51,30 +51,30 @@ public class TripController {
 
 
     //Trip of Company
-    @GetMapping("/Company/{id}")
+    @GetMapping("/company/{id}")
     public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(tripService.getAllTripOfCompany(id), HttpStatus.OK);
     }
-    @GetMapping("/Company/{CompanyId}/{id}")
+    @GetMapping("/company/{CompanyId}/{id}")
     public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByIdOfCompany(CompanyId, id), HttpStatus.OK);
     }
-    @GetMapping("/Company/status/{CompanyId}/{status}")
+    @GetMapping("/company/status/{CompanyId}/{status}")
     public ResponseEntity<?> getByStatusOfCompany(@PathVariable(name = "status") String status, @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByStatusOfCompany(CompanyId,status), HttpStatus.OK);
     }
-    @GetMapping("/Company/date/{CompanyId}/{date}")
+    @GetMapping("/company/date/{CompanyId}/{date}")
     public ResponseEntity<?> getByArrivalOfCompany(@PathVariable(name = "date") Timestamp date, @PathVariable(name = "CompanyId") Long CompanyId) throws ParseException {
         return new ResponseEntity<>(tripService.findByTimeArrivalOfCompany(CompanyId, date), HttpStatus.OK);
     }
-    @GetMapping("/Company/sort/{CompanyId}")
+    @GetMapping("/company/sort/{CompanyId}")
     public ResponseEntity<?> sortByTimeArrivalOfCompany(@PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.sortTripByTimeArrivalOfCompany(CompanyId), HttpStatus.OK);
     }
 
 
     //Customer
-    @GetMapping("/Customer/{arrival}/{departure}/{date}")
+    @GetMapping("/customer/{arrival}/{departure}/{date}")
     public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival,
                                                   @PathVariable(name = "departure") String departure,
                                                   @PathVariable(name = "date") String date){

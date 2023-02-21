@@ -40,7 +40,7 @@ public class VehicleController {
     @PatchMapping("/company/{id}")
     public ResponseEntity<?> updateStatusActive(
             @PathVariable(name = "id") Long id) {
-        Vehicle vehicle = vehicleService.updateStatusActive(id);
+        Vehicle vehicle = vehicleService.updateStatus(id);
         VehicleResponse response = vehicleMapper.mapToVehicleResponse(vehicle);
         return new ResponseEntity<>(new VehicleResponseMsg("Status change Active Successfully",
                 response), null, 200);
@@ -48,7 +48,7 @@ public class VehicleController {
 
 
 //===================================================================================================================
-    @GetMapping("/getAll")
+    @GetMapping("")
     public ResponseEntity<?> getAll() {
         List<Vehicle> vehicles = vehicleService.findAll();
         List<VehicleResponse> response = vehicleMapper.mapToVehicleResponse(vehicles);

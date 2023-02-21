@@ -258,4 +258,9 @@ public class TripServiceImp implements TripService {
         newCity.setCity(city);
         return cityRepository.save(newCity);
     }
+
+    @Override
+    public Trip getTripByVehicleId(Long vehicleId) {
+        return tripRepo.findByVehicleId(vehicleId);
+    }
 }
