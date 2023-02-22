@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
     Trip findAllByCompanyIdAndId(Long companyId, Long id);
-    Trip findByVehicleId(Long id);
+    Optional<Trip> findByVehicleId(Long id);
     List<Trip> findByTimeArrival(Date date);
     List<Trip> getTripsByStatus(String status);
     List<Trip> findAllByCompanyId(Long id);
