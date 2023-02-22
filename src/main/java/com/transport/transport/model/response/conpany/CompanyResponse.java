@@ -17,5 +17,6 @@ public class CompanyResponse {
     private AccountResponse account;
     private String name;
     private String description;
+    private String status;
     private double rating;
 }
