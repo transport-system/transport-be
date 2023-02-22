@@ -261,6 +261,6 @@ public class TripServiceImp implements TripService {
 
     @Override
     public Trip getTripByVehicleId(Long vehicleId) {
-        return tripRepo.findByVehicleId(vehicleId);
+        return tripRepo.findByVehicleId(vehicleId).orElseThrow(() -> new NotFoundException("Not have Trip in /" + vehicleId + " /"));
     }
 }
