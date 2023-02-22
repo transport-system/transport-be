@@ -6,7 +6,9 @@ import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
 import com.transport.transport.model.response.trip.TripMsg;
+import com.transport.transport.model.response.trip.TripResponeOfConpany;
 import com.transport.transport.model.response.trip.TripResponse;
+import com.transport.transport.model.response.trip.customer.TripForCustomer;
 import com.transport.transport.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,7 +55,9 @@ public class TripController {
     //Trip of Company
     @GetMapping("/company/{id}")
     public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "id") Long id) {
-        return new ResponseEntity<>(tripService.getAllTripOfCompany(id), HttpStatus.OK);
+        List<Trip> trip = tripService.getAllTripOfCompany(id);
+        List<TripResponeOfConpany> listTrip =  tripMapper.mapToTripResponseOfCompany(trip);
+        return new ResponseEntity<>(new TripMsg("List", listTrip, id), HttpStatus.OK);
     }
     @GetMapping("/company/{CompanyId}/{id}")
     public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id, @PathVariable(name = "CompanyId") Long CompanyId) {
@@ -78,7 +82,9 @@ public class TripController {
     public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival,
                                                   @PathVariable(name = "departure") String departure,
                                                   @PathVariable(name = "date") String date){
-        return new ResponseEntity<>(tripService.findbyArrivalAndDepature(arrival,departure,date), HttpStatus.OK);
+        List<Trip> trip = tripService.findbyArrivalAndDepature(arrival,departure,date);
+        List<TripForCustomer> listTrip =  tripMapper.mapToTripResponseOfCustomer(trip);
+        return new ResponseEntity<>(new TripMsg("List", listTrip, arrival), HttpStatus.OK);
     }
 
     //===========================================================================================================
