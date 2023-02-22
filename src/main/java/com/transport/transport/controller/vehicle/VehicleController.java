@@ -45,7 +45,14 @@ public class VehicleController {
         return new ResponseEntity<>(new VehicleResponseMsg("Status change Active Successfully",
                 response), null, 200);
     }
-
+    @PatchMapping("/COMPANY/{id}/{companyid}")
+    public ResponseEntity<?> updateVehiclesByStatus(
+            @PathVariable(name = "id") Long id, @RequestBody VehicleRequest request,@PathVariable(name = "companyid")Long companyid) {
+        Vehicle vehicle = vehicleService.updateStatusInActivebyCompanyId(id, request,companyid);
+        VehicleResponse response = vehicleMapper.mapToVehicleResponse(vehicle);
+        return new ResponseEntity<>(new VehicleResponseMsg("Status change Active Successfully",
+                response), null, 200);
+    }
 
 //===================================================================================================================
     @GetMapping("")

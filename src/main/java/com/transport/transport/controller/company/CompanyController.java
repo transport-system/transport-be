@@ -91,4 +91,5 @@ public class CompanyController {
         companyService.delete(id);
         return new ResponseEntity<>(new CompanyResponseMsg("Delete successfully"), null, 204);
     }
+
 }

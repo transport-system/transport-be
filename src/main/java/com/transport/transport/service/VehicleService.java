@@ -16,6 +16,8 @@ public interface VehicleService extends CRUDService<Vehicle> {
     List<Vehicle> findVehiclesByName(String name);
 
     Vehicle updateStatus(Long id);
+    Vehicle updateStatusInActivebyCompanyId(Long id, VehicleRequest request, Long companyId);
+
 
     Vehicle getVehicleIdAndCompanyId(Long companyid, Long id);
     List<Vehicle> getVehiclenameAndCompanyId(String name, Long companyId);

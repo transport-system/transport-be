@@ -78,7 +78,7 @@ public class VehicleServiceImp implements VehicleService {
         Company company = companyRepository.findById(vehicleRequest.getCompanyId())
                 .orElseThrow(() -> new NotFoundException("Company not found: " + vehicleRequest.getCompanyId()));
         Vehicle vehicle = new Vehicle();
-        vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+        vehicle.setStatus(Status.Vehicle.INACTIVE.name());
         if (repository.existsByLicensePlates(vehicleRequest.getLicensePlates())) {
             throw new NotFoundException("Vehicle license plates already exists: " + vehicleRequest.getLicensePlates());
         } else if (vehicleRequest.getVehicleType().equalsIgnoreCase("bus")) {
@@ -150,7 +150,15 @@ public class VehicleServiceImp implements VehicleService {
 
         return repository.findAllByVehicleTypeAndCompany_Id(name, companyId);
     }
-
+    @Override
+    public Vehicle updateStatusInActivebyCompanyId(Long id, VehicleRequest request, Long companyId) {
+        Vehicle vehicle = findById(id);
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new NotFoundException("Company not found: " + companyId));
+        vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+        repository.save(vehicle);
+        return vehicle;
+    }
     @Override
     public List<Vehicle> findAllByStatusAndCompany_Id(String status, Long companyId) {
 

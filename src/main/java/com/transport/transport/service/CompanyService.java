@@ -9,4 +9,5 @@ public interface CompanyService extends CRUDService<Company> {
     void updateCompany(CompanyUpdateRequest request, Long id);
     Company registerCompany(CompanyRequest registerCompanyRequest);
     Account addNewAccount(CompanyRequest registerCompanyRequest);
+
 }
