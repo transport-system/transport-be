@@ -19,6 +19,8 @@ public interface VehicleMapper {
     @Mapping(source = "vehicleType", target = "vehicleType")
     @Mapping(source = "id", target = "vehicleId")
     @Mapping(source = "seatCapacity", target = "totalSeat")
+    @Mapping(source = "company.id", target = "companyId")
+
     VehicleResponse mapToVehicleResponse(Vehicle vehicle);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

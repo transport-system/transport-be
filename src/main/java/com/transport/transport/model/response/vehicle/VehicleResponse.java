@@ -15,6 +15,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VehicleResponse {
     private Long vehicleId;
+    private Long companyId;
     private int totalSeat;
     private String licensePlates;
     private String status;
