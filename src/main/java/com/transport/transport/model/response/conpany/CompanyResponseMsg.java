@@ -1,6 +1,7 @@
 package com.transport.transport.model.response.conpany;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.transport.transport.model.response.account.AccountResponse;
 import com.transport.transport.model.response.vehicle.VehicleResponse;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ public class CompanyResponseMsg {
     private Long companyId;
     private CompanyResponse data;
     private List<CompanyResponse> list_data;
+
     private List<VehicleResponse> list_vehicle;
     public CompanyResponseMsg(String message, CompanyResponse data) {
         this.message = message;

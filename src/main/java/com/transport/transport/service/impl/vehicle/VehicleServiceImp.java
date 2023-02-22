@@ -78,7 +78,7 @@ public class VehicleServiceImp implements VehicleService {
         Company company = companyRepository.findById(vehicleRequest.getCompanyId())
                 .orElseThrow(() -> new NotFoundException("Company not found: " + vehicleRequest.getCompanyId()));
         Vehicle vehicle = new Vehicle();
-        vehicle.setStatus(Status.Vehicle.INACTIVE.name());
+        vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         if (repository.existsByLicensePlates(vehicleRequest.getLicensePlates())) {
             throw new NotFoundException("Vehicle license plates already exists: " + vehicleRequest.getLicensePlates());
         } else if (vehicleRequest.getVehicleType().equalsIgnoreCase("bus")) {

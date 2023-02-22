@@ -25,7 +25,7 @@ public class RouteServiceImp implements RouteService {
             throw new RuntimeException("City not exits");
         }
         routeNew.setCity1(arrivalCity);
-        routeNew.setCity1(departureCity);
+        routeNew.setCity2(departureCity);
         return routeRepository.save(routeNew);
     }
     @Override
