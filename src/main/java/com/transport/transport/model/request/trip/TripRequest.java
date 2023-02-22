@@ -26,10 +26,10 @@ public class TripRequest {
     @NotBlank
     private String description;
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Timestamp timeDeparture;
     @NotNull
-    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Timestamp timeArrival;
     @NotNull
     private Long vehicleId;
