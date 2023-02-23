@@ -131,11 +131,13 @@ public class VehicleServiceImp implements VehicleService {
         if (trip.getStatus().equalsIgnoreCase(Status.Trip.DOING.name()) ||
                 trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
             throw new BadRequestException("You can not update status vehicle when trip is not active");
-        } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
-            vehicle.setStatus(Status.Vehicle.ACTIVE.name());
-        } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
-            vehicle.setStatus(Status.Vehicle.INACTIVE.name());
-        } else if (vehicle.getTrip().isEmpty()) {
+        } else if(trip.getStatus().equalsIgnoreCase(Status.Trip.ACTIVE.name())) {
+            if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
+                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+            } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
+                vehicle.setStatus(Status.Vehicle.INACTIVE.name());
+        }}
+        else if (vehicle.getTrip().isEmpty()) {
             if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
                 vehicle.setStatus(Status.Vehicle.ACTIVE.name());
             } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
