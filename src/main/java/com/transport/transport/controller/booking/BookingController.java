@@ -28,8 +28,8 @@ public class BookingController {
 
     @PostMapping()
     public ResponseEntity<?> createNewBooking(@RequestBody BookingRequest request) {
-        List<FreeSeat> freeSeats = seatService.addSeatIntoVehicle(request);
-        List<SeatResponse> responses = seatMapper.mapSeatResponseFromFreeSeat(freeSeats);
+        Booking booking = bookingService.createBooking(request);
+        BookingResponse responses = bookingMapper.createBookingResponseFromBooking(booking);
         return new ResponseEntity<>(responses, null, 201);
     }
 

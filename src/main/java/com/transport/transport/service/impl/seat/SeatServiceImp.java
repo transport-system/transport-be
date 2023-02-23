@@ -73,19 +73,19 @@ public class SeatServiceImp implements SeatService {
         }
 
         //đổi ngược logic lại xem sao
-        seatId.forEach(id -> {
-            FreeSeat freeSeat = repository.findByVehicleIdAndSeatNumber(id, trip.getId());
-            if (freeSeat.getStatus().equalsIgnoreCase(Status.Seat.ACTIVE.name())) {
-                freeSeat.setVehicle(vehicle);
-                freeSeat.setBooking(booking);
-                freeSeat.setStatus(Status.Seat.PENDING.name());
-                repository.save(freeSeat);
-                freeSeats.add(freeSeat);
-            }else if(freeSeat.getStatus().equalsIgnoreCase(Status.Seat.PENDING.name())
-              || freeSeat.getStatus().equalsIgnoreCase(Status.Seat.INACTIVE.name())){
-                throw new RuntimeException("Seat is already booked: " + id);
-            }
-        });
+//        seatId.forEach(id -> {
+//            FreeSeat freeSeat = repository.findByVehicleIdAndSeatNumber(id, trip.getId());
+//            if (freeSeat.getStatus().equalsIgnoreCase(Status.Seat.ACTIVE.name())) {
+//                freeSeat.setVehicle(vehicle);
+//                freeSeat.setBooking(booking);
+//                freeSeat.setStatus(Status.Seat.PENDING.name());
+//                repository.save(freeSeat);
+//                freeSeats.add(freeSeat);
+//            }else if(freeSeat.getStatus().equalsIgnoreCase(Status.Seat.PENDING.name())
+//              || freeSeat.getStatus().equalsIgnoreCase(Status.Seat.INACTIVE.name())){
+//                throw new RuntimeException("Seat is already booked: " + id);
+//            }
+//        });
         return freeSeats;
     }
 }
