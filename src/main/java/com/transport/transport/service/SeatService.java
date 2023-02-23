@@ -6,6 +6,5 @@ import com.transport.transport.model.request.booking.BookingRequest;
 import java.util.List;
 
 public interface SeatService extends CRUDService<FreeSeat> {
-    List<FreeSeat> addSeatIntoVehicle(BookingRequest request);
-
+    List<FreeSeat> findAllSeatByVehicle(Long vehicleId);
 }

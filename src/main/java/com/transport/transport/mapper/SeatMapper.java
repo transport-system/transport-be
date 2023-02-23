@@ -12,11 +12,12 @@ public interface SeatMapper {
     @Mapping(source = "id", target = "seatId")
     @Mapping(source = "seatNumber", target = "seatNumber")
     @Mapping(source = "status", target = "status")
-    @Mapping(source = "booking.id", target = "bookingId")
-    @Mapping(source = "vehicle.id", target = "vehicleId")
     SeatResponse mapSeatResponseFromFreeSeat(FreeSeat freeSeat);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @InheritConfiguration(name = "mapSeatResponseFromFreeSeat")
     List<SeatResponse> mapSeatResponseFromFreeSeat(List<FreeSeat> freeSeats);
+
+//    @Mapping(source = "booking.id", target = "bookingId")
+//    @Mapping(source = "vehicle.id", target = "vehicleId")
 }

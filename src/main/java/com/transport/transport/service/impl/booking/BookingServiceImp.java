@@ -8,7 +8,6 @@ import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.SeatRepository;
 import com.transport.transport.service.AccountService;
 import com.transport.transport.service.BookingService;
-import com.transport.transport.service.SeatService;
 import com.transport.transport.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

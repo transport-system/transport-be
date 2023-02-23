@@ -15,6 +15,4 @@ public class SeatResponse {
     private Long seatId;
     private Integer seatNumber;
     private String status;
-    private Long bookingId;
-    private Long vehicleId;
 }
