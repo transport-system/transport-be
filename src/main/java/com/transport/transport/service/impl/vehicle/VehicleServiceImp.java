@@ -134,6 +134,12 @@ public class VehicleServiceImp implements VehicleService {
             vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
             vehicle.setStatus(Status.Vehicle.INACTIVE.name());
+        } else if(trip == null){
+            if (trip.getVehicle().getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
+                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+            } else if (trip.getVehicle().getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
+                vehicle.setStatus(Status.Vehicle.INACTIVE.name());
+            }
         }
         repository.save(vehicle);
         return vehicle;

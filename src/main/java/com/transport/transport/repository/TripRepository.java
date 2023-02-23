@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
     Trip findAllByCompanyIdAndId(Long companyId, Long id);
-    Optional<Trip> findByVehicleId(Long id);
+    Trip findByVehicleId(Long id);
     List<Trip> findByTimeArrival(Date date);
     List<Trip> getTripsByStatus(String status);
     List<Trip> findAllByCompanyId(Long id);
