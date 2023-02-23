@@ -126,18 +126,16 @@ public class VehicleServiceImp implements VehicleService {
     @Override
     public Vehicle updateStatus(Long id) {
         Vehicle vehicle = findById(id);
-        Trip trip = tripService.getTripByVehicleId(vehicle.getId());
-        if (trip.getStatus().equalsIgnoreCase(Status.Trip.DOING.name()) ||
-                trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
-            throw new BadRequestException("You can not update status vehicle when trip is not active");
-        } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
+        if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
             vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
             vehicle.setStatus(Status.Vehicle.INACTIVE.name());
-        }
-        List<Trip> vehicleTrip = vehicle.getTrip();
-        if (vehicleTrip.isEmpty()) {
-            if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
+        } else {
+            Trip trip = tripService.getTripByVehicleId(vehicle.getId());
+            if (trip.getStatus().equalsIgnoreCase(Status.Trip.DOING.name()) ||
+                    trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
+                throw new BadRequestException("You can not update status vehicle when trip is not active");
+            } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.INACTIVE.name())) {
                 vehicle.setStatus(Status.Vehicle.ACTIVE.name());
             } else if (vehicle.getStatus().equalsIgnoreCase(Status.Vehicle.ACTIVE.name())) {
                 vehicle.setStatus(Status.Vehicle.INACTIVE.name());

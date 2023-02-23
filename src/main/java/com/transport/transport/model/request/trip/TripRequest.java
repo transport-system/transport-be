@@ -21,7 +21,6 @@ public class TripRequest {
     @Min(10000)
     @Max(100000000)
     private double price;
-    @NotBlank
     private String image;
     @NotBlank
     private String description;
