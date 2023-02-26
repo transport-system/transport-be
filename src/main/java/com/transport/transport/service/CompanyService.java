@@ -1,6 +1,5 @@
 package com.transport.transport.service;
 
-import com.transport.transport.config.security.user.Account;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.request.company.CompanyRequest;
 import com.transport.transport.model.request.company.CompanyUpdateRequest;
