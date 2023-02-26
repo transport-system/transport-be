@@ -10,6 +10,7 @@ import com.transport.transport.service.BookingService;
 import com.transport.transport.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class BookingController {
         return new ResponseEntity<>(responses, null, 201);
     }
 
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @GetMapping()
     public ResponseEntity<?> getAllBooking() {
         List<Booking> bookings = bookingService.findAll();

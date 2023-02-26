@@ -1,17 +1,18 @@
 package com.transport.transport.repository;
 
-import com.transport.transport.model.entity.Account;
+import com.transport.transport.config.security.user.Account;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    Account findByUsername(String username);
+    Optional<Account> findByUsername(String username);
 
     List<Account> findAllByStatusIsNotNull(Pageable pageable);
     Account findAccountByUsernameAndStatus(String username, String status);

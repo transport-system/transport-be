@@ -1,8 +1,6 @@
 package com.transport.transport.service;
 
-import com.transport.transport.common.RoleEnum;
-import com.transport.transport.common.Status;
-import com.transport.transport.model.entity.Account;
+import com.transport.transport.config.security.user.Account;
 import com.transport.transport.model.request.account.*;
 import org.springframework.data.domain.Pageable;
 
@@ -16,10 +14,9 @@ public interface AccountService extends CRUDService<Account> {
     Account findByUsername(String username);
     Account getAccountActiveByUsername(String username);
     List<Account> searchAccountsByFullName(String search, Pageable pageable);
-    Account register(RegisterRequest registerRequest);
-    boolean login(LoginRequest loginRequest);
+    Account register(RegisterRequest registerRequest);;
     Account changePassword(Long id, ChangePasswordRequest changePasswordRequest);
-    Account updateProfile(Long id, UpdateRequest updateRequest);
+    Account updateProfile(String username, UpdateRequest updateRequest);
 
     List<Account> findAccountByRoleAndStatus(String role, String status);
 }

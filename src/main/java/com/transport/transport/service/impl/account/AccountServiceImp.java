@@ -2,14 +2,12 @@ package com.transport.transport.service.impl.account;
 
 import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
+import com.transport.transport.config.security.user.Account;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.AccountMapper;
-import com.transport.transport.model.entity.Account;
 import com.transport.transport.model.request.account.ChangePasswordRequest;
-import com.transport.transport.model.request.account.LoginRequest;
 import com.transport.transport.model.request.account.RegisterRequest;
 import com.transport.transport.model.request.account.UpdateRequest;
-import com.transport.transport.model.response.account.AccountMsg;
 import com.transport.transport.repository.AccountRepository;
 import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.service.AccountService;
@@ -78,7 +76,7 @@ public class AccountServiceImp implements AccountService {
 
     @Override
     public Account findByUsername(String username) {
-        return repository.findByUsername(username);
+        return repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Account username not found: " + username));
     }
 
     @Override
@@ -115,23 +113,6 @@ public class AccountServiceImp implements AccountService {
         }
     }
 
-    @Override
-    public boolean login(LoginRequest loginRequest) {
-        AccountMsg accountLoginResponse = new AccountMsg();
-        if (repository.existsByUsername(loginRequest.getUsername())) {
-            Account account = repository.findByUsername(loginRequest.getUsername());
-            if (account.getPassword().equals(loginRequest.getPassword())) {
-                Account account1 = repository.findById(account.getId()).get();
-                accountLoginResponse.setMessage("Login success");
-                return true;
-            } else {
-                accountLoginResponse.setMessage("username or password is wrong");
-                return false;
-            }
-        } else {
-            throw new RuntimeException("Username not exists");
-        }
-    }
 
     @Override
     public Account changePassword(Long id, ChangePasswordRequest changePasswordRequest) {
@@ -152,20 +133,15 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public Account updateProfile(Long id, UpdateRequest updateRequest) {
-        if (repository.existsById(id)) {
-            Account account = repository.findById(id).get();
+    public Account updateProfile(String username, UpdateRequest updateRequest) {
+            Account account = findByUsername(username);
             mapper.updateAccountFromUpdateRequest(account, updateRequest);
-
             long milliseconds = updateRequest.getDateOfBirth();
             Date dob = ConvertUtils.getDate(milliseconds);
             account.setDateOfBirth(dob);
 
             return repository.save(account);
-        } else {
-            throw new RuntimeException("Account not exists");
         }
-    }
 
     @Override
     public List<Account> findAccountByRoleAndStatus(String role, String status) {

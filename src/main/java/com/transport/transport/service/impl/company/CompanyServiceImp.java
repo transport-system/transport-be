@@ -2,14 +2,15 @@ package com.transport.transport.service.impl.company;
 
 import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
+import com.transport.transport.config.security.user.Account;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.CompanyMapper;
-import com.transport.transport.model.entity.Account;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.request.company.CompanyRequest;
 import com.transport.transport.model.request.company.CompanyUpdateRequest;
 import com.transport.transport.repository.AccountRepository;
 import com.transport.transport.repository.CompanyRepository;
+import com.transport.transport.service.AuthenticationService;
 import com.transport.transport.service.CompanyService;
 import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class CompanyServiceImp implements CompanyService {
 
     private final CompanyRepository repository;
     private final AccountRepository accountRepository;
+    private final AuthenticationService authenticationService;
     private final CompanyMapper mapper;
 
 
@@ -68,7 +70,7 @@ public class CompanyServiceImp implements CompanyService {
 
     @Override
     public Company registerCompany(CompanyRequest request) {
-        Account account = addNewAccount(request);
+        Account account = authenticationService.registerCompany(request);
         Company company = repository.findCompanyByAccount_Username(request.getUsername());
         if (company != null) {
             throw new NotFoundException("Company not found: " + account.getUsername());
@@ -77,27 +79,6 @@ public class CompanyServiceImp implements CompanyService {
         company.setAccount(account);
         mapper.registerCompanyFromCompanyRequest(request, company);
         return repository.save(company);
-    }
-
-    @Override
-    public Account addNewAccount(CompanyRequest request) {
-        if (accountRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
-        } else if (accountRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        } else if (accountRepository.existsByPhone(request.getPhone())) {
-            throw new RuntimeException("Phone already exists");
-        } else if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new RuntimeException("Password and confirm password not match");
-        } else {
-            Account account = new Account();
-            mapper.registerAccountFromCompanyRequest(request, account);
-            long milliseconds = request.getDateOfBirth();
-            Date dob = ConvertUtils.getDate(milliseconds);
-            account.setDateOfBirth(dob);
-            account.setRole(RoleEnum.COMPANY.name());
-            return accountRepository.save(account);
-        }
     }
 }
 

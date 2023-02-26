@@ -1,7 +1,5 @@
 package com.transport.transport.service;
 
-import com.transport.transport.model.entity.Account;
-
 import java.util.List;
 
 public interface CRUDService<T> {

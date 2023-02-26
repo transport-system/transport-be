@@ -16,8 +16,8 @@ public class CompanyResponseMsg {
     private Long companyId;
     private CompanyResponse data;
     private List<CompanyResponse> list_data;
-
     private List<VehicleResponse> list_vehicle;
+
     public CompanyResponseMsg(String message, CompanyResponse data) {
         this.message = message;
         this.data = data;
