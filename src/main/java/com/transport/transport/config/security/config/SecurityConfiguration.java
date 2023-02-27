@@ -42,13 +42,14 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(EndpointConstant.Authentication.AUTHENTICATION_ENDPOINT +"/**").permitAll() //Cho phép tất cả các role, nhưng mà không đăng nhập vẫn được
-                .antMatchers(EndpointConstant.Booking.BOOKING_ENDPOINT +"/**").permitAll()
-                .antMatchers(EndpointConstant.Seat.SEAT_ENDPOINT +"/**").permitAll()
-                .antMatchers(EndpointConstant.Account.ACCOUNT_ENDPOINT +"/**").authenticated() //cho phép tất cả các role, nhưng phải login
-                .antMatchers(EndpointConstant.Company.COMPANY_ENDPOINT +"/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
-                .antMatchers(EndpointConstant.Vehicle.VEHICLE_ENDPOINT +"/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
-                .antMatchers(EndpointConstant.Trip.TRIP_ENDPOINT +"/**").permitAll()
+                .antMatchers(EndpointConstant.Authentication.AUTHENTICATION_ENDPOINT + "/**").permitAll() //Cho phép tất cả các role, nhưng mà không đăng nhập vẫn được
+                .antMatchers(EndpointConstant.Booking.BOOKING_ENDPOINT + "/**").permitAll()
+                .antMatchers(EndpointConstant.Seat.SEAT_ENDPOINT + "/**").permitAll()
+                .antMatchers(EndpointConstant.Account.ACCOUNT_ENDPOINT + "/**").authenticated() //cho phép tất cả các role, nhưng phải login
+                .antMatchers(EndpointConstant.Company.COMPANY_ENDPOINT + "/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
+                .antMatchers(EndpointConstant.Vehicle.VEHICLE_ENDPOINT + "/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
+                .antMatchers(EndpointConstant.Trip.TRIP_ENDPOINT + "/**").permitAll()
+                .antMatchers("http://localhost:8088/images" + "/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

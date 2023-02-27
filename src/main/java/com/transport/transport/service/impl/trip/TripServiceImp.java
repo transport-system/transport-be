@@ -183,25 +183,28 @@ public class TripServiceImp implements TripService {
             throw new RuntimeException("City Departure cannot like City Arrival");
         }
         List<Route> route = routeService.allRoute();
-        Route checkroute = new Route();
-        for (Route route1: route){
-            if(route1.getCity1().getCity().equalsIgnoreCase(trip.getCityArrival()) &&
-                    route1.getCity2().getCity().equalsIgnoreCase(trip.getCityDeparture())){
-                newTrip.setRoute(route1);
-                break;
-            }
-        }
+        Route checkroute = routeService.create(trip.getCityDeparture(),trip.getCityArrival());
+//        for (Route route1: route){
+//            if(route1.getCity1().getCity().equalsIgnoreCase(trip.getCityArrival()) &&
+//                    route1.getCity2().getCity().equalsIgnoreCase(trip.getCityDeparture())){
+//                newTrip.setRoute(route1);
+//                break;
+//            }
+//        }
+        newTrip.setRoute(checkroute);
         if(newTrip.getRoute() == null){
             throw new RuntimeException("Not exsit route");
         }
 
 
         //set Company
-        Company company = companyRepository.findById(trip.getCompanyId()).get();
+        Company company = companyRepository.findById(trip.getCompanyId())
+                .orElseThrow(() -> new NotFoundException("Company not found: " + trip.getCompanyId()));
         newTrip.setCompany(company);
 
         //set Vehicle
-        Vehicle vehicle = vehicleRepository.findById(trip.getVehicleId()).get();
+        Vehicle vehicle = vehicleRepository.findById(trip.getVehicleId())
+                .orElseThrow(() -> new NotFoundException("vehicle not found: " + trip.getVehicleId()));
         if (vehicle.getCompany().getId().equals(company.getId())) {
             if (vehicle.getStatus().equalsIgnoreCase("ACTIVE")) {
                 newTrip.setVehicle(vehicle);

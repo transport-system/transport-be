@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -35,7 +37,7 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
-    @GetMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT )
+    @GetMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT)
     public ResponseEntity<?> getAll() {
         List<Account> account = accountService.findAll();
         List<AccountResponse> accountResponses = accountMapper.mapAccountResponseFromAccount(account);
@@ -69,4 +71,14 @@ public class AccountController {
         List<AccountResponse> response = accountMapper.mapAccountResponseFromAccount(accounts);
         return new ResponseEntity<>(new AccountMsg("GET Role vs Status Successfully", role, status, response), null, 200);
     }
+
+    @PostMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT + "/user" + "/{id}")
+    public ResponseEntity<?> uploadImg(@PathVariable(name = "id") Long id,
+                                       @RequestParam MultipartFile image) throws IOException {
+        Account account = accountService.uploadImg(id, image);
+        AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
+        return new ResponseEntity<>(new AccountMsg("Upload Image Successfully", response), null, 200);
+
+    }
+
 }

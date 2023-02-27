@@ -10,6 +10,7 @@ import com.transport.transport.model.response.vehicle.VehicleResponseMsg;
 import com.transport.transport.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,6 +38,7 @@ public class VehicleController {
         return new ResponseEntity<>(new VehicleResponseMsg("Status change Inactive Successfully"), null, 200);
     }
 //=======================================================================================================================================================================
+
     @PatchMapping("/company/{id}")
     public ResponseEntity<?> updateStatusActive(
             @PathVariable(name = "id") Long id) {

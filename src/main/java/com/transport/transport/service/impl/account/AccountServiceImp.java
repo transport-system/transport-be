@@ -1,5 +1,6 @@
 package com.transport.transport.service.impl.account;
 
+import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
 import com.transport.transport.config.security.user.Account;
@@ -13,16 +14,26 @@ import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.service.AccountService;
 import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImp implements AccountService {
-
+    private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
     private final AccountRepository repository;
     private final CompanyRepository companyRepository;
     private final AccountMapper mapper;
@@ -134,14 +145,14 @@ public class AccountServiceImp implements AccountService {
 
     @Override
     public Account updateProfile(String username, UpdateRequest updateRequest) {
-            Account account = findByUsername(username);
-            mapper.updateAccountFromUpdateRequest(account, updateRequest);
-            long milliseconds = updateRequest.getDateOfBirth();
-            Date dob = ConvertUtils.getDate(milliseconds);
-            account.setDateOfBirth(dob);
+        Account account = findByUsername(username);
+        mapper.updateAccountFromUpdateRequest(account, updateRequest);
+        long milliseconds = updateRequest.getDateOfBirth();
+        Date dob = ConvertUtils.getDate(milliseconds);
+        account.setDateOfBirth(dob);
 
-            return repository.save(account);
-        }
+        return repository.save(account);
+    }
 
     @Override
     public List<Account> findAccountByRoleAndStatus(String role, String status) {
@@ -153,12 +164,10 @@ public class AccountServiceImp implements AccountService {
         } else if (rolesList.equals(role.equalsIgnoreCase("user"))
                 && statusList.equals(status.equalsIgnoreCase("active"))) {
             return repository.getAccountsByRoleAndStatus(RoleEnum.USER.name(), Status.Account.ACTIVE.name());
-        }
-        else if (rolesList.equals(role.equalsIgnoreCase("company"))
+        } else if (rolesList.equals(role.equalsIgnoreCase("company"))
                 && statusList.equals(status.equalsIgnoreCase("active"))) {
             return repository.getAccountsByRoleAndStatus(RoleEnum.COMPANY.name(), Status.Account.ACTIVE.name());
-        }
-        else if (rolesList.equals(role.equalsIgnoreCase("company"))
+        } else if (rolesList.equals(role.equalsIgnoreCase("company"))
                 && statusList.equals(status.equalsIgnoreCase("inactive"))) {
             return repository.getAccountsByRoleAndStatus(RoleEnum.COMPANY.name(), Status.Account.INACTIVE.name());
         }
@@ -166,4 +175,22 @@ public class AccountServiceImp implements AccountService {
         return repository.getAccountsByRoleAndStatus(role, status);
 
     }
+
+    @Override
+    public Account uploadImg(Long id, MultipartFile image) throws IOException {
+        Path staticPath = Paths.get("static");
+        Path imagePath = Paths.get("images");
+        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
+            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
+        }
+        Path file = CURRENT_FOLDER.resolve(staticPath)
+                .resolve(imagePath).resolve(image.getOriginalFilename());
+        try (OutputStream os = Files.newOutputStream(file)) {
+            os.write(image.getBytes());
+        }
+        Account user = repository.findById(id).get();
+        user.setAvatarImage(imagePath.resolve(image.getOriginalFilename()).toString());
+        return repository.save(user);
+    }
+
 }

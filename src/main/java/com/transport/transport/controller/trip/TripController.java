@@ -13,6 +13,7 @@ import com.transport.transport.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +29,8 @@ public class TripController {
     private final TripMapper tripMapper;
 
     //Trip Of Admin
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
+
     @GetMapping("/all")
     public ResponseEntity<TripMsg> getAll() {
         List<Trip> trip = tripService.getAllTrip();
@@ -71,6 +74,7 @@ public class TripController {
     public ResponseEntity<?> getByArrivalOfCompany(@PathVariable(name = "date") Timestamp date, @PathVariable(name = "CompanyId") Long CompanyId) throws ParseException {
         return new ResponseEntity<>(tripService.findByTimeArrivalOfCompany(CompanyId, date), HttpStatus.OK);
     }
+
     @GetMapping("/company/sort/{CompanyId}")
     public ResponseEntity<?> sortByTimeArrivalOfCompany(@PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.sortTripByTimeArrivalOfCompany(CompanyId), HttpStatus.OK);
@@ -88,6 +92,7 @@ public class TripController {
     }
 
     //===========================================================================================================
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
     @PostMapping("/create")
     public ResponseEntity<TripMsg> create(@Valid @RequestBody TripRequest request) {
         Trip trip = tripService.createrTrip(request);
@@ -95,6 +100,7 @@ public class TripController {
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
         return new ResponseEntity<>(new TripMsg("create success", response), null, 200);
     }
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
     @PutMapping("/{id}")
     public ResponseEntity<TripMsg> update(@Valid @RequestBody UpdateTrip request,
                                           @PathVariable(name = "id") Long id) {
@@ -102,7 +108,7 @@ public class TripController {
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
         return new ResponseEntity<>(new TripMsg("update success", response), null, 200);
     }
-
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @PostMapping("/city/{city}")
     public ResponseEntity<?> addCity(@PathVariable(name = "city") String city) {
         return new ResponseEntity<>(tripService.addCity(city), HttpStatus.OK);

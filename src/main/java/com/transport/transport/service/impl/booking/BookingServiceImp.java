@@ -182,9 +182,9 @@ public class BookingServiceImp implements BookingService {
         numberSeat.forEach((seat) -> {
                 FreeSeat freeSeat = seatRepository.findByVehicleIdAndSeatNumber(seat, trip.getVehicle().getId());
             if (freeSeat.getStatus().equalsIgnoreCase(Status.Seat.PENDING.name())) {
-                throw new BadRequestException("Seat is pending: " + freeSeat.getSeatNumber());
+                throw new BadRequestException("Seat is pending: " + numberSeat);
             } else if (freeSeat.getStatus().equalsIgnoreCase(Status.Seat.INACTIVE.name())) {
-                throw new BadRequestException("Seat is booked: " + freeSeat.getSeatNumber());
+                throw new BadRequestException("Seat is booked: " + numberSeat);
             } else {
                 freeSeat.setStatus(Status.Seat.PENDING.name());
                 freeSeat.setVehicle(trip.getVehicle());

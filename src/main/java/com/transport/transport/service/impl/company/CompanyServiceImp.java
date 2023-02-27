@@ -73,7 +73,7 @@ public class CompanyServiceImp implements CompanyService {
         Account account = authenticationService.registerCompany(request);
         Company company = repository.findCompanyByAccount_Username(request.getUsername());
         if (company != null) {
-            throw new NotFoundException("Company not found: " + account.getUsername());
+            throw new NotFoundException("Company username existed : " + account.getUsername());
         }
         company = new Company();
         company.setAccount(account);
