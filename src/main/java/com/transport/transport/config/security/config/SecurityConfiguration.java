@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                 .antMatchers(EndpointConstant.Company.COMPANY_ENDPOINT + "/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
                 .antMatchers(EndpointConstant.Vehicle.VEHICLE_ENDPOINT + "/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
                 .antMatchers(EndpointConstant.Trip.TRIP_ENDPOINT + "/**").permitAll()
-                .antMatchers("http://localhost:8088/images" + "/**").permitAll()
+                .antMatchers("/images/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
