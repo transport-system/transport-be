@@ -102,30 +102,6 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public Account register(RegisterRequest registerRequest) {
-        if (repository.existsByUsername(registerRequest.getUsername())) {
-            throw new RuntimeException("Username already exists");
-        } else if (repository.existsByEmail(registerRequest.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        } else if (repository.existsByPhone(registerRequest.getPhone())) {
-            throw new RuntimeException("Phone already exists");
-        } else if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
-            throw new RuntimeException("Password and confirm password not match");
-        } else {
-            Account account = new Account();
-            mapper.registerAccountFromRegisterRequest(account, registerRequest);
-
-            long milliseconds = registerRequest.getDateOfBirth();
-            Date dob = ConvertUtils.getDate(milliseconds);
-            account.setDateOfBirth(dob);
-
-            account.setRole(RoleEnum.USER.name());
-            return repository.save(account);
-        }
-    }
-
-
-    @Override
     public Account changePassword(Long id, ChangePasswordRequest changePasswordRequest) {
         if (repository.existsById(id)) {
             Account account = repository.findById(id).get();
@@ -171,9 +147,7 @@ public class AccountServiceImp implements AccountService {
                 && statusList.equals(status.equalsIgnoreCase("inactive"))) {
             return repository.getAccountsByRoleAndStatus(RoleEnum.COMPANY.name(), Status.Account.INACTIVE.name());
         }
-
         return repository.getAccountsByRoleAndStatus(role, status);
-
     }
 
     @Override

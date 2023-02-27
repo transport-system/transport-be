@@ -26,7 +26,6 @@ public interface AccountService extends CRUDService<Account> {
     Account findByUsername(String username);
     Account getAccountActiveByUsername(String username);
     List<Account> searchAccountsByFullName(String search, Pageable pageable);
-    Account register(RegisterRequest registerRequest);;
     Account changePassword(Long id, ChangePasswordRequest changePasswordRequest);
     Account updateProfile(String username, UpdateRequest updateRequest);
 
