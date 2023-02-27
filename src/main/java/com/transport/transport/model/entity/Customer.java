@@ -30,7 +30,6 @@ public class Customer {
 
     @Column(name = "email")
     private String email;
-    private String note;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "customer",

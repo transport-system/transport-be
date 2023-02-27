@@ -8,9 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 public class AddCustomerRequest {
-    private String email;
     private String firstname;
     private String lastname;
-    private String note;
     private String phone;
+    private String email;
 }

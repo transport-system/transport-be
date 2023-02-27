@@ -22,15 +22,6 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
-    private final SeatService seatService;
-    private final SeatMapper seatMapper;
-
-    @PostMapping()
-    public ResponseEntity<?> createNewBooking(@RequestBody BookingRequest request) {
-        Booking booking = bookingService.createBooking(request);
-        BookingResponse responses = bookingMapper.createBookingResponseFromBooking(booking);
-        return new ResponseEntity<>(responses, null, 201);
-    }
 
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @GetMapping()
@@ -46,4 +37,19 @@ public class BookingController {
         BookingResponse response = bookingMapper.createBookingResponseFromBooking(booking);
         return new ResponseEntity<>(response, null, 200);
     }
+
+    @PostMapping()
+    public ResponseEntity<?> createNewBooking(@RequestBody BookingRequest request) {
+        Booking booking = bookingService.createBooking(request);
+        BookingResponse responses = bookingMapper.createBookingResponseFromBooking(booking);
+        return new ResponseEntity<>(responses, null, 201);
+    }
+
+    @PostMapping("{id}/pay")
+    public ResponseEntity<?> payBooking(@PathVariable("id") Long bookingId) {
+        Booking booking = bookingService.payBooking(bookingId);
+        BookingResponse responses = bookingMapper.createBookingResponseFromBooking(booking);
+        return new ResponseEntity<>(responses, null, 201);
+    }
+
 }

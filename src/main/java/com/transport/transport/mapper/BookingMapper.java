@@ -18,6 +18,7 @@ public interface BookingMapper {
     @Mapping(source = "status", target = "status")
     @Mapping(source = "account.id", target = "accountResponse.id")
     @Mapping(source = "trip.id", target = "tripResponse.tripId")
+    @Mapping(source = "customer", target = "customerResponse")
     @Mapping(target = "seatResponse", source ="freeSeats")
 //    @Mapping(target = "seatResponse.seatId")
     BookingResponse createBookingResponseFromBooking(Booking booking);

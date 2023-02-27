@@ -2,6 +2,7 @@ package com.transport.transport.model.response.booking;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.transport.transport.model.response.account.AccountResponse;
+import com.transport.transport.model.response.customer.CustomerResponse;
 import com.transport.transport.model.response.seat.SeatResponse;
 import com.transport.transport.model.response.trip.TripResponse;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class BookingResponse {
     private Integer numberOfSeats;
     private String status;
     private AccountResponse accountResponse;
+    private CustomerResponse customerResponse;
     private TripResponse tripResponse;
     private List<SeatResponse> seatResponse;
 }

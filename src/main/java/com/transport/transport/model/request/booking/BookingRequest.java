@@ -16,6 +16,10 @@ import java.util.List;
 public class BookingRequest {
     private String note;
     private Long accountId;
+    private String firstname;
+    private String lastname;
+    private String phone;
+    private String email;
     private Long tripId;
     private List<Integer> seatNumber;
 }
