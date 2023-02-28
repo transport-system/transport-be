@@ -43,7 +43,6 @@ public class TripServiceImp implements TripService {
                 vehicle.setStatus(Status.Vehicle.ACTIVE.name());
                 vehicleRepository.save(vehicle);
             }
-
             if(trip.getVehicle().getSeatCapacity() <= 0) {
                 Vehicle vehicle = trip.getVehicle();
                 trip.setStatus(Status.Trip.INACTIVE.name());
@@ -68,7 +67,7 @@ public class TripServiceImp implements TripService {
 
     //Get of User
     @Override
-    public List<Trip> findbyArrivalAndDepature(String arrival, String departure,String date){
+    public List<Trip> findbyArrival_DepatureAndTime(String arrival, String departure,String date){
         List<Trip> listAll = tripRepo.findAll();
         List<Trip> list = new ArrayList<>();
         for(Trip listCheck: listAll){
@@ -88,6 +87,23 @@ public class TripServiceImp implements TripService {
         return list;
     }
 
+    @Override
+    public List<Trip> findbyArrivalAndDepature(String arrival, String departure) {
+        List<Trip> listAll = tripRepo.findAll();
+        List<Trip> list = new ArrayList<>();
+        for(Trip listCheck: listAll){
+            if(listCheck.getStatus().equalsIgnoreCase("ACTIVE")) {
+                if (listCheck.getRoute().getCity2().getCity().equalsIgnoreCase(departure)
+                        && listCheck.getRoute().getCity1().getCity().equalsIgnoreCase(arrival)) {
+                        list.add(listCheck);
+                }
+            }
+        }
+        if(list == null || list.size() == 0){
+            throw new RuntimeException("Not Found Trip");
+        }
+        return list;
+    }
 
 
     // Get of Admin
@@ -123,8 +139,6 @@ public class TripServiceImp implements TripService {
     public List<Trip> sortTripByTimeArrival() {
         return tripRepo.findAll(Sort.by(Sort.Direction.ASC, "TimeArrival"));
     }
-
-
 
 
     //Get of Company

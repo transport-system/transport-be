@@ -18,8 +18,8 @@ public interface TripService{
     List<Trip> sortTripByTimeArrival();
 
     //Get of user
-    List<Trip> findbyArrivalAndDepature(String arival, String depature, String date);
-
+    List<Trip> findbyArrivalAndDepature(String arival, String depature);
+    public List<Trip> findbyArrival_DepatureAndTime(String arrival, String departure,String date);
     //Get of company
     List<Trip> getAllTripOfCompany(Long companyId);
     Trip findByIdOfCompany(Long companyId, Long Id);

@@ -37,7 +37,6 @@ public class FeedBack {
     @Column(name = "status")
     private String status;
 
-
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", referencedColumnName = "company_id")

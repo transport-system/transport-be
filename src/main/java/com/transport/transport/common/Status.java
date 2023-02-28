@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 public class Status {
     public enum Feedback {
         ACTIVE,
-        INACTIVE,
-        PENDING,
-        REJECTED,
-        ACCEPT
+        INACTIVE
     }
 
     public enum Account {

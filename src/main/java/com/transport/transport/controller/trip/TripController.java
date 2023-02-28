@@ -83,10 +83,17 @@ public class TripController {
 
     //Customer
     @GetMapping("/customer/{arrival}/{departure}/{date}")
-    public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival,
+    public ResponseEntity<?> getAllTripOfCustomerWithTime(@PathVariable(name = "arrival") String arrival,
                                                   @PathVariable(name = "departure") String departure,
                                                   @PathVariable(name = "date") String date){
-        List<Trip> trip = tripService.findbyArrivalAndDepature(arrival,departure,date);
+        List<Trip> trip = tripService.findbyArrival_DepatureAndTime(arrival,departure,date);
+        List<TripForCustomer> listTrip =  tripMapper.mapToTripResponseOfCustomer(trip);
+        return new ResponseEntity<>(new TripMsg("List", listTrip, arrival), HttpStatus.OK);
+    }
+    @GetMapping("/customer/{arrival}/{departure}")
+    public ResponseEntity<?> getAllTripOfCustomer(@PathVariable(name = "arrival") String arrival,
+                                                  @PathVariable(name = "departure") String departure){
+        List<Trip> trip = tripService.findbyArrivalAndDepature(arrival,departure);
         List<TripForCustomer> listTrip =  tripMapper.mapToTripResponseOfCustomer(trip);
         return new ResponseEntity<>(new TripMsg("List", listTrip, arrival), HttpStatus.OK);
     }
