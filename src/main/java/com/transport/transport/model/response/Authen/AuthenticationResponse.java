@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthenticationResponse {
+    private Long id;
     private String username;
     private String firstname;
     private String lastname;
     private String token;
     private String role;
+    private Long companyId;
 }

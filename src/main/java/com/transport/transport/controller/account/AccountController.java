@@ -10,6 +10,8 @@ import com.transport.transport.model.response.account.AccountMsg;
 import com.transport.transport.model.response.account.AccountResponse;
 import com.transport.transport.model.response.error.MsgResponse;
 import com.transport.transport.service.AccountService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +26,13 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequiredArgsConstructor
+@Api( tags = "Accounts")
 public class AccountController {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
     private final JwtService jwtService;
 
+    @ApiOperation(value = "This method is used to get the account by id.")
     @GetMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT + "/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
         Account account = accountService.findById(id);

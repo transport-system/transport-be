@@ -8,6 +8,7 @@ import com.transport.transport.model.request.vehicle.VehicleRequest;
 import com.transport.transport.model.response.vehicle.VehicleResponse;
 import com.transport.transport.model.response.vehicle.VehicleResponseMsg;
 import com.transport.transport.service.VehicleService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = EndpointConstant.Vehicle.VEHICLE_ENDPOINT)
+@Api( tags = "Vehicles")
 public class VehicleController {
     private final VehicleService vehicleService;
     private final VehicleMapper vehicleMapper;

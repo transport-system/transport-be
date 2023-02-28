@@ -10,6 +10,7 @@ import com.transport.transport.model.response.trip.TripResponeOfConpany;
 import com.transport.transport.model.response.trip.TripResponse;
 import com.transport.transport.model.response.trip.customer.TripForCustomer;
 import com.transport.transport.service.TripService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(EndpointConstant.Trip.TRIP_ENDPOINT)
+@Api( tags = "Trips")
 public class TripController {
     private final TripService tripService;
     private final TripMapper tripMapper;

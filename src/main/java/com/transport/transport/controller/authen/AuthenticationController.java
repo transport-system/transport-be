@@ -6,6 +6,7 @@ import com.transport.transport.model.request.authen.RegisterRequestV2;
 import com.transport.transport.model.response.Authen.AuthenMsg;
 import com.transport.transport.model.response.Authen.AuthenticationResponse;
 import com.transport.transport.service.AuthenticationService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Api( tags = "Authentication")
 public class AuthenticationController {
     private final AuthenticationService service;
 

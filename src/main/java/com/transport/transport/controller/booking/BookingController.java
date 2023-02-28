@@ -8,6 +8,7 @@ import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.response.booking.BookingResponse;
 import com.transport.transport.service.BookingService;
 import com.transport.transport.service.SeatService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping(path = EndpointConstant.Booking.BOOKING_ENDPOINT)
 @RequiredArgsConstructor
 @RestController
+@Api( tags = "Bookings")
 public class BookingController {
 
     private final BookingService bookingService;

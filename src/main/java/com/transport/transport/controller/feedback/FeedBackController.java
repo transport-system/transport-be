@@ -14,6 +14,7 @@ import com.transport.transport.model.response.trip.TripMsg;
 import com.transport.transport.model.response.trip.TripResponse;
 import com.transport.transport.service.FeedbackService;
 import com.transport.transport.service.TripService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import static com.transport.transport.common.EndpointConstant.Feedback.FEEDBACK_
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(EndpointConstant.Feedback.FEEDBACK_ENDPOINT)
+@Api( tags = "Feedbacks")
 public class FeedBackController {
 
     private final FeedbackService feedbackService;

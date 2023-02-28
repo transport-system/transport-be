@@ -7,6 +7,7 @@ import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.response.seat.SeatMsg;
 import com.transport.transport.model.response.seat.SeatResponse;
 import com.transport.transport.service.SeatService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = EndpointConstant.Seat.SEAT_ENDPOINT)
+@Api( tags = "Seats")
 public class SeatController {
     private final SeatService seatService;
     private final SeatMapper seatMapper;

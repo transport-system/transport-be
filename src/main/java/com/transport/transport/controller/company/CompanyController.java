@@ -13,6 +13,7 @@ import com.transport.transport.model.response.conpany.CompanyResponseMsg;
 import com.transport.transport.model.response.vehicle.VehicleResponse;
 import com.transport.transport.service.CompanyService;
 import com.transport.transport.service.VehicleService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = EndpointConstant.Company.COMPANY_ENDPOINT)
+@Api( tags = "Companies")
 public class CompanyController {
     private final CompanyMapper companyMapper;
     private final CompanyService companyService;
