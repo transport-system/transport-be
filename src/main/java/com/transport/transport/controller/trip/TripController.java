@@ -11,6 +11,7 @@ import com.transport.transport.model.response.trip.TripResponse;
 import com.transport.transport.model.response.trip.customer.TripForCustomer;
 import com.transport.transport.service.TripService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,8 @@ public class TripController {
     private final TripMapper tripMapper;
 
     //Trip Of Admin
-    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
 
+    @ApiOperation(value = "This is method get all trip.")
     @GetMapping("/all")
     public ResponseEntity<TripMsg> getAll() {
         List<Trip> trip = tripService.getAllTrip();
