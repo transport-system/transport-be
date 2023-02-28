@@ -23,9 +23,11 @@ import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
 
+import static com.transport.transport.common.EndpointConstant.Feedback.FEEDBACK_ENDPOINT;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/feedback")
+@RequestMapping(EndpointConstant.Feedback.FEEDBACK_ENDPOINT)
 public class FeedBackController {
 
     private final FeedbackService feedbackService;
