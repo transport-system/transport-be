@@ -47,7 +47,8 @@ public class CompanyServiceImp implements CompanyService {
     @Override
     public void delete(Long id) {
 
-        Company company = repository.findById(id).orElseThrow(() -> new NotFoundException("Company not found: " + id));
+        Company company = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Company not found: " + id));
         Account account = company.getAccount();
 
         account.setStatus(Status.Account.INACTIVE.name());
