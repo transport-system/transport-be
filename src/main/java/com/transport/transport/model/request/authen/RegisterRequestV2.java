@@ -3,6 +3,7 @@ package com.transport.transport.model.request.authen;
 import lombok.*;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -35,7 +36,7 @@ public class RegisterRequestV2 {
 
     private String avatarImage;
 
-    private long dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotEmpty(message = "Gender is required")
     private String gender;

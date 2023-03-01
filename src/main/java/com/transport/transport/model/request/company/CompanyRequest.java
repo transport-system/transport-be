@@ -4,6 +4,7 @@ import com.transport.transport.utils.Trimmable;
 import lombok.*;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -35,7 +36,7 @@ public class CompanyRequest implements Trimmable {
     @Pattern(regexp = "(0)+(\\d){9}", message = "is invalid")
     private String phone;
     private String avatarImage;
-    private long dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotEmpty(message = "Gender is required")
     private String gender;

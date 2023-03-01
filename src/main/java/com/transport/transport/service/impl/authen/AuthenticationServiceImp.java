@@ -33,8 +33,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     @Override
     public AuthenticationResponse register(RegisterRequestV2 request) {
-        long milliseconds = request.getDateOfBirth();
-        Date dob = ConvertUtils.getDate(milliseconds);
+//        long milliseconds = request.getDateOfBirth();
+//        Date dob = ConvertUtils.getDate(milliseconds);
 
         var user = Account.builder()
                 .firstname(request.getFirstname())
@@ -43,7 +43,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .dateOfBirth(dob)
+                .dateOfBirth(request.getDateOfBirth())
                 .avatarImage(request.getAvatarImage())
                 .gender(request.getGender())
                 .role(RoleEnum.USER.name())
@@ -54,8 +54,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
     @Override
     public AuthenticationResponse admin(RegisterRequestV2 request) {
-        long milliseconds = request.getDateOfBirth();
-        Date dob = ConvertUtils.getDate(milliseconds);
+//        long milliseconds = request.getDateOfBirth();
+//        Date dob = ConvertUtils.getDate(milliseconds);
 
         var user = Account.builder()
                 .firstname(request.getFirstname())
@@ -64,7 +64,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .dateOfBirth(dob)
+                .dateOfBirth(request.getDateOfBirth())
                 .avatarImage(request.getAvatarImage())
                 .gender(request.getGender())
                 .role(RoleEnum.ADMIN.name())
@@ -95,8 +95,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
     @Override
     public Account registerCompany(CompanyRequest request) {
-        long milliseconds = request.getDateOfBirth();
-        Date dob = ConvertUtils.getDate(milliseconds);
+//        long milliseconds = request.getDateOfBirth();
+//        Date dob = ConvertUtils.getDate(milliseconds);
 
         var user = Account.builder()
                 .firstname(request.getFirstname())
@@ -105,7 +105,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .dateOfBirth(dob)
+                .dateOfBirth(request.getDateOfBirth())
                 .avatarImage(request.getAvatarImage())
                 .gender(request.getGender())
                 .role(RoleEnum.COMPANY.name())

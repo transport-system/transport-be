@@ -4,6 +4,8 @@ import com.transport.transport.utils.Trimmable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class UpdateRequest implements Trimmable {
@@ -15,5 +17,5 @@ public class UpdateRequest implements Trimmable {
 
     private String avatarImage;
 
-    private long dateOfBirth;
+    private LocalDate dateOfBirth;
 }

@@ -123,9 +123,9 @@ public class AccountServiceImp implements AccountService {
     public Account updateProfile(String username, UpdateRequest updateRequest) {
         Account account = findByUsername(username);
         mapper.updateAccountFromUpdateRequest(account, updateRequest);
-        long milliseconds = updateRequest.getDateOfBirth();
-        Date dob = ConvertUtils.getDate(milliseconds);
-        account.setDateOfBirth(dob);
+//        long milliseconds = updateRequest.getDateOfBirth();
+//        Date dob = ConvertUtils.getDate(milliseconds);
+        account.setDateOfBirth(updateRequest.getDateOfBirth());
 
         return repository.save(account);
     }

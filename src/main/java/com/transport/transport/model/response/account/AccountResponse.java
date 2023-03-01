@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,7 +21,7 @@ public class AccountResponse {
     private String firstname;
     private String lastname;
     private String avatarImage;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String email;
     private String phone;
     private String gender;
