@@ -14,6 +14,7 @@ public interface TripMapper {
     @Mapping(source = "seatQuantity", target = "seatQuantity")
     @Mapping(source = "id", target = "tripId")
     @Mapping(source = "company.id", target = "companyId")
+    @Mapping(source = "vehicle.id", target = "vehicleId")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
     TripResponse mapTripResponseFromTrip(Trip trip);

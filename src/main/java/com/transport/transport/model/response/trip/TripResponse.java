@@ -1,10 +1,6 @@
 package com.transport.transport.model.response.trip;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.transport.transport.model.entity.City;
-import com.transport.transport.model.entity.Route;
-import com.transport.transport.model.response.route.RouteResponse;
-import com.transport.transport.model.response.vehicle.VehicleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +15,8 @@ import java.sql.Timestamp;
 public class TripResponse {
     private Long tripId;
     private Long companyId;
+
+    private Long vehicleId;
     private String employeeName;
     private double price;
     private String image;
