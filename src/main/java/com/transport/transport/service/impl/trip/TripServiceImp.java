@@ -33,7 +33,7 @@ public class TripServiceImp implements TripService {
         List<Trip> tripCheck = tripRepo.findAll();
         for (Trip trip : tripCheck) {
             Timestamp now = Timestamp.from(Instant.now());
-            if (trip.getTimeDeparture().after(now) || trip.getTimeDeparture().equals(now)) {
+            if (trip.getTimeDeparture().before(now) && trip.getTimeArrival().after(now)) {
                 trip.setStatus(Status.Trip.DOING.name());
             }
             if (trip.getTimeArrival().before(now)) {
