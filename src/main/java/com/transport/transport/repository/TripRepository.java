@@ -2,6 +2,7 @@ package com.transport.transport.repository;
 
 import com.transport.transport.model.entity.Trip;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -11,6 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
+    @Query("SELECT DISTINCT trip.route.id FROM Trip trip GROUP BY trip.route ORDER BY COUNT(trip.route.id) DESC")
+    List<Long> findCountAndNameOrderByCountDesc();
+
     Trip findAllByCompanyIdAndId(Long companyId, Long id);
     Trip findByVehicleId(Long id);
     List<Trip> findByTimeArrival(Date date);

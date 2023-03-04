@@ -8,4 +8,6 @@ import java.util.List;
 public interface RouteService {
     Route create(String Departure, String Arrival);
     List<Route> allRoute();
+
+    List<Route> propose();
 }
