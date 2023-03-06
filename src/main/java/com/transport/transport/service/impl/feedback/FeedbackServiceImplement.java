@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -60,14 +61,22 @@ public class FeedbackServiceImplement implements FeedbackService {
     public void changeStatus(Long id) {
         FeedBack change = feedbackRepository.findById(id).get();
         if (change == null) {
-            throw new RuntimeException("Not Esixt Feedback");
+            throw new RuntimeException("Not Exit Feedback");
         }
         change.setStatus(Status.Feedback.INACTIVE.name());
+        feedbackRepository.save(change);
     }
 
     @Override
     public List<FeedBack> getAllByCompany(Long id) {
-        return feedbackRepository.getAllByCompany_Id(id);
+        List<FeedBack> list = feedbackRepository.getAllByCompany_Id(id);
+        List<FeedBack> listCompany = new ArrayList<>();
+        for (FeedBack l: list){
+            if(l.getStatus().equalsIgnoreCase(Status.Feedback.ACTIVE.name())){
+                listCompany.add(l);
+            }
+        }
+        return listCompany;
     }
 
     @Override

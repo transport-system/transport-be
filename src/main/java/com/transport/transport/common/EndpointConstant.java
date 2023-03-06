@@ -25,7 +25,6 @@ public final class EndpointConstant {
         public static final String COMPANY_ENDPOINT = ROOT_ENDPOINT + "/company";
 
     }
-
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Vehicle {
         public static final String VEHICLE_ENDPOINT = ROOT_ENDPOINT + "/vehicle";
@@ -34,10 +33,6 @@ public final class EndpointConstant {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Feedback {
         public static final String FEEDBACK_ENDPOINT = ROOT_ENDPOINT + "/feedbacks";
-    }
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Role {
-        public static final String FEEDBACK_ENDPOINT = ROOT_ENDPOINT + "/role";
     }
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Trip {

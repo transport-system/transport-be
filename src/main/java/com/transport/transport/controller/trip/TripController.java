@@ -1,14 +1,19 @@
 package com.transport.transport.controller.trip;
 
 import com.transport.transport.common.EndpointConstant;
+import com.transport.transport.mapper.RouteMapper;
 import com.transport.transport.mapper.TripMapper;
+import com.transport.transport.model.entity.Route;
 import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
+import com.transport.transport.model.response.route.RouteMsg;
+import com.transport.transport.model.response.route.RoutePropose;
 import com.transport.transport.model.response.trip.TripMsg;
 import com.transport.transport.model.response.trip.TripResponeOfConpany;
 import com.transport.transport.model.response.trip.TripResponse;
 import com.transport.transport.model.response.trip.customer.TripForCustomer;
+import com.transport.transport.service.RouteService;
 import com.transport.transport.service.TripService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +49,7 @@ public class TripController {
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(tripService.findById(id), HttpStatus.OK);
     }
+
     @GetMapping("status/{status}")
     public ResponseEntity<?> getByStatus(@PathVariable(name = "status") String status) {
         return new ResponseEntity<>(tripService.findByStatus(status), HttpStatus.OK);

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
-    @Query("SELECT DISTINCT trip.route.id FROM Trip trip GROUP BY trip.route ORDER BY COUNT(trip.route.id) DESC")
+    @Query("SELECT trip.route.id FROM Trip trip GROUP BY trip.route.id ORDER BY COUNT(trip.route.id) DESC")
     List<Long> findCountAndNameOrderByCountDesc();
 
     Trip findAllByCompanyIdAndId(Long companyId, Long id);

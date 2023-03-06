@@ -54,7 +54,7 @@ public class FeedBackController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCompany(@PathVariable(name = "id") Long id) {
         feedbackService.changeStatus(id);
-        return new ResponseEntity<>(new CompanyResponseMsg("Delete successfully"), null, 204);
+        return new ResponseEntity<>("Success",HttpStatus.OK);
     }
     @GetMapping("/all")
     public ResponseEntity<FeedbackMsg> getAll() {

@@ -44,10 +44,10 @@ public class RouteServiceImp implements RouteService {
         int i = 0;
         for (Long l: list){
             i++;
-            if(i == 4){
+            if(i == 6){
                 break;
             }
-            propose.add(routeRepository.getById(l));
+            propose.add(routeRepository.findById(l).get());
         }
         return propose;
     }
