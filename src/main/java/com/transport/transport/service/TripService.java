@@ -25,7 +25,7 @@ public interface TripService{
     Trip findByIdOfCompany(Long companyId, Long Id);
     List<Trip> findByTimeArrivalOfCompany(Long companyId,Timestamp date);
     List<Trip> findByStatusOfCompany(Long companyId,String status);
-    Trip changeStatus(Long id, String status);
+    void deleteTrip(Long id);
     List<Trip> sortTripByTimeArrivalOfCompany(Long companyId);
 
     Trip createrTrip(TripRequest trip);

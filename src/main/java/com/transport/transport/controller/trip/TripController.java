@@ -64,6 +64,7 @@ public class TripController {
     }
 
 
+
     //Trip of Company
     @GetMapping("/company/{id}")
     public ResponseEntity<?> getAllTripOfCompany(@PathVariable(name = "id") Long id) {
@@ -87,6 +88,12 @@ public class TripController {
     @GetMapping("/company/sort/{CompanyId}")
     public ResponseEntity<?> sortByTimeArrivalOfCompany(@PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.sortTripByTimeArrivalOfCompany(CompanyId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteCompany(@PathVariable(name = "id") Long id) {
+        tripService.deleteTrip(id);
+        return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
 

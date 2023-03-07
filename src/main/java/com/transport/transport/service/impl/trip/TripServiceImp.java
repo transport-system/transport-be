@@ -5,10 +5,7 @@ import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.trip.TripRequest;
 import com.transport.transport.model.request.trip.UpdateTrip;
-import com.transport.transport.repository.CityRepository;
-import com.transport.transport.repository.CompanyRepository;
-import com.transport.transport.repository.TripRepository;
-import com.transport.transport.repository.VehicleRepository;
+import com.transport.transport.repository.*;
 import com.transport.transport.service.RouteService;
 import com.transport.transport.service.TripService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +26,14 @@ public class TripServiceImp implements TripService {
     private final VehicleRepository vehicleRepository;
     private final CityRepository cityRepository;
 
+    private final BookingRepository bookingRepository;
+
     public void autoUpdateTrip() {
         List<Trip> tripCheck = tripRepo.findAll();
         for (Trip trip : tripCheck) {
+            if(trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())){
+                break;
+            }
             Timestamp now = Timestamp.from(Instant.now());
             if (trip.getTimeDeparture().before(now) && trip.getTimeArrival().after(now)) {
                 trip.setStatus(Status.Trip.DOING.name());
@@ -255,18 +257,17 @@ public class TripServiceImp implements TripService {
     }
 
     @Override
-    public Trip changeStatus(Long id,String status) {
+    public void deleteTrip(Long id) {
+        boolean check;
         Trip trip = tripRepo.findById(id).get();
-        if (status.equalsIgnoreCase("ACTIVE")) {
-            trip.setStatus(Status.Trip.ACTIVE.name());
-        }
-        if (status.equalsIgnoreCase("INACTIVE")) {
+        if(bookingRepository.findAllByTrip_Id(id).isEmpty()){
             trip.setStatus(Status.Trip.INACTIVE.name());
+            tripRepo.save(trip);
+            check = true;
         }
-        if (status.equalsIgnoreCase("DOING")) {
-            trip.setStatus(Status.Trip.DOING.name());
+        else{
+            throw new RuntimeException("Cannot Delete this Trip");
         }
-        return trip;
     }
 
     @Override
