@@ -1,12 +1,19 @@
-package com.transport.transport.service.impl.file;
-
-
-import org.springframework.stereotype.Service;
-
-
-@Service
-public class FileServiceImp {
-//  //  @Value("${firebase.image-url}")
+//package com.transport.transport.service.impl.file;
+//
+//import com.google.cloud.storage.Blob;
+//import com.google.cloud.storage.Bucket;
+//import com.google.firebase.cloud.StorageClient;
+//import com.transport.transport.service.FileService;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.stereotype.Service;
+//import org.springframework.util.StringUtils;
+//import org.springframework.web.multipart.MultipartFile;
+//import java.awt.image.BufferedImage;
+//import java.io.IOException;
+//
+//@Service
+//public class FileServiceImp implements FileService {
+//    @Value("${firebase.image-url}")
 //    private String imageUrl;
 //
 //    @Override
@@ -56,4 +63,4 @@ public class FileServiceImp {
 //        }
 //        blob.delete();
 //    }
-}
+//}

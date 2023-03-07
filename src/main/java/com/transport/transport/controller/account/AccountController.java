@@ -76,13 +76,13 @@ public class AccountController {
         return new ResponseEntity<>(new AccountMsg("GET Role vs Status Successfully", role, status, response), null, 200);
     }
 
-    @PostMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT + "/user")
-    public ResponseEntity<?> uploadImg(@RequestParam MultipartFile image,
-                                       @RequestHeader(value = AUTHORIZATION) String token) {
-        token = token.substring("Bearer ".length());
-        String username = jwtService.extractUsername(token);
-        Account account = accountService.uploadImg(image, username);
-        AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
-        return new ResponseEntity<>(new AccountMsg("Upload Image Successfully", response), null, 200);
-    }
+//    @PostMapping(path = EndpointConstant.Account.ACCOUNT_ENDPOINT + "/user" + "/{id}")
+//    public ResponseEntity<?> uploadImg(@RequestParam MultipartFile image,
+//                                       @RequestHeader(value = AUTHORIZATION) String token) {
+//        token = token.substring("Bearer ".length());
+//        String username = jwtService.extractUsername(token);
+//        Account account = accountService.uploadImg(image, username);
+//        AccountResponse response = accountMapper.mapAccountResponseFromAccount(account);
+//        return new ResponseEntity<>(new AccountMsg("Upload Image Successfully", response), null, 200);
+//    }
 }

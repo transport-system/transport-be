@@ -17,6 +17,7 @@ public interface TripMapper {
     @Mapping(source = "vehicle.id", target = "vehicleId")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
+    @Mapping(source = "vehicle", target = "vehicle")
     TripResponse mapTripResponseFromTrip(Trip trip);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

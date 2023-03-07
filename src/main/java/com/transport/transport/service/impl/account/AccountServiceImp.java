@@ -39,7 +39,6 @@ public class AccountServiceImp implements AccountService {
     private final AccountRepository repository;
     private final CompanyRepository companyRepository;
     private final AccountMapper mapper;
-   // private final FileService fileService;
 
     @Override
     public List<Account> findAllAccounts(Pageable pageable) {
@@ -156,8 +155,8 @@ public class AccountServiceImp implements AccountService {
     @Override
     public Account uploadImg(@RequestBody MultipartFile image, String username) {
         Account account = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Account username not found: " + username));
-//        account.setAvatarImage(fileService.uploadFile(image));
-//        save(account);
+        account.setAvatarImage(fileService.uploadFile(image));
+        save(account);
         return account;
     }
 }
