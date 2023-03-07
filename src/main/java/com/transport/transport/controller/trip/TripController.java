@@ -12,6 +12,7 @@ import com.transport.transport.model.response.route.RoutePropose;
 import com.transport.transport.model.response.trip.TripMsg;
 import com.transport.transport.model.response.trip.TripResponeOfConpany;
 import com.transport.transport.model.response.trip.TripResponse;
+import com.transport.transport.model.response.trip.TripResponseForId;
 import com.transport.transport.model.response.trip.customer.TripForCustomer;
 import com.transport.transport.service.RouteService;
 import com.transport.transport.service.TripService;
@@ -48,7 +49,7 @@ public class TripController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(name = "id") Long id) {
         Trip trip1 = tripService.findById(id);
-        TripResponse trip = tripMapper.mapTripResponseFromTrip(trip1);
+        TripResponseForId trip = tripMapper.mapTripResponseIdFromTrip(trip1);
         return new ResponseEntity<>(new TripMsg("List", trip), HttpStatus.OK);
     }
 

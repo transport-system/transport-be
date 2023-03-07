@@ -13,11 +13,18 @@ import java.util.List;
 public class TripMsg {
     private String message;
     private TripResponse data;
+    private TripResponseForId data_id;
     private List<TripResponse> list_trip;
     private List<TripForCustomer> list_trip_Customer;
     private List<TripResponeOfConpany> list_trip_Company;
+
     public TripMsg(String message) {
         this.message = message;
+    }
+
+    public TripMsg(String message, TripResponseForId trip) {
+        this.message = message;
+        this.data_id = trip;
     }
     public TripMsg(String message, TripResponse tripResponse) {
         this.message = message;
