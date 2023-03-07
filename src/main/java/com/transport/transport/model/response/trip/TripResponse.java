@@ -17,6 +17,7 @@ public class TripResponse {
     private Long tripId;
     private Long companyId;
     private Long vehicleId;
+    private String vehicleType;
     private String employeeName;
     private double price;
     private String image;

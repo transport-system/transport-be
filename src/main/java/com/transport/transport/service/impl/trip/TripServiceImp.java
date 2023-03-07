@@ -28,30 +28,30 @@ public class TripServiceImp implements TripService {
 
     private final BookingRepository bookingRepository;
 
-    public void autoUpdateTrip() {
-        List<Trip> tripCheck = tripRepo.findAll();
-        for (Trip trip : tripCheck) {
-            if(trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())){
-                break;
-            }
-            Timestamp now = Timestamp.from(Instant.now());
-            if (trip.getTimeDeparture().before(now) && trip.getTimeArrival().after(now)) {
-                trip.setStatus(Status.Trip.DOING.name());
-            }
-            if (trip.getTimeArrival().before(now)) {
-                trip.setStatus(Status.Trip.INACTIVE.name());
-                //Change status when trip is done
-                Vehicle vehicle = trip.getVehicle();
-                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
-                vehicleRepository.save(vehicle);
-            }
-            if(trip.getVehicle().getSeatCapacity() <= 0) {
-                Vehicle vehicle = trip.getVehicle();
-                trip.setStatus(Status.Trip.INACTIVE.name());
-                vehicleRepository.save(vehicle);
-            }
-        }
-    }
+//    public void autoUpdateTrip() {
+//        List<Trip> tripCheck = tripRepo.findAll();
+//        for (Trip trip : tripCheck) {
+//            if(trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())){
+//                break;
+//            }
+//            Timestamp now = Timestamp.from(Instant.now());
+//            if (trip.getTimeDeparture().before(now) && trip.getTimeArrival().after(now)) {
+//                trip.setStatus(Status.Trip.DOING.name());
+//            }
+//            if (trip.getTimeArrival().before(now)) {
+//                trip.setStatus(Status.Trip.INACTIVE.name());
+//                //Change status when trip is done
+//                Vehicle vehicle = trip.getVehicle();
+//                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+//                vehicleRepository.save(vehicle);
+//            }
+//            if(trip.getVehicle().getSeatCapacity() <= 0) {
+//                Vehicle vehicle = trip.getVehicle();
+//                trip.setStatus(Status.Trip.INACTIVE.name());
+//                vehicleRepository.save(vehicle);
+//            }
+//        }
+//    }
     public Timestamp timeReturn(Timestamp depatureTime) {
         Calendar c = Calendar.getInstance();
         c.setTime(depatureTime);
@@ -146,7 +146,7 @@ public class TripServiceImp implements TripService {
     //Get of Company
     @Override
     public List<Trip> getAllTripOfCompany(Long companyId) {
-        autoUpdateTrip();
+        //autoUpdateTrip();
         return tripRepo.findAllByCompanyId(companyId);
     }
     @Override
@@ -252,7 +252,7 @@ public class TripServiceImp implements TripService {
         tripU.setTimeDeparture(trip.getTimeDeparture());
         tripU.setTimeArrival(trip.getTimeArrival());
         tripU.setTimeReturn(timeReturn(trip.getTimeDeparture()));
-        autoUpdateTrip();
+        //autoUpdateTrip();
         return tripRepo.save(tripU);
     }
 
