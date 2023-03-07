@@ -68,7 +68,6 @@ public class CompanyServiceImp implements CompanyService {
         repository.save(company);
     }
 
-
     @Override
     public Company registerCompany(CompanyRequest request) {
         Account account = authenticationService.registerCompany(request);
