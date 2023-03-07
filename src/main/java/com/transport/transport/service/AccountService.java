@@ -30,6 +30,6 @@ public interface AccountService extends CRUDService<Account> {
     Account updateProfile(String username, UpdateRequest updateRequest);
 
     List<Account> findAccountByRoleAndStatus(String role, String status);
-    Account uploadImg(Long id,MultipartFile image) throws IOException;
+    Account uploadImg(MultipartFile image, String username);
 
 }

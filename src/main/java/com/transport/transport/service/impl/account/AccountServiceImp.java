@@ -12,6 +12,7 @@ import com.transport.transport.model.request.account.UpdateRequest;
 import com.transport.transport.repository.AccountRepository;
 import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.service.AccountService;
+import com.transport.transport.service.FileService;
 import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +39,7 @@ public class AccountServiceImp implements AccountService {
     private final AccountRepository repository;
     private final CompanyRepository companyRepository;
     private final AccountMapper mapper;
+    private final FileService fileService;
 
     @Override
     public List<Account> findAllAccounts(Pageable pageable) {
@@ -151,20 +154,10 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Override
-    public Account uploadImg(Long id, MultipartFile image) throws IOException {
-        Path staticPath = Paths.get("static");
-        Path imagePath = Paths.get("images");
-        if (!Files.exists(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath))) {
-            Files.createDirectories(CURRENT_FOLDER.resolve(staticPath).resolve(imagePath));
-        }
-        Path file = CURRENT_FOLDER.resolve(staticPath)
-                .resolve(imagePath).resolve(image.getOriginalFilename());
-        try (OutputStream os = Files.newOutputStream(file)) {
-            os.write(image.getBytes());
-        }
-        Account user = repository.findById(id).get();
-        user.setAvatarImage(imagePath.resolve(image.getOriginalFilename()).toString());
-        return repository.save(user);
+    public Account uploadImg(@RequestBody MultipartFile image, String username) {
+        Account account = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Account username not found: " + username));
+        account.setAvatarImage(fileService.uploadFile(image));
+        save(account);
+        return account;
     }
-
 }
