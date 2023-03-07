@@ -36,6 +36,7 @@ public class BookingServiceImp implements BookingService {
 
     private static final long MILLIS_TO_WAIT = 10 * 1000L;
     private static int flag = 0;
+
     @Override
     public List<Booking> findAll() {
         return bookingRepository.findAll();
@@ -70,7 +71,7 @@ public class BookingServiceImp implements BookingService {
 
         newBooking.setNote(booking.getNote());
 
-        if (booking.getAccountId()==null && booking.getEmail()!=null){
+        if (booking.getAccountId() == null && booking.getEmail() != null) {
             // Create new customer
             Customer customer = customerService.addCustomer(booking);
             newBooking.setCustomer(customer);
@@ -106,6 +107,9 @@ public class BookingServiceImp implements BookingService {
         int seatNumber = seatId.size();
         newBooking.setNumberOfSeats(seatNumber);
 
+        if (seatNumber > 5) {
+            throw new RuntimeException("Require is less 5" +seatId);
+        }
 //      Calculate price
         double totalPrice = newBooking.getTrip().getPrice() * seatNumber;
         newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
@@ -180,7 +184,7 @@ public class BookingServiceImp implements BookingService {
         Trip trip = booking.getTrip();
         List<FreeSeat> freeSeats = new ArrayList<>();
         numberSeat.forEach((seat) -> {
-                FreeSeat freeSeat = seatRepository.findByVehicleIdAndSeatNumber(seat, trip.getVehicle().getId());
+            FreeSeat freeSeat = seatRepository.findByVehicleIdAndSeatNumber(seat, trip.getVehicle().getId());
             if (freeSeat.getStatus().equalsIgnoreCase(Status.Seat.PENDING.name())) {
                 throw new BadRequestException("Seat is pending: " + numberSeat);
             } else if (freeSeat.getStatus().equalsIgnoreCase(Status.Seat.INACTIVE.name())) {
