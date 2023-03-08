@@ -10,7 +10,7 @@ import java.util.List;
 public interface BookingMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "id", target = "id", ignore = true)
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "createBookingTime", target = "createBookingTime", ignore = true)
     @Mapping(source = "examTime", target = "examTime")
     @Mapping(source = "totalPrice", target = "totalPrice")
