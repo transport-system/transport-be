@@ -68,6 +68,23 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
+    public List<Booking> findAllByCustomerId(Long id) {
+        return bookingRepository.findAllByCustomerId(id);
+    }
+
+    @Override
+    public List<Booking> findAllByCompany(Long id) {
+        List<Booking> booklist = bookingRepository.findAll();
+        List<Booking> list = new ArrayList<>();
+        for(Booking booking : booklist){
+            if(booking.getTrip().getCompany().getId() == id){
+                list.add(booking);
+            }
+        }
+        return list;
+    }
+
+    @Override
     public Booking createBooking(BookingRequest booking) {
         Booking newBooking = new Booking();
 

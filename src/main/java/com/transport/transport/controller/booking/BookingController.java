@@ -41,6 +41,20 @@ public class BookingController {
         return new ResponseEntity<>(response, null, 200);
     }
 
+    @GetMapping("/company/{id}")
+    public ResponseEntity<?> getBookingByCompany(@PathVariable("id") Long id) {
+        List<Booking> bookings = bookingService.findAllByCompany(id);
+        List<BookingResponse> response = bookingMapper.createBookingResponseFromBooking(bookings);
+        return new ResponseEntity<>(response, null, 200);
+    }
+
+    @GetMapping("/customer{id}")
+    public ResponseEntity<?> getBookingByCustomer(@PathVariable("id") Long id) {
+        List<Booking> bookings = bookingService.findAllByCustomerId(id);
+        List<BookingResponse> response = bookingMapper.createBookingResponseFromBooking(bookings);
+        return new ResponseEntity<>(response, null, 200);
+    }
+
     @PostMapping()
     public ResponseEntity<?> createNewBooking(@RequestBody BookingRequest request) {
         Booking booking = bookingService.createBooking(request);

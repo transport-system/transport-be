@@ -10,6 +10,9 @@ import com.transport.transport.model.request.customer.AddCustomerRequest;
 import java.util.List;
 
 public interface BookingService extends CRUDService<Booking> {
+
+    List<Booking> findAllByCustomerId(Long id);
+    List<Booking> findAllByCompany(Long id);
     Booking createBooking(BookingRequest booking);
     Booking payBooking(PaymentRequest method);
     List<FreeSeat> addSeat(List<Integer> numberSeat, Booking booking);
