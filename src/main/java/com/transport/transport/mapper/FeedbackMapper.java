@@ -14,6 +14,8 @@ public interface FeedbackMapper {
     @Mapping(source = "detail", target = "detail")
     @Mapping(source = "ratingScore", target = "rating")
     @Mapping(source = "id", target = "feedBackId")
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.avatarImage", target = "avatar")
     FeedbackResponse mapFeedbackResponseFromFeedback(FeedBack feedBack);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

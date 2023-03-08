@@ -13,6 +13,8 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FeedbackResponse {
     private Long  feedBackId;
+    private Long  accountId;
+    private String avatar;
     private String name;
     private int rating;
     private String detail;
