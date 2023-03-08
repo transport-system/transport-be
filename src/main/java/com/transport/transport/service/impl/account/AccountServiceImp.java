@@ -152,11 +152,11 @@ public class AccountServiceImp implements AccountService {
         return repository.getAccountsByRoleAndStatus(role, status);
     }
 
-    @Override
-    public Account uploadImg(@RequestBody MultipartFile image, String username) {
-        Account account = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Account username not found: " + username));
-        account.setAvatarImage(fileService.uploadFile(image));
-        save(account);
-        return account;
-    }
+//    @Override
+//    public Account uploadImg(@RequestBody MultipartFile image, String username) {
+//        Account account = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Account username not found: " + username));
+//        account.setAvatarImage(fileService.uploadFile(image));
+//        save(account);
+//        return account;
+//    }
 }

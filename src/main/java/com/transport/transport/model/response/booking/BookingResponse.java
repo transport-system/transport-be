@@ -23,6 +23,7 @@ public class BookingResponse {
     private Long id;
     private Timestamp createBookingTime;
     private String note;
+    private String paymentMethod;
     private Long examTime;
     private BigDecimal totalPrice;
     private Integer numberOfSeats;

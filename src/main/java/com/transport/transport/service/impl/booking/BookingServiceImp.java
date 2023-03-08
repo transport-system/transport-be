@@ -1,11 +1,13 @@
 package com.transport.transport.service.impl.booking;
 
+import com.transport.transport.common.PaymentType;
 import com.transport.transport.common.Status;
 import com.transport.transport.config.security.user.Account;
 import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
+import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.SeatRepository;
 import com.transport.transport.service.AccountService;
@@ -34,7 +36,7 @@ public class BookingServiceImp implements BookingService {
     private final TripService tripService;
     private final CustomerService customerService;
 
-    private static final long MILLIS_TO_WAIT = 10 * 1000L;
+    private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
 
     @Override
@@ -126,9 +128,8 @@ public class BookingServiceImp implements BookingService {
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
         Booking after = bookingRepository.save(newBooking);
-
+        PaymentRequest method = new PaymentRequest();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
-
         // If after 10s, booking is not paid, booking will be rejected
         // else booking will be paid and seat will be inactive
         final Future<?> future = executor.submit(() -> {
@@ -144,16 +145,22 @@ public class BookingServiceImp implements BookingService {
                 out.println("Thread interrupted");
             }
         });
-        return future.isDone() ? payBooking(after.getId()) : after;
+        return future.isDone() ? payBooking(method) : after;
     }
 
 
     @Override
-    public Booking payBooking(Long bookingId) {
+    public Booking payBooking(PaymentRequest method) {
 
-        return bookingRepository.findById(bookingId).map((booking) -> {
+        return bookingRepository.findById(method.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
                 booking.setStatus(Status.Booking.DONE.name());
+                if (method.getMethod().equalsIgnoreCase(PaymentType.CARD.name())
+                        || method.getMethod().equalsIgnoreCase(PaymentType.CASH.name())) {
+                    booking.setPaymentMethod(method.getMethod().toUpperCase());
+                } else {
+                    throw new BadRequestException("Payment method is not valid");
+                }
                 booking.getFreeSeats().forEach((seat) -> {
                     seat.setStatus(Status.Seat.INACTIVE.name());
                 });
@@ -162,7 +169,7 @@ public class BookingServiceImp implements BookingService {
             } else {
                 throw new BadRequestException("Can't pay booking");
             }
-        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + bookingId));
+        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
 
     }
 

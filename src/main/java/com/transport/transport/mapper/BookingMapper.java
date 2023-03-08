@@ -20,6 +20,7 @@ public interface BookingMapper {
     @Mapping(source = "trip.id", target = "tripResponse.tripId")
     @Mapping(source = "customer", target = "customerResponse")
     @Mapping(target = "seatResponse", source ="freeSeats")
+    @Mapping(target = "paymentMethod", source ="paymentMethod")
 //    @Mapping(target = "seatResponse.seatId")
     BookingResponse createBookingResponseFromBooking(Booking booking);
 
