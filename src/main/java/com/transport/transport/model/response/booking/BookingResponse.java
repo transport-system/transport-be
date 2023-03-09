@@ -33,15 +33,12 @@ public class BookingResponse {
     //Account
     private Long accountID;
     private String username;
-    private String role;
     private String firstname;
     private String lastname;
     private String avatarImage;
     private LocalDate dateOfBirth;
     private String email;
     private String phone;
-    private String gender;
-    private Long companyId;
 //    private AccountResponse accountResponse;
 
     //Customer

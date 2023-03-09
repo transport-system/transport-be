@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface BookingService extends CRUDService<Booking> {
 
+    List<Booking> findAllByAccountId(Long id);
     List<Booking> findAllByCustomerId(Long id);
     List<Booking> findAllByCompany(Long id);
     Booking createBooking(BookingRequest booking);
