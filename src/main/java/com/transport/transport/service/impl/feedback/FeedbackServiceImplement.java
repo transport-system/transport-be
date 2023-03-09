@@ -80,6 +80,18 @@ public class FeedbackServiceImplement implements FeedbackService {
     }
 
     @Override
+    public List<FeedBack> getAllByUserId(Long id) {
+        List<FeedBack> list = feedbackRepository.getAllByAccount_Id(id);
+        List<FeedBack> listOfUser = new ArrayList<>();
+        for (FeedBack l: list){
+            if(l.getStatus().equalsIgnoreCase(Status.Feedback.ACTIVE.name())){
+                listOfUser.add(l);
+            }
+        }
+        return listOfUser;
+    }
+
+    @Override
     public FeedBack upadteFeedBack(FeedbackRequest request, Long feedbackId) {
         FeedBack feedBack = feedbackRepository.findById(feedbackId).get();
         feedBack.setDetail(request.getDetail());

@@ -12,6 +12,7 @@ public interface FeedbackService {
     FeedBack createFeedback(FeedbackRequest request) throws ParseException;
     public void changeStatus(Long id);
     List<FeedBack> getAllByCompany(Long id);
+    List<FeedBack> getAllByUserId(Long id);
     List<FeedBack> getAll();
     FeedBack upadteFeedBack(FeedbackRequest request, Long feedbackId);
 

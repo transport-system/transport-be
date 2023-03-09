@@ -62,6 +62,12 @@ public class FeedBackController {
         List<FeedbackResponse> list =  feedbackMapper.mapToFeedbackResponse(feedBack);
         return new ResponseEntity<>(new FeedbackMsg("List", list), HttpStatus.OK);
     }
+    @GetMapping("/all/user/{id}")
+    public ResponseEntity<FeedbackMsg> getAllOUser(@PathVariable(name = "id") Long id) {
+        List<FeedBack> feedBack = feedbackService.getAllByUserId(id);
+        List<FeedbackResponse> list =  feedbackMapper.mapToFeedbackResponse(feedBack);
+        return new ResponseEntity<>(new FeedbackMsg("List", list), HttpStatus.OK);
+    }
 
     //Company
     @GetMapping("/all/company/{id}")
