@@ -16,9 +16,22 @@ public interface BookingMapper {
     @Mapping(source = "totalPrice", target = "totalPrice")
     @Mapping(source = "numberOfSeats", target = "numberOfSeats")
     @Mapping(source = "status", target = "status")
-    @Mapping(source = "account.id", target = "accountResponse.id")
+    //Account
+    @Mapping(source = "account.id", target = "accountID")
+    @Mapping(source = "account.username", target = "username")
+    @Mapping(source = "account.firstname", target = "firstname")
+    @Mapping(source = "account.lastname", target = "lastname")
+    @Mapping(source = "account.email", target = "email")
+    @Mapping(source = "account.phone", target = "phone")
+    //Customer
+    @Mapping(source = "customer.id", target = "c_Id")
+    @Mapping(source = "customer.firstname", target = "c_Firstname")
+    @Mapping(source = "customer.lastname", target = "c_Lastname")
+    @Mapping(source = "customer.phone", target = "c_Phone")
+    @Mapping(source = "customer.email", target = "c_Email")
+
+
     @Mapping(source = "trip.id", target = "tripResponse.tripId")
-    @Mapping(source = "customer", target = "customerResponse")
     @Mapping(target = "seatResponse", source ="freeSeats")
     @Mapping(target = "paymentMethod", source ="paymentMethod")
 //    @Mapping(target = "seatResponse.seatId")

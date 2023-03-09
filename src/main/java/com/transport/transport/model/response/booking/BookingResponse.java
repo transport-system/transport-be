@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -28,8 +29,29 @@ public class BookingResponse {
     private BigDecimal totalPrice;
     private Integer numberOfSeats;
     private String status;
-    private AccountResponse accountResponse;
-    private CustomerResponse customerResponse;
+
+    //Account
+    private Long accountID;
+    private String username;
+    private String role;
+    private String firstname;
+    private String lastname;
+    private String avatarImage;
+    private LocalDate dateOfBirth;
+    private String email;
+    private String phone;
+    private String gender;
+    private Long companyId;
+//    private AccountResponse accountResponse;
+
+    //Customer
+    private Long c_Id;
+    private String c_Firstname;
+    private String c_Lastname;
+    private String c_Phone;
+    private String c_Email;
+//    private CustomerResponse customerResponse;
+
     private TripResponse tripResponse;
     private List<SeatResponse> seatResponse;
 }
