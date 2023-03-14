@@ -5,12 +5,14 @@ import com.transport.transport.mapper.BookingMapper;
 import com.transport.transport.mapper.SeatMapper;
 import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.request.booking.BookingRequest;
+import com.transport.transport.model.request.booking.CancleBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.model.response.booking.BookingResponse;
 import com.transport.transport.service.BookingService;
 import com.transport.transport.service.SeatService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +76,12 @@ public class BookingController {
         Booking booking = bookingService.payBooking(payment);
         BookingResponse responses = bookingMapper.createBookingResponseFromBooking(booking);
         return new ResponseEntity<>(responses, null, 201);
+    }
+
+    @PostMapping("/returnTicket")
+    public ResponseEntity<?> returnTicket(@RequestBody CancleBooking cancleBooking){
+        bookingService.ReturnTicket(cancleBooking);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
 }

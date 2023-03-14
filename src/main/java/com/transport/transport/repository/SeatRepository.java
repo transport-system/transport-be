@@ -11,6 +11,8 @@ import java.util.List;
 public interface SeatRepository extends JpaRepository<FreeSeat, Long> {
 
     List<FreeSeat> findAllByVehicleId(Long vehicleId);
+    @Query("SELECT s FROM FreeSeat s WHERE s.seatNumber = ?1 and s.booking = ?2 ")
+    FreeSeat findByBooking_IdAndSeatNumber(int seat, Long id);
 
     @Query("SELECT s FROM FreeSeat s WHERE s.seatNumber = ?1 and s.vehicle.id = ?2 ")
     FreeSeat findByVehicleIdAndSeatNumber(Integer seatNumber, Long vehicleId);

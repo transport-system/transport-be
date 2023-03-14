@@ -7,6 +7,7 @@ import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
+import com.transport.transport.model.request.booking.CancleBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.SeatRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -226,5 +228,48 @@ public class BookingServiceImp implements BookingService {
             }
         });
         return freeSeats;
+    }
+
+
+    @Override
+    public void ReturnTicket(CancleBooking cancleBooking) {
+
+        List<Integer> numberSeat = cancleBooking.getSeatNumber();
+        for(Integer seat: numberSeat){
+            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancleBooking.getBookingId());
+            freeSeat.setStatus(Status.Seat.INACTIVE.name());
+            seatRepository.save(freeSeat);
+        }
+        Booking booking = bookingRepository.findById(cancleBooking.getBookingId()).get();
+
+        //Change number seat
+        int newNumberOfSeat = booking.getNumberOfSeats() - numberSeat.size();
+        booking.setNumberOfSeats(newNumberOfSeat);
+
+        //Check Time
+        Calendar c = Calendar.getInstance();
+        c.setTime(booking.getCreateBookingTime());
+        c.add(Calendar.DATE, +1);
+        Timestamp timeAccept = new Timestamp(c.getTimeInMillis());
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        Timestamp returnTime = booking.getTrip().getTimeReturn();
+
+        //Check Date to Change total price
+        //Check TH1: Time in Create after 1 day
+        double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
+        double newPrice = 0;
+        if(now.after(timeAccept)) {
+            newPrice = booking.getTotalPrice().doubleValue() - price * numberSeat.size();
+        } else if (now.before(returnTime) && now.after(timeAccept)) {
+            double total = booking.getTotalPrice().doubleValue() - price * numberSeat.size();
+            newPrice = total - (total*(20/100));
+        }else {
+            newPrice = booking.getTotalPrice().doubleValue();
+        }
+        booking.setTotalPrice(BigDecimal.valueOf(newPrice));
+        //Check if number seat = 0 => This Booking cancle => Change Status
+        if (newNumberOfSeat == 0){
+            booking.setStatus(Status.Seat.INACTIVE.name());
+        }
     }
 }
