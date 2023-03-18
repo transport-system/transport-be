@@ -48,4 +48,9 @@ public class Status {
         PENDING,
         }
 
+        public enum Voucher {
+            ACTIVE,
+            INACTIVE,
+            EXPIRED
+        }
 }

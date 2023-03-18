@@ -58,4 +58,9 @@ public final class EndpointConstant {
     public static final class Seat {
         public static final String SEAT_ENDPOINT = ROOT_ENDPOINT + "/seat";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Voucher {
+        public static final String VOUCHER_ENDPOINT = ROOT_ENDPOINT + "/voucher";
+    }
 }

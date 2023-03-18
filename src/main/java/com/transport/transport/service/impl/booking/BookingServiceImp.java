@@ -136,6 +136,10 @@ public class BookingServiceImp implements BookingService {
         if (seatNumber > 5) {
             throw new RuntimeException("Require is less 5" +seatId);
         }
+
+        if (seatNumber == 0) {
+            throw new RuntimeException("Require is more 0" +seatId);
+        }
 //      Calculate price
         double totalPrice = newBooking.getTrip().getPrice() * seatNumber;
         newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
