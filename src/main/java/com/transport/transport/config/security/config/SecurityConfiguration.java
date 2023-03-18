@@ -52,6 +52,7 @@ public class SecurityConfiguration {
                 .antMatchers(EndpointConstant.Route.ROUTE_ENDPOINT + "/**").permitAll()
                 .antMatchers(EndpointConstant.Feedback.FEEDBACK_ENDPOINT + "/**").permitAll()
                 .antMatchers(EndpointConstant.Trip.TRIP_ENDPOINT + "/**").permitAll()
+                .antMatchers(EndpointConstant.Payment.PAYMENT_ENDPOINT + "/**").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .anyRequest()
                 .authenticated()
