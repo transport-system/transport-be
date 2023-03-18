@@ -50,6 +50,11 @@ public final class EndpointConstant {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Payment {
+        public static final String PAYMENT_ENDPOINT = ROOT_ENDPOINT + "/paypal";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Seat {
         public static final String SEAT_ENDPOINT = ROOT_ENDPOINT + "/seat";
     }
