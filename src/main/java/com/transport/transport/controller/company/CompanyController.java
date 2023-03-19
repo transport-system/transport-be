@@ -1,21 +1,18 @@
 package com.transport.transport.controller.company;
 
 import com.transport.transport.common.EndpointConstant;
-import com.transport.transport.config.security.jwt.JwtService;
 import com.transport.transport.mapper.CompanyMapper;
 import com.transport.transport.mapper.VehicleMapper;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.entity.Vehicle;
 import com.transport.transport.model.request.company.CompanyRequest;
-import com.transport.transport.model.request.vehicle.VehicleRequest;
-import com.transport.transport.model.response.conpany.CompanyResponse;
-import com.transport.transport.model.response.conpany.CompanyResponseMsg;
+import com.transport.transport.model.response.company.CompanyResponse;
+import com.transport.transport.model.response.company.CompanyResponseMsg;
 import com.transport.transport.model.response.vehicle.VehicleResponse;
 import com.transport.transport.service.CompanyService;
 import com.transport.transport.service.VehicleService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -200,13 +200,6 @@ public class TripServiceImp implements TripService {
         }
         List<Route> route = routeService.allRoute();
         Route checkroute = routeService.create(trip.getCityDeparture(),trip.getCityArrival());
-//        for (Route route1: route){
-//            if(route1.getCity1().getCity().equalsIgnoreCase(trip.getCityArrival()) &&
-//                    route1.getCity2().getCity().equalsIgnoreCase(trip.getCityDeparture())){
-//                newTrip.setRoute(route1);
-//                break;
-//            }
-//        }
         newTrip.setRoute(checkroute);
         if(newTrip.getRoute() == null){
             throw new RuntimeException("Not exsit route");

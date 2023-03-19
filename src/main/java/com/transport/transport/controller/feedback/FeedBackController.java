@@ -2,18 +2,11 @@ package com.transport.transport.controller.feedback;
 
 import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.mapper.FeedbackMapper;
-import com.transport.transport.mapper.TripMapper;
 import com.transport.transport.model.entity.FeedBack;
-import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.feedback.FeedbackRequest;
-import com.transport.transport.model.request.trip.TripRequest;
-import com.transport.transport.model.response.conpany.CompanyResponseMsg;
 import com.transport.transport.model.response.feeedback.FeedbackMsg;
 import com.transport.transport.model.response.feeedback.FeedbackResponse;
-import com.transport.transport.model.response.trip.TripMsg;
-import com.transport.transport.model.response.trip.TripResponse;
 import com.transport.transport.service.FeedbackService;
-import com.transport.transport.service.TripService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
-
-import static com.transport.transport.common.EndpointConstant.Feedback.FEEDBACK_ENDPOINT;
 
 @RestController
 @RequiredArgsConstructor

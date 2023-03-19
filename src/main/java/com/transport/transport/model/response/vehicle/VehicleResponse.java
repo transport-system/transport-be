@@ -1,8 +1,6 @@
 package com.transport.transport.model.response.vehicle;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.transport.transport.common.Status;
-import com.transport.transport.model.response.conpany.CompanyResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -12,8 +12,6 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class TripRequest {
     @NotBlank
     private String employeeName;

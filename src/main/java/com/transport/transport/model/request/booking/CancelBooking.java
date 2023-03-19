@@ -7,9 +7,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class CancleBooking {
+public class CancelBooking {
     private Long bookingId;
     private List<Integer> seatNumber;
 

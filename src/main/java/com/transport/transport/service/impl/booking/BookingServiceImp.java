@@ -7,14 +7,11 @@ import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
-import com.transport.transport.model.request.booking.CancleBooking;
+import com.transport.transport.model.request.booking.CancelBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.SeatRepository;
-import com.transport.transport.service.AccountService;
-import com.transport.transport.service.BookingService;
-import com.transport.transport.service.CustomerService;
-import com.transport.transport.service.TripService;
+import com.transport.transport.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +34,7 @@ public class BookingServiceImp implements BookingService {
     private final AccountService accountService;
     private final TripService tripService;
     private final CustomerService customerService;
+    private final VoucherService voucherService;
 
     private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
@@ -107,6 +105,8 @@ public class BookingServiceImp implements BookingService {
             newBooking.setAccount(account);
         }
 
+
+
         // Get trip
         Trip trip = tripService.findById(booking.getTripId());
         newBooking.setTrip(trip);
@@ -142,7 +142,19 @@ public class BookingServiceImp implements BookingService {
         }
 //      Calculate price
         double totalPrice = newBooking.getTrip().getPrice() * seatNumber;
-        newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+        Long voucherID = booking.getVoucherId();
+        if (voucherID != null) {
+            Voucher voucher = voucherService.findById(booking.getVoucherId());
+            if (voucher != null) {
+                double discount = (totalPrice * Double.parseDouble(
+                        String.valueOf(voucher.getDiscountValue()))) / 100;
+                totalPrice = totalPrice - discount;
+                voucher.setQuantity(voucher.getQuantity() - 1);
+                newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+            }
+        } else {
+            newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+        }
 
 //      Auto set capacity vehicle
         int capacity = vehicle.getSeatCapacity() - seatNumber;
@@ -179,7 +191,6 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public Booking payBooking(PaymentRequest method) {
-
         return bookingRepository.findById(method.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
                 booking.setStatus(Status.Booking.DONE.name());
@@ -198,10 +209,11 @@ public class BookingServiceImp implements BookingService {
                 throw new BadRequestException("Can't pay booking");
             }
         }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
-
     }
 
-    private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber, List<FreeSeat> freeSeats) {
+    private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,
+                       List<FreeSeat> freeSeats) {
+
         newBooking.setStatus(Status.Booking.REJECTED.name());
         newBooking.setRejectedNote("Time out");
         freeSeats.forEach((seat) -> {
@@ -236,15 +248,15 @@ public class BookingServiceImp implements BookingService {
 
 
     @Override
-    public void ReturnTicket(CancleBooking cancleBooking) {
+    public void ReturnTicket(CancelBooking cancelBooking) {
 
-        List<Integer> numberSeat = cancleBooking.getSeatNumber();
+        List<Integer> numberSeat = cancelBooking.getSeatNumber();
         for(Integer seat: numberSeat){
-            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancleBooking.getBookingId());
+            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancelBooking.getBookingId());
             freeSeat.setStatus(Status.Seat.INACTIVE.name());
             seatRepository.save(freeSeat);
         }
-        Booking booking = bookingRepository.findById(cancleBooking.getBookingId()).get();
+        Booking booking = bookingRepository.findById(cancelBooking.getBookingId()).get();
 
         //Change number seat
         int newNumberOfSeat = booking.getNumberOfSeats() - numberSeat.size();

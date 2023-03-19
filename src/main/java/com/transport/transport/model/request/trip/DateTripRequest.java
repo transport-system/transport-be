@@ -9,8 +9,6 @@ import java.sql.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class DateTripRequest {
     @NotBlank
     @DateTimeFormat(pattern="yyyy-MM-dd")

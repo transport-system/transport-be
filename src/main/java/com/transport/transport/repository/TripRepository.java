@@ -3,6 +3,7 @@ package com.transport.transport.repository;
 import com.transport.transport.model.entity.Trip;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@EnableJpaRepositories
+
 public interface TripRepository extends JpaRepository<Trip, Long> {
     @Query("SELECT trip.route.id FROM Trip trip GROUP BY trip.route.id ORDER BY COUNT(trip.route.id) DESC")
     List<Long> findCountAndNameOrderByCountDesc();
@@ -26,6 +29,7 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     Trip findAllByIdAndCompany_IdAndVehicle_Id(Long id, Long coId,Long veId);
     List<Trip> findAllByCompany_IdAndVehicle_Status(Long coId,String veStatus);
 
-    @Query("SELECT COUNT(Trip.id) FROM Trip WHERE Trip.status LIKE 'ACTIVE'")
+    //Count
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE'")
     int countAllTrip();
 }

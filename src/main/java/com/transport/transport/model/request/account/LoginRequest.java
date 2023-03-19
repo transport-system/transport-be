@@ -8,8 +8,6 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class LoginRequest {
     @NotBlank
     private String username;

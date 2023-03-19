@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
-
+    boolean existsByVoucherCode(String voucherCode);
+    Voucher findByVoucherCode(String voucherCode);
 }

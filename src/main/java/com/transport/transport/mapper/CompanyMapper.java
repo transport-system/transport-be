@@ -4,7 +4,7 @@ import com.transport.transport.config.security.user.Account;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.request.company.CompanyRequest;
 import com.transport.transport.model.request.company.CompanyUpdateRequest;
-import com.transport.transport.model.response.conpany.CompanyResponse;
+import com.transport.transport.model.response.company.CompanyResponse;
 import org.mapstruct.*;
 
 import java.util.List;

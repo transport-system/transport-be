@@ -2,14 +2,12 @@ package com.transport.transport.controller.booking;
 
 import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.mapper.BookingMapper;
-import com.transport.transport.mapper.SeatMapper;
 import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.request.booking.BookingRequest;
-import com.transport.transport.model.request.booking.CancleBooking;
+import com.transport.transport.model.request.booking.CancelBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.model.response.booking.BookingResponse;
 import com.transport.transport.service.BookingService;
-import com.transport.transport.service.SeatService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -79,8 +77,8 @@ public class BookingController {
     }
 
     @PostMapping("/returnTicket")
-    public ResponseEntity<?> returnTicket(@RequestBody CancleBooking cancleBooking){
-        bookingService.ReturnTicket(cancleBooking);
+    public ResponseEntity<?> returnTicket(@RequestBody CancelBooking cancelBooking){
+        bookingService.ReturnTicket(cancelBooking);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 

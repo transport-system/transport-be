@@ -40,5 +40,4 @@ public class Voucher {
 
     @Column(name = "discount_value")
     private BigDecimal discountValue;
-
 }

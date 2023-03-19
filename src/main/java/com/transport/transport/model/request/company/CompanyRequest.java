@@ -9,8 +9,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class CompanyRequest implements Trimmable {
     @NotBlank
     private String username;

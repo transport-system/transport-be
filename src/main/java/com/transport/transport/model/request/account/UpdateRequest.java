@@ -1,13 +1,13 @@
 package com.transport.transport.model.request.account;
 
 import com.transport.transport.utils.Trimmable;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateRequest implements Trimmable {
     private String firstname;
 

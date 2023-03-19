@@ -6,8 +6,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class RouteRequest {
     @NotBlank
     private String city1;

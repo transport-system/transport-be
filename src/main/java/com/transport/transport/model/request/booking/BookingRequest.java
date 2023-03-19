@@ -1,5 +1,7 @@
 package com.transport.transport.model.request.booking;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.transport.transport.model.request.voucher.VoucherRequest;
 import com.transport.transport.utils.ConvertUtils;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,8 +13,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class BookingRequest {
     private String note;
     private Long accountId;
@@ -21,5 +21,7 @@ public class BookingRequest {
     private String phone;
     private String email;
     private Long tripId;
+
+    private Long voucherId;
     private List<Integer> seatNumber;
 }

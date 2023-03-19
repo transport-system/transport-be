@@ -1,8 +1,7 @@
-package com.transport.transport.model.response.conpany;
+package com.transport.transport.model.response.company;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.transport.transport.model.response.Authen.AuthenticationResponse;
-import com.transport.transport.model.response.account.AccountResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

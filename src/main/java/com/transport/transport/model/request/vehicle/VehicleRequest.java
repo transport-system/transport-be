@@ -7,8 +7,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class VehicleRequest {
     @NotBlank
     private String licensePlates;

@@ -3,15 +3,13 @@ package com.transport.transport.service.impl.paypal;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-import com.transport.transport.common.PaymentType;
 import com.transport.transport.common.Status;
 import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.entity.FreeSeat;
 import com.transport.transport.model.entity.PayPal;
-import com.transport.transport.model.request.booking.CancleBooking;
-import com.transport.transport.model.request.booking.PaymentRequest;
+import com.transport.transport.model.request.booking.CancelBooking;
 import com.transport.transport.model.request.paypal.PaypalRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.PayPalRepository;
@@ -27,7 +25,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -98,15 +95,15 @@ public class PaypalServiceImple  implements PaypalService {
     }
 
     @Override
-    public String ReturnTicket(CancleBooking cancleBooking) throws PayPalRESTException {
+    public String ReturnTicket(CancelBooking cancelBooking) throws PayPalRESTException {
 
-        List<Integer> numberSeat = cancleBooking.getSeatNumber();
+        List<Integer> numberSeat = cancelBooking.getSeatNumber();
         for(Integer seat: numberSeat){
-            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancleBooking.getBookingId());
+            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancelBooking.getBookingId());
             freeSeat.setStatus(Status.Seat.INACTIVE.name());
             seatRepository.save(freeSeat);
         }
-        Booking booking = bookingRepository.findById(cancleBooking.getBookingId()).get();
+        Booking booking = bookingRepository.findById(cancelBooking.getBookingId()).get();
 
         //Change number seat
         int newNumberOfSeat = booking.getNumberOfSeats() - numberSeat.size();

@@ -132,7 +132,8 @@ public class TripController {
                                           @PathVariable(name = "id") Long id) {
         Trip trip = tripService.updateTrip(request, id);
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
-        return new ResponseEntity<>(new TripMsg("update success", response), null, 200);
+        return new ResponseEntity<>(new TripMsg("update success",
+                response), null, 200);
     }
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @PostMapping("/city/{city}")

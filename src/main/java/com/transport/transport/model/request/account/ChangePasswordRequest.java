@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 public class ChangePasswordRequest {
 
 
