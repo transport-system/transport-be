@@ -29,11 +29,14 @@ public interface BookingMapper {
     @Mapping(source = "customer.lastname", target = "c_Lastname")
     @Mapping(source = "customer.phone", target = "c_Phone")
     @Mapping(source = "customer.email", target = "c_Email")
-
+    //Company
+    @Mapping(source ="trip.company.companyName", target = "companyName")
+    @Mapping(source ="trip.company.account.email", target = "companyEmail")
+    @Mapping(source ="trip.company.account.phone", target = "companyPhone")
 
     @Mapping(source = "trip.id", target = "tripResponse.tripId")
-    @Mapping(source = "trip.route.city1", target = "tripResponse.departure")
-    @Mapping(source = "trip.route.city2", target = "tripResponse.arrival")
+    @Mapping(source = "trip.route.city1.city", target = "tripResponse.departure")
+    @Mapping(source = "trip.route.city2.city", target = "tripResponse.arrival")
     @Mapping(target = "seatResponse", source ="freeSeats")
     @Mapping(target = "paymentMethod", source ="paymentMethod")
 //    @Mapping(target = "seatResponse.seatId")

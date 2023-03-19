@@ -49,6 +49,12 @@ public class BookingResponse {
     private String c_Email;
 //    private CustomerResponse customerResponse;
 
+    //Company
+    private String companyName;
+    private String companyPhone;
+    private String companyEmail;
+
+
     private TripResponse tripResponse;
     private List<SeatResponse> seatResponse;
 }
