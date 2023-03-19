@@ -26,10 +26,10 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findAllByCompanyIdAndTimeArrival(Long companyId, Timestamp date);
     List<Trip> findAllByCompanyIdAndStatus(Long companyId, String status);
 
-    Trip findAllByIdAndCompany_IdAndVehicle_Id(Long id, Long coId,Long veId);
-    List<Trip> findAllByCompany_IdAndVehicle_Status(Long coId,String veStatus);
-
     //Count
-    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE'")
-    int countAllTrip();
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1")
+    int countTotalVehicleByCompanyId(Long companyId);
+
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1")
+    int countTotalTripByCompanyId(Long companyId);
 }

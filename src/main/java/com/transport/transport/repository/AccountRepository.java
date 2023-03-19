@@ -34,4 +34,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT COUNT(a) FROM Account a WHERE a.role = ?1")
     int countAccountsByRole(String role);
+
+    @Query("SELECT COUNT(a) FROM Account a WHERE a.role = ?1 AND a.company.id = ?2 AND a.status = 'ACTIVE'")
+    int countAccountsByRoleAndCompanyId(String role, Long id);
 }

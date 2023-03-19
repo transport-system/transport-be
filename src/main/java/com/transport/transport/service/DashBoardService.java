@@ -1,15 +1,12 @@
 package com.transport.transport.service;
 
+import com.transport.transport.model.response.dashboard.AdminResponse;
+import com.transport.transport.model.response.dashboard.CompanyResponse;
+
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 
 public interface DashBoardService {
-    int countUser();
-    int countCompany();
-    int countTrip();
-    int countBookingByCompany(Long id);
-
-    int countBookingByTrip(Long id);
-    BigDecimal revenue();
-    BigDecimal revenueByCompany();
-
+    AdminResponse getAdminDashboard();
+    CompanyResponse getCompanyDashboard(Long companyId);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.util.List;
 
 @Repository
@@ -18,16 +19,28 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByAccountId(Long id);
 
-    int countAllByTrip_Company_Account_Id(Long id);
+    @Query("SELECT COUNT(b) FROM Booking b")
+    int countTotalBooking();
 
-    @Query("SELECT COUNT(t.id) FROM Trip t JOIN Booking b WHERE t.id = b.trip.id GROUP BY t.id")
-    int countAllByTrip_Id(Long id);
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'REJECTED'")
+    int countTotalBookingCancel();
 
-    //Calculate revenue by month
-    @Query("SELECT SUM(b.totalPrice) FROM Booking b")
-    BigDecimal revenue();
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'DONE'")
+    int countTotalBookingSuccess();
 
-    //Calculate revenue by company
-    @Query("SELECT SUM(b.totalPrice) FROM Booking b JOIN Trip t WHERE b.trip.id = t.id GROUP BY t.id")
-    BigDecimal revenueByCompany();
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'PENDING'")
+    int countTotalBookingPending();
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1")
+    int countTotalBookingByCompanyId(Long id);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2")
+    int countTotalBookingByCompanyIdAndStatus(Long id, String status);
+
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE'")
+    BigDecimal getRevenue();
+
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'")
+    BigDecimal getRevenueByCompanyId(Long id);
+
 }

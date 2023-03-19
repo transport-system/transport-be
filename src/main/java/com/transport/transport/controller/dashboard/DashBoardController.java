@@ -2,54 +2,36 @@ package com.transport.transport.controller.dashboard;
 
 
 import com.transport.transport.common.EndpointConstant;
+import com.transport.transport.model.response.dashboard.AdminResponse;
+import com.transport.transport.model.response.dashboard.CompanyResponse;
 import com.transport.transport.service.DashBoardService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = EndpointConstant.Dashboard.DASHBOARD_ENDPOINT)
 @Api( tags = "Dashboard")
 public class DashBoardController {
-
     private final DashBoardService dashBoardService;
-    @GetMapping("/countUser")
-    public int countUser(){
-        return dashBoardService.countUser();
+
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
+    @GetMapping("/admin")
+    public AdminResponse getAdminDashboard() {
+        return dashBoardService.getAdminDashboard();
     }
 
-    @GetMapping("/countCompany")
-    public int countCompany(){
-        return dashBoardService.countCompany();
-    }
-
-    @GetMapping("/countTrip")
-    public int countTrip(){
-        return dashBoardService.countTrip();
-    }
-
-    @GetMapping("/countBookingByCompany")
-    public int countBookingByCompany(){
-        return dashBoardService.countBookingByCompany(1L);
-    }
-
-    @GetMapping("/countBookingByTrip")
-    public int countBookingByTrip(){
-        return dashBoardService.countBookingByTrip(1L);
-    }
-
-    @GetMapping("/revenue")
-    public BigDecimal revenue(){
-        return dashBoardService.revenue();
-    }
-
-    @GetMapping("/revenueByCompany")
-    public BigDecimal revenueByCompany(){
-        return dashBoardService.revenueByCompany();
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
+    @GetMapping("/company/{id}")
+    public CompanyResponse getCompanyDashboard(@PathVariable Long id) {
+        return dashBoardService.getCompanyDashboard(id);
     }
 }
