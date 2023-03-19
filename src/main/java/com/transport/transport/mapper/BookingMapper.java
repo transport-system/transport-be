@@ -32,6 +32,8 @@ public interface BookingMapper {
 
 
     @Mapping(source = "trip.id", target = "tripResponse.tripId")
+    @Mapping(source = "trip.route.city1", target = "tripResponse.departure")
+    @Mapping(source = "trip.route.city2", target = "tripResponse.arrival")
     @Mapping(target = "seatResponse", source ="freeSeats")
     @Mapping(target = "paymentMethod", source ="paymentMethod")
 //    @Mapping(target = "seatResponse.seatId")
