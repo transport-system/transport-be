@@ -11,7 +11,7 @@ public interface BookingMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "createBookingTime", target = "createBookingTime", ignore = true)
+    @Mapping(source = "createBookingTime", target = "createBookingTime")
     @Mapping(source = "examTime", target = "examTime")
     @Mapping(source = "totalPrice", target = "totalPrice")
     @Mapping(source = "numberOfSeats", target = "numberOfSeats")
