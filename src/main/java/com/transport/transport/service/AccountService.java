@@ -30,6 +30,8 @@ public interface AccountService extends CRUDService<Account> {
     Account updateProfile(String username, UpdateRequest updateRequest);
 
     List<Account> findAccountByRoleAndStatus(String role, String status);
-//    Account uploadImg(MultipartFile image, String username);
 
+    void updateResetPasswordToken(String token, String email);
+    public Account getByResetPasswordToken(String token);
+    public void updatePassword(Account account, String newPassword);
 }

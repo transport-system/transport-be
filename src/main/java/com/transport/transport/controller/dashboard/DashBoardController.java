@@ -6,6 +6,7 @@ import com.transport.transport.model.response.dashboard.AdminResponse;
 import com.transport.transport.model.response.dashboard.CompanyResponse;
 import com.transport.transport.service.DashBoardService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +24,14 @@ import java.sql.ResultSet;
 public class DashBoardController {
     private final DashBoardService dashBoardService;
 
+    @ApiOperation(value = "Get admin dashboard")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @GetMapping("/admin")
     public AdminResponse getAdminDashboard() {
         return dashBoardService.getAdminDashboard();
     }
 
+    @ApiOperation(value = "Get company dashboard")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
     @GetMapping("/company/{id}")
     public CompanyResponse getCompanyDashboard(@PathVariable Long id) {

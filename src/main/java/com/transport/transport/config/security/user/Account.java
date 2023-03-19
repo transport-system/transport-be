@@ -58,6 +58,9 @@ public class Account implements UserDetails {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;

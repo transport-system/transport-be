@@ -17,6 +17,7 @@ import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -35,9 +37,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImp implements AccountService {
-    private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
     private final AccountRepository repository;
-    private final CompanyRepository companyRepository;
     private final AccountMapper mapper;
 
     @Override
@@ -152,11 +152,34 @@ public class AccountServiceImp implements AccountService {
         return repository.getAccountsByRoleAndStatus(role, status);
     }
 
-//    @Override
-//    public Account uploadImg(@RequestBody MultipartFile image, String username) {
-//        Account account = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("Account username not found: " + username));
-//        account.setAvatarImage(fileService.uploadFile(image));
-//        save(account);
-//        return account;
-//    }
+    @Transactional
+    @Override
+    public void updateResetPasswordToken(String token, String email) {
+        Account account = repository.findByEmail(email);
+        if (account != null) {
+            account.setResetPasswordToken(token);
+            repository.save(account);
+        } else {
+            throw new NotFoundException("Could not find any customer with the email " + email);
+        }
+    }
+
+    @Transactional
+    @Override
+    public Account getByResetPasswordToken(String token) {
+        return repository.findByResetPasswordToken(token);
+    }
+
+    @Transactional
+    @Override
+    public void updatePassword(Account account, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        account.setPassword(encodedPassword);
+
+        account.setResetPasswordToken(null);
+        repository.save(account);
+    }
+
+
 }
