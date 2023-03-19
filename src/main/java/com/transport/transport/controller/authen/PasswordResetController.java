@@ -73,26 +73,19 @@ public class PasswordResetController {
 
 
     @PostMapping("/reset_password")
-    public String processResetPassword(@Param(value = "token") String token,
+    public String processResetPassword(String token,
                                        String password,
-                                       String confirmPassword,
-                                       HttpServletRequest request) {
+                                       String confirmPassword) {
         Account account = accountService.getByResetPasswordToken(token);
-        String resultPage = null;
         if (account == null) {
-            resultPage = "message";
-            request.setAttribute("message", "Invalid Token");
+            return "Invalid Token";
         } else {
             if (password.equals(confirmPassword)) {
                 accountService.updatePassword(account, password);
-                resultPage = "message";
-                request.setAttribute("message", "You have successfully changed your password.");
+                return "You have successfully changed your password.";
             } else {
-                resultPage = "message";
-                request.setAttribute("message", "Passwords do not match");
+                return "Passwords do not match";
             }
         }
-
-        return resultPage;
     }
 }

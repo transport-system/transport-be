@@ -35,6 +35,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.email = ?1")
     public Account findByEmail(String email);
 
+    @Query("SELECT a FROM Account a WHERE a.resetPasswordToken = ?1")
     public Account findByResetPasswordToken(String token);
 
     @Query("SELECT COUNT(a) FROM Account a WHERE a.role = ?1")

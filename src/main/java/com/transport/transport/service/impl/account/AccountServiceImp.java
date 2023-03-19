@@ -152,8 +152,9 @@ public class AccountServiceImp implements AccountService {
         return repository.getAccountsByRoleAndStatus(role, status);
     }
 
-    @Transactional
+
     @Override
+    @Transactional
     public void updateResetPasswordToken(String token, String email) {
         Account account = repository.findByEmail(email);
         if (account != null) {
@@ -164,14 +165,15 @@ public class AccountServiceImp implements AccountService {
         }
     }
 
-    @Transactional
+
     @Override
+    @Transactional
     public Account getByResetPasswordToken(String token) {
         return repository.findByResetPasswordToken(token);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void updatePassword(Account account, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
