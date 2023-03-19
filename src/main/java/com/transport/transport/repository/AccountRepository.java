@@ -29,4 +29,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     List<Account> getAccountsByRole(String role);
 
+    int countAccountsByRole(String role);
 }

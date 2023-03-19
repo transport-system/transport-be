@@ -7,7 +7,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
+
     boolean existsByCompanyName(String name);
+
+    @Query("SELECT COUNT(Company.id) FROM Company WHERE Company.account.status LIKE 'ACTIVE'")
+    int countAllCompany();
 
     @Query("SELECT c FROM Company c WHERE c.account.username = ?1")
     Company findCompanyByAccount_Username(String username);

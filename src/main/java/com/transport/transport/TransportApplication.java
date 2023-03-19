@@ -14,6 +14,5 @@ public class TransportApplication {
     public static void main(String[] args) {
         SpringApplication.run(TransportApplication.class, args);
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+00:00"));;
-
     }
 }
