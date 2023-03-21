@@ -7,7 +7,6 @@ import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
-import com.transport.transport.model.request.booking.CancelBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.SeatRepository;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -104,9 +102,6 @@ public class BookingServiceImp implements BookingService {
             Account account = accountService.findById(booking.getAccountId());
             newBooking.setAccount(account);
         }
-
-
-
         // Get trip
         Trip trip = tripService.findById(booking.getTripId());
         newBooking.setTrip(trip);
@@ -164,12 +159,14 @@ public class BookingServiceImp implements BookingService {
         if (capacity == 0) {
             trip.setStatus(Status.Trip.INACTIVE.name());
         }
-        if(booking.getStatus().equalsIgnoreCase(Status.Booking.CASH.name())){
-            newBooking.setStatus(Status.Booking.CASH.name());
-            List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
-            newBooking.setFreeSeats(freeSeats);
-            bookingRepository.save(newBooking);
-            return bookingRepository.save(newBooking);
+        if (booking.getStatus().isEmpty()) {
+            if (booking.getStatus().equalsIgnoreCase(Status.Booking.CASH.name())) {
+                newBooking.setStatus(Status.Booking.CASH.name());
+                List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
+                newBooking.setFreeSeats(freeSeats);
+                bookingRepository.save(newBooking);
+                return bookingRepository.save(newBooking);
+            }
         }
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
