@@ -77,20 +77,20 @@ public class BookingController {
     }
 
     @GetMapping("/returnTicket")
-    public ResponseEntity<?> returnTicket(@RequestParam Long booking){
-        bookingService.refundTicket(booking);
+    public ResponseEntity<?> returnTicket(@PathVariable("id") Long id){
+        bookingService.refundTicket(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @GetMapping("/refund")
-    public ResponseEntity<?> requestRefund(@RequestParam Long booking){
-        bookingService.requestRefund(booking);
+    public ResponseEntity<?> requestRefund(@PathVariable("id") Long id){
+        bookingService.requestRefund(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
     @GetMapping("/cashTicket")
-    public ResponseEntity<?> cash(@RequestParam Long booking){
-        bookingService.doneCash(booking);
+    public ResponseEntity<?> cash(@PathVariable("id") Long id){
+        bookingService.doneCash(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
