@@ -164,28 +164,34 @@ public class BookingServiceImp implements BookingService {
         if (capacity == 0) {
             trip.setStatus(Status.Trip.INACTIVE.name());
         }
-
+        if(booking.getStatus().equalsIgnoreCase(Status.Booking.CASH.name())){
+            newBooking.setStatus(Status.Booking.CASH.name());
+            List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
+            newBooking.setFreeSeats(freeSeats);
+            bookingRepository.save(newBooking);
+            return bookingRepository.save(newBooking);
+        }
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
         Booking after = bookingRepository.save(newBooking);
-        PaymentRequest method = new PaymentRequest();
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        // If after 10s, booking is not paid, booking will be rejected
-        // else booking will be paid and seat will be inactive
-        final Future<?> future = executor.submit(() -> {
-            try {
-                Thread.sleep(MILLIS_TO_WAIT);
-                if (flag == 0) {
-                    reset(after, trip, vehicle, seatNumber, freeSeats);
-                } else {
-                    out.println("Booking is paid");
-                    flag = 0;
+            PaymentRequest method = new PaymentRequest();
+            final ExecutorService executor = Executors.newSingleThreadExecutor();
+            // If after 10s, booking is not paid, booking will be rejected
+            // else booking will be paid and seat will be inactive
+            final Future<?> future = executor.submit(() -> {
+                try {
+                    Thread.sleep(MILLIS_TO_WAIT);
+                    if (flag == 0) {
+                        reset(after, trip, vehicle, seatNumber, freeSeats);
+                    } else {
+                        out.println("Booking is paid");
+                        flag = 0;
+                    }
+                } catch (InterruptedException e) {
+                    out.println("Thread interrupted");
                 }
-            } catch (InterruptedException e) {
-                out.println("Thread interrupted");
-            }
-        });
-        return future.isDone() ? payBooking(method) : after;
+            });
+            return future.isDone() ? payBooking(method) : after;
     }
 
 
@@ -246,46 +252,35 @@ public class BookingServiceImp implements BookingService {
         return freeSeats;
     }
 
-
     @Override
-    public void ReturnTicket(CancelBooking cancelBooking) {
-
-        List<Integer> numberSeat = cancelBooking.getSeatNumber();
-        for(Integer seat: numberSeat){
-            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancelBooking.getBookingId());
+    public void refundTicket(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).get();
+        List<FreeSeat> numberSeat = booking.getFreeSeats();
+        for(FreeSeat seat: numberSeat) {
+            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.getSeatNumber(), bookingId);
             freeSeat.setStatus(Status.Seat.INACTIVE.name());
             seatRepository.save(freeSeat);
         }
-        Booking booking = bookingRepository.findById(cancelBooking.getBookingId()).get();
-
-        //Change number seat
-        int newNumberOfSeat = booking.getNumberOfSeats() - numberSeat.size();
-        booking.setNumberOfSeats(newNumberOfSeat);
-
-        //Check Time
-        Calendar c = Calendar.getInstance();
-        c.setTime(booking.getCreateBookingTime());
-        c.add(Calendar.DATE, +1);
-        Timestamp timeAccept = new Timestamp(c.getTimeInMillis());
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Timestamp returnTime = booking.getTrip().getTimeReturn();
-
-        //Check Date to Change total price
-        //Check TH1: Time in Create after 1 day
         double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
         double newPrice = 0;
-        if(now.after(timeAccept)) {
-            newPrice = booking.getTotalPrice().doubleValue() - price * numberSeat.size();
-        } else if (now.before(returnTime) && now.after(timeAccept)) {
-            double total = booking.getTotalPrice().doubleValue() - price * numberSeat.size();
-            newPrice = total - (total*(20/100));
-        }else {
-            newPrice = booking.getTotalPrice().doubleValue();
-        }
+        newPrice = booking.getTotalPrice().doubleValue()*0.1;
         booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-        //Check if number seat = 0 => This Booking cancle => Change Status
-        if (newNumberOfSeat == 0){
-            booking.setStatus(Status.Seat.INACTIVE.name());
-        }
+        booking.setStatus(Status.Booking.REFUNDED.name());
+        bookingRepository.save(booking);
     }
+    @Override
+    public void requestRefund(Long bookingId) {
+        Booking change = bookingRepository.findById(bookingId).get();
+        change.setStatus(Status.Booking.REQUESTREFUND.name());
+        bookingRepository.save(change);
+    }
+
+    @Override
+    public void doneCash(Long bookingId) {
+        Booking change = bookingRepository.findById(bookingId).get();
+        change.setStatus(Status.Booking.DONE.name());
+        bookingRepository.save(change);
+    }
+
+
 }
