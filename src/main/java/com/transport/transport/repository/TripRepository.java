@@ -32,4 +32,8 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
 
     @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1")
     int countTotalTripByCompanyId(Long companyId);
+
+    //By Date
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1 AND t.timeArrival BETWEEN ?2 AND ?3")
+    int countTotalTripByCompanyId(Long companyId, Timestamp from, Timestamp to);
 }

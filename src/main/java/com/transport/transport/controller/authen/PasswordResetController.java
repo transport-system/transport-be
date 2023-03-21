@@ -2,6 +2,7 @@ package com.transport.transport.controller.authen;
 
 import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.config.security.user.Account;
+import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.request.authen.ForgotPasswordForm;
 import com.transport.transport.service.AccountService;
 import com.transport.transport.utils.Utility;
@@ -35,15 +36,17 @@ public class PasswordResetController {
     public String processForgotPassword(@Valid @RequestBody ForgotPasswordForm form, HttpServletRequest request) {
         String email = form.getEmail();
         String token = RandomString.make(30);
-
+        String msg = null;
         try {
             accountService.updateResetPasswordToken(token, email);
             String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
             sendEmail(email, resetPasswordLink);
+            msg = "We have sent a reset password link to your email. Please check.";
         } catch (Exception e) {
-            e.printStackTrace();
+            msg = "Error while sending email: " + e.getMessage();
+            throw new NotFoundException("Could not find any customer with the email " + email);
         }
-        return "We have sent a reset password link to your email. Please check.";
+        return msg;
     }
 
     public void sendEmail(String recipientEmail, String link)
@@ -51,7 +54,7 @@ public class PasswordResetController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom("contact@shopme.com", "Shopme Support");
+        helper.setFrom("contact@shopme.com", "Transport System");
         helper.setTo(recipientEmail);
 
         String subject = "Here's the link to reset your password";

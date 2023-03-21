@@ -84,7 +84,8 @@ public class TripController {
         return new ResponseEntity<>(tripService.findByStatusOfCompany(CompanyId,status), HttpStatus.OK);
     }
     @GetMapping("/company/date/{CompanyId}/{date}")
-    public ResponseEntity<?> getByArrivalOfCompany(@PathVariable(name = "date") Timestamp date, @PathVariable(name = "CompanyId") Long CompanyId) throws ParseException {
+    public ResponseEntity<?> getByArrivalOfCompany(@PathVariable(name = "date") Timestamp date,
+                                                   @PathVariable(name = "CompanyId") Long CompanyId) throws ParseException {
         return new ResponseEntity<>(tripService.findByTimeArrivalOfCompany(CompanyId, date), HttpStatus.OK);
     }
 

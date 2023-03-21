@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -43,4 +43,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'")
     BigDecimal getRevenueByCompanyId(Long id);
 
+
+    @Query(value = "SELECT MONTH(b.createBookingTime) as month, SUM(b.totalPrice) as revenue FROM Booking b " +
+            "WHERE b.id IN (SELECT t.id FROM Trip t WHERE t.company.id = ?1) AND b.status = 'DONE' " +
+            "GROUP BY MONTH(b.createBookingTime)")
+    List<Object[]> getRevenueByMonth(Long id);
+
+
+
+    //By Date
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE' AND b.createBookingTime BETWEEN ?2 AND ?3")
+    BigDecimal getRevenueByCompanyId(Long id, Timestamp from, Timestamp to);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.createBookingTime BETWEEN ?2 AND ?3")
+    int countTotalBookingByCompanyId(Long id, Timestamp from, Timestamp to);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2 AND b.createBookingTime BETWEEN ?3 AND ?4")
+    int countTotalBookingByCompanyIdAndStatus(Long id, String status, Timestamp from, Timestamp to);
 }

@@ -1,12 +1,12 @@
 package com.transport.transport.model.response.dashboard;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.transport.transport.model.entity.Booking;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -21,5 +21,5 @@ public class CompanyResponse {
     private int totalBookingCancel;
     private int totalBookingPending;
     private int totalBookingSuccess;
-    private BigDecimal revenue;
+    private BigDecimal totalRevenue;
 }
