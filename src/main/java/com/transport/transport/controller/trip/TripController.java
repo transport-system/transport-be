@@ -123,7 +123,6 @@ public class TripController {
     @PostMapping("/create")
     public ResponseEntity<TripMsg> create(@Valid @RequestBody TripRequest request) {
         Trip trip = tripService.createrTrip(request);
-
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
         return new ResponseEntity<>(new TripMsg("create success", response), null, 200);
     }

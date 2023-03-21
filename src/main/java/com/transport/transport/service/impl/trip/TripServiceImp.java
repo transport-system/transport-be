@@ -76,9 +76,20 @@ public class TripServiceImp implements TripService {
             if(listCheck.getStatus().equalsIgnoreCase("ACTIVE")) {
                 if (listCheck.getRoute().getCity2().getCity().equalsIgnoreCase(departure)
                     && listCheck.getRoute().getCity1().getCity().equalsIgnoreCase(arrival)) {
-                    String date1 = checkDate(listCheck.getTimeDeparture());
-                    if(date1.equalsIgnoreCase(date)){
-                        list.add(listCheck);
+                    if(date != null) {
+                        String date1 = checkDate(listCheck.getTimeDeparture());
+                        if (date1.equalsIgnoreCase(date)) {
+                            list.add(listCheck);
+                        }
+                    }
+                    else{
+                        Timestamp dateDeparture = new Timestamp(listCheck.getTimeDeparture().getTime());
+                        String date5 = checkDate(dateDeparture);
+                        Timestamp ts = Timestamp.from(Instant.now());
+                        String date6 = checkDate(ts);
+                        if (date5.equalsIgnoreCase(date6)) {
+                            list.add(listCheck);
+                        }
                     }
                 }
             }
@@ -88,7 +99,6 @@ public class TripServiceImp implements TripService {
         }
         return list;
     }
-
     @Override
     public List<Trip> findbyArrivalAndDepature(String arrival, String departure) {
         List<Trip> listAll = tripRepo.findAll();

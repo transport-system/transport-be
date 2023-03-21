@@ -40,6 +40,7 @@ public class PaypalServiceImple  implements PaypalService {
     public Payment createPayment(double request) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency("USD");
+        request = request/24000;
         double total = new BigDecimal(request).setScale(2, RoundingMode.HALF_UP).doubleValue();
         amount.setTotal(String.format("%.2f", total));
 
