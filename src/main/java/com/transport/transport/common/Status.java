@@ -21,9 +21,9 @@ public class Status {
         REQUEST,
         DONE,
         REJECTED,
-        UNAVAILABLE,
-        EXPIRED,
-        ACCEPT
+        REFUNDED,
+        REQUESTREFUND,
+        CASH
     }
 
     public enum CheckTime {
@@ -39,7 +39,8 @@ public class Status {
     public enum Trip {
         ACTIVE,
         DOING,
-        INACTIVE
+        INACTIVE,
+        UPDATE
     }
 
     public enum Seat {

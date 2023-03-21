@@ -1,6 +1,7 @@
 package com.transport.transport.model.request.booking;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.transport.transport.common.Status;
 import com.transport.transport.model.request.voucher.VoucherRequest;
 import com.transport.transport.utils.ConvertUtils;
 import lombok.*;
@@ -22,6 +23,7 @@ public class BookingRequest {
     private String email;
     private Long tripId;
 
+    private String status;
     private Long voucherId;
     private List<Integer> seatNumber;
 }

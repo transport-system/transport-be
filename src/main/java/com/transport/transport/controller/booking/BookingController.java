@@ -76,10 +76,23 @@ public class BookingController {
         return new ResponseEntity<>(responses, null, 201);
     }
 
-    @PostMapping("/returnTicket")
-    public ResponseEntity<?> returnTicket(@RequestBody CancelBooking cancelBooking){
-        bookingService.ReturnTicket(cancelBooking);
+    @GetMapping("/returnTicket")
+    public ResponseEntity<?> returnTicket(@RequestParam Long booking){
+        bookingService.refundTicket(booking);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
+
+    @GetMapping("/refund")
+    public ResponseEntity<?> requestRefund(@RequestParam Long booking){
+        bookingService.requestRefund(booking);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @GetMapping("/cashTicket")
+    public ResponseEntity<?> cash(@RequestParam Long booking){
+        bookingService.doneCash(booking);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
 
 }
