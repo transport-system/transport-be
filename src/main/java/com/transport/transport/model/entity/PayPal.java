@@ -20,9 +20,6 @@ public class PayPal {
     private Long id;
     @Column(name="paymentId")
     private String paymentId;
-
-    @Column(name = "saleId")
-    private String saleId;
     @Column(name="payerId")
     private String payerId;
     @Column(name="customerId")

@@ -37,10 +37,10 @@ public class PaypalServiceImple  implements PaypalService {
     private final BookingRepository bookingRepository;
     private final SeatRepository seatRepository;
     @Override
-    public Payment createPayment(PaypalRequest request) throws PayPalRESTException {
+    public Payment createPayment(double request) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency("USD");
-        double total = new BigDecimal(request.getTotal()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double total = new BigDecimal(request).setScale(2, RoundingMode.HALF_UP).doubleValue();
         amount.setTotal(String.format("%.2f", total));
 
         Transaction transaction = new Transaction();
@@ -57,6 +57,8 @@ public class PaypalServiceImple  implements PaypalService {
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
+        redirectUrls.setCancelUrl("http://localhost:8088/api/paypal/paypal/cancel");
+        redirectUrls.setReturnUrl("http://localhost:8088/api/paypal/paypal/success");
         payment.setRedirectUrls(redirectUrls);
 
         return payment.create(apiContext);
@@ -78,7 +80,6 @@ public class PaypalServiceImple  implements PaypalService {
         add.setCustomerId(request.getCustomerId());
         add.setTripId(request.getTripId());
         add.setPayerId(request.getPayerId());
-        add.setSaleId(request.getSaleId());
         payBooking(request);
         return payPalRepository.save(add);
     }
@@ -94,62 +95,4 @@ public class PaypalServiceImple  implements PaypalService {
         }).orElseThrow(() -> new NotFoundException("Booking id not found: " + request.getBookingId()));
     }
 
-    @Override
-    public String ReturnTicket(CancelBooking cancelBooking) throws PayPalRESTException {
-
-        List<Integer> numberSeat = cancelBooking.getSeatNumber();
-        for(Integer seat: numberSeat){
-            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.intValue(), cancelBooking.getBookingId());
-            freeSeat.setStatus(Status.Seat.INACTIVE.name());
-            seatRepository.save(freeSeat);
-        }
-        Booking booking = bookingRepository.findById(cancelBooking.getBookingId()).get();
-
-        //Change number seat
-        int newNumberOfSeat = booking.getNumberOfSeats() - numberSeat.size();
-        booking.setNumberOfSeats(newNumberOfSeat);
-
-        //Check Time
-        Calendar c = Calendar.getInstance();
-        c.setTime(booking.getCreateBookingTime());
-        c.add(Calendar.DATE, +1);
-        Timestamp timeAccept = new Timestamp(c.getTimeInMillis());
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Timestamp returnTime = booking.getTrip().getTimeReturn();
-
-        //Check Date to Change total price
-        //Check TH1: Time in Create after 1 day
-        double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
-        double newPrice = 0;
-        if(now.after(timeAccept)) {
-            newPrice = booking.getTotalPrice().doubleValue() - price * numberSeat.size();
-        } else if (now.before(returnTime) && now.after(timeAccept)) {
-            double total = booking.getTotalPrice().doubleValue() - price * numberSeat.size();
-            newPrice = total - (total*(20/100));
-        }else {
-            newPrice = booking.getTotalPrice().doubleValue();
-        }
-        booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-        //Check if number seat = 0 => This Booking cancle => Change Status
-        if (newNumberOfSeat == 0){
-            booking.setStatus(Status.Seat.INACTIVE.name());
-        }
-
-        PayPal payPal = payPalRepository.findByBookingId(booking.getId());
-
-// Tạo một đối tượng Refund với thông tin hoàn tiền
-        Refund refund = new Refund();
-        Amount amount = new Amount();
-        amount.setTotal(String.valueOf(newPrice)); // Số tiền cần hoàn tiền
-        amount.setCurrency("USD");
-        refund.setAmount(amount);
-
-// Gọi API để thực hiện hoàn tiền
-        Payment payment = new Payment();
-        Sale sale = new Sale();
-        sale.setId(payPal.getSaleId());
-        payment.setId(payPal.getPaymentId());
-        Refund refundedPaymentRefund = sale.refund(apiContext, refund);
-        return refundedPaymentRefund.toJSON();
-    }
 }

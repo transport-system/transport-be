@@ -6,6 +6,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaypalRequest {
-    private Double total;
-    private String currency;
+    Double total;
+    String cancelUrl;
+    String successUrl;
+
 }
