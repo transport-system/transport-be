@@ -23,7 +23,7 @@ public class Status {
         REJECTED,
         REFUNDED,
         REQUESTREFUND,
-        CASH
+        PayLater
     }
 
     public enum CheckTime {

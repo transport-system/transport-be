@@ -161,8 +161,8 @@ public class BookingServiceImp implements BookingService {
         if (capacity == 0) {
             trip.setStatus(Status.Trip.INACTIVE.name());
         }
-        if (booking.getStatus().equalsIgnoreCase(Status.Booking.CASH.name())) {
-            newBooking.setStatus(Status.Booking.CASH.name());
+        if (booking.getStatus().equalsIgnoreCase(Status.Booking.PayLater.name())) {
+            newBooking.setStatus(Status.Booking.PayLater.name());
             List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
             newBooking.setFreeSeats(freeSeats);
             bookingRepository.save(newBooking);
