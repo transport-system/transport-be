@@ -204,29 +204,52 @@ public class BookingServiceImp implements BookingService {
     }
 
 
+//    @Override
+//    public Booking payBooking(PaymentRequest method) {
+//        return bookingRepository.findById(method.getBookingId()).map((booking) -> {
+//            if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
+//                if(method.getMethod().equalsIgnoreCase("CARD")){
+//                    booking.setStatus(Status.Booking.DONE.name());
+//                }
+//                if(method.getMethod().equalsIgnoreCase("CASH")){
+//                    booking.setStatus(Status.Booking.PAYLATER.name());
+//                }
+//                else{
+//                    throw new BadRequestException("Payment method is not valid");
+//                }
+//                booking.setPaymentMethod(method.getMethod().toUpperCase());
+//                booking.getFreeSeats().forEach((seat) -> {
+//                    seat.setStatus(Status.Seat.INACTIVE.name());
+//                });
+//                flag++;
+//                return bookingRepository.save(booking);
+//            } else {
+//                throw new BadRequestException("Can't pay booking");
+//            }
+//        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
+//    }
     @Override
-    public Booking payBooking(PaymentRequest method) {
-        return bookingRepository.findById(method.getBookingId()).map((booking) -> {
-            if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-                if(method.getMethod().equalsIgnoreCase(PaymentType.CARD.name())){
-                    booking.setStatus(Status.Booking.DONE.name());
-                }
-                if(method.getMethod().equalsIgnoreCase(PaymentType.CASH.name())){
-                    booking.setStatus(Status.Booking.PAYLATER.name());
-                }
-                else{
-                    throw new BadRequestException("Payment method is not valid");
-                }
-                booking.setPaymentMethod(method.getMethod().toUpperCase());
-                booking.getFreeSeats().forEach((seat) -> {
-                    seat.setStatus(Status.Seat.INACTIVE.name());
-                });
-                flag++;
-                return bookingRepository.save(booking);
-            } else {
-                throw new BadRequestException("Can't pay booking");
+    public Booking payBooking(PaymentRequest method){
+        Booking payBooking = bookingRepository.findById(method.getBookingId()).get();
+        if (payBooking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
+            if(method.getMethod().equalsIgnoreCase("CARD")){
+                payBooking.setStatus(Status.Booking.DONE.name());
             }
-        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
+            if(method.getMethod().equalsIgnoreCase("CASH")){
+                payBooking.setStatus(Status.Booking.PAYLATER.name());
+            }
+            else{
+                throw new BadRequestException("Payment method is not valid");
+            }
+            payBooking.setPaymentMethod(method.getMethod().toUpperCase());
+            payBooking.getFreeSeats().forEach((seat) -> {
+                seat.setStatus(Status.Seat.INACTIVE.name());
+            });
+            flag++;
+        } else {
+            throw new BadRequestException("Can't pay booking");
+        }
+        return bookingRepository.save(payBooking);
     }
 
     private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,
