@@ -38,7 +38,7 @@ public class BookingServiceImp implements BookingService {
     private final CustomerService customerService;
     private final VoucherService voucherService;
 
-    private static final long MILLIS_TO_WAIT = 30000L;
+    private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
     private final PayPalRepository payPalRepository;
 
@@ -208,10 +208,10 @@ public class BookingServiceImp implements BookingService {
     public Booking payBooking(PaymentRequest method) {
         return bookingRepository.findById(method.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-                if(method.getMethod().equalsIgnoreCase("CARD")){
+                if(method.getMethod().equalsIgnoreCase(PaymentType.CARD.name())){
                     booking.setStatus(Status.Booking.DONE.name());
                 }
-                if(method.getMethod().equalsIgnoreCase("CASH")){
+                if(method.getMethod().equalsIgnoreCase(PaymentType.CASH.name())){
                     booking.setStatus(Status.Booking.PAYLATER.name());
                 }
                 else{
