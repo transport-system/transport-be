@@ -182,25 +182,26 @@ public class BookingServiceImp implements BookingService {
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
         Booking after = bookingRepository.save(newBooking);
-        PaymentRequest method = new PaymentRequest();
-
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        // If after 10s, booking is not paid, booking will be rejected
-        // else booking will be paid and seat will be inactive
-        final Future<?> future = executor.submit(() -> {
-            try {
-                Thread.sleep(MILLIS_TO_WAIT);
-                if (flag == 0) {
-                    reset(after, trip, vehicle, seatNumber, freeSeats);
-                    } else {
-                        out.println("Booking is paid");
-                        flag = 0;
-                    }
-                } catch (InterruptedException e) {
-                    out.println("Thread interrupted");
-                }
-            });
-        return future.isDone() ? payBooking(method) : after;
+//        PaymentRequest method = new PaymentRequest();
+//
+//        final ExecutorService executor = Executors.newSingleThreadExecutor();
+//        // If after 10s, booking is not paid, booking will be rejected
+//        // else booking will be paid and seat will be inactive
+//        final Future<?> future = executor.submit(() -> {
+//            try {
+//                Thread.sleep(MILLIS_TO_WAIT);
+//                if (flag == 0) {
+//                    reset(after, trip, vehicle, seatNumber, freeSeats);
+//                    } else {
+//                        out.println("Booking is paid");
+//                        flag = 0;
+//                    }
+//                } catch (InterruptedException e) {
+//                    out.println("Thread interrupted");
+//                }
+//            });
+//        return future.isDone() ? payBooking(method) : after;
+        return after;
     }
 
 
