@@ -9,6 +9,7 @@ import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.repository.BookingRepository;
+import com.transport.transport.repository.PayPalRepository;
 import com.transport.transport.repository.SeatRepository;
 import com.transport.transport.service.*;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class BookingServiceImp implements BookingService {
 
     private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
+    private final PayPalRepository payPalRepository;
 
     @Override
     public List<Booking> findAll() {
@@ -268,8 +270,13 @@ public class BookingServiceImp implements BookingService {
     @Override
     public void requestRefund(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
-        change.setStatus(Status.Booking.REQUESTREFUND.name());
-        bookingRepository.save(change);
+        if(change.getStatus().equalsIgnoreCase("DONE")){
+            change.setStatus(Status.Booking.REQUESTREFUND.name());
+            bookingRepository.save(change);
+        }
+        else {
+            throw  new RuntimeException("You have not paid for this order yet");
+        }
     }
 
     @Override
