@@ -237,10 +237,6 @@ public class BookingServiceImp implements BookingService {
             if(method.getMethod().equalsIgnoreCase("CASH")){
                 payBooking.setStatus(Status.Booking.PAYLATER.name());
             }
-            else{
-                throw new BadRequestException("Payment method is not valid");
-            }
-            payBooking.setPaymentMethod(method.getMethod().toUpperCase());
             payBooking.getFreeSeats().forEach((seat) -> {
                 seat.setStatus(Status.Seat.INACTIVE.name());
             });
