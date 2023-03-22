@@ -17,9 +17,6 @@ import java.math.BigDecimal;
 public class AdminResponse {
     private int totalCompany;
     private int totalUser;
-    private int totalBooking;
-    private int totalBookingCancel;
-    private int totalBookingPending;
-    private int totalBookingSuccess;
+    private int totalTrip;
     private BigDecimal revenue;
 }

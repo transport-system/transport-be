@@ -2,7 +2,6 @@ package com.transport.transport.controller.dashboard;
 
 
 import com.transport.transport.common.EndpointConstant;
-import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.response.dashboard.AdminResponse;
 import com.transport.transport.model.response.dashboard.CompanyResponse;
 import com.transport.transport.model.response.dashboard.RevenueByMonth;
@@ -10,17 +9,14 @@ import com.transport.transport.service.DashBoardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,6 +32,13 @@ public class DashBoardController {
         return dashBoardService.getAdminDashboard();
     }
 
+    @ApiOperation(value = "Get admin dashboard last 7 days")
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
+    @GetMapping("/admin/7days")
+    public AdminResponse getAdminDashboardLast7Days() {
+        return dashBoardService.getAdminDashboardLast7Days();
+    }
+
     @ApiOperation(value = "Get company dashboard")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
     @GetMapping("/company/{id}")
@@ -43,15 +46,26 @@ public class DashBoardController {
         return dashBoardService.getCompanyDashboard(id);
     }
 
-    @ApiOperation(value = "Get company dashboard by date")
+    @ApiOperation(value = "Get company dashboard last 7 days")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
-    @GetMapping("/company/{id}/{from}/{to}")
-    public CompanyResponse getCompanyDashboardByDate(@PathVariable Long id,
-                                                     @PathVariable(name = "from") Timestamp from,
-                                                     @PathVariable(name = "to") Timestamp to) {
-        return dashBoardService.getCompanyDashboard(id, from, to);
+    @GetMapping("/company/7days/{id}")
+    public CompanyResponse getCompanyDashboardLast7Days(@PathVariable Long id) {
+        return dashBoardService.getCompanyDashboardLast7Days(id);
     }
 
+    @ApiOperation(value = "Get company dashboard by trip")
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
+    @GetMapping("/company/{id}/trip/{tripId}")
+    public CompanyResponse getCompanyByTripDashboard(@PathVariable Long id, @PathVariable Long tripId) {
+        return dashBoardService.getCompanyByTripDashboard(id, tripId);
+    }
+
+//    @ApiOperation(value = "Get company dashboard by trip last 7 days")
+//    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
+//    @GetMapping("/company/7days/{id}/trip/{tripId}")
+//    public CompanyResponse getCompanyByTripDashboardLast7Days(@PathVariable Long id, @PathVariable Long tripId) {
+//        return dashBoardService.getCompanyByTripDashboardLast7Days(id, tripId);
+//    }
 
     @ApiOperation(value = "Get revenue by month")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")

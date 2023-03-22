@@ -9,11 +9,13 @@ import java.util.List;
 
 public interface DashBoardService {
     AdminResponse getAdminDashboard();
-
+    AdminResponse getAdminDashboardLast7Days();
 
     CompanyResponse getCompanyDashboard(Long companyId);
-    CompanyResponse getCompanyDashboard(Long companyId, Timestamp from, Timestamp to);
+    CompanyResponse getCompanyDashboardLast7Days(Long companyId);
 
+    CompanyResponse getCompanyByTripDashboard(Long companyId, Long tripId);
+    CompanyResponse getCompanyByTripDashboardLast7Days(Long companyId, Long tripId);
 
     List<RevenueByMonth> getRevenueByMonth(Long companyId);
 }

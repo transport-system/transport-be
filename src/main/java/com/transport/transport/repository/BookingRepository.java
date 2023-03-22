@@ -19,30 +19,12 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByAccountId(Long id);
 
-    @Query("SELECT COUNT(b) FROM Booking b")
-    int countTotalBooking();
-
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'REJECTED'")
-    int countTotalBookingCancel();
-
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'DONE'")
-    int countTotalBookingSuccess();
-
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = 'PENDING'")
-    int countTotalBookingPending();
-
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1")
-    int countTotalBookingByCompanyId(Long id);
-
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2")
-    int countTotalBookingByCompanyIdAndStatus(Long id, String status);
-
+    //=======ADMIN=======
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE'")
     BigDecimal getRevenue();
 
-    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'")
-    BigDecimal getRevenueByCompanyId(Long id);
-
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE' AND b.createBookingTime BETWEEN ?1 AND ?2")
+    BigDecimal getRevenue(Timestamp from, Timestamp to);
 
     @Query(value = "SELECT MONTH(b.createBookingTime) as month, SUM(b.totalPrice) as revenue FROM Booking b " +
             "WHERE b.id IN (SELECT t.id FROM Trip t WHERE t.company.id = ?1) AND b.status = 'DONE' " +
@@ -50,10 +32,36 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Object[]> getRevenueByMonth(Long id);
 
 
+    //=======COMPANY=======
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1")
+    int countTotalBookingByCompanyId(Long id);
 
-    //By Date
-    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE' AND b.createBookingTime BETWEEN ?2 AND ?3")
-    BigDecimal getRevenueByCompanyId(Long id, Timestamp from, Timestamp to);
+    @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1" +
+            " AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
+    int countTotalBookingByCompanyIdLast7Days(Long id);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2")
+    int countTotalBookingByCompanyIdAndTripId(Long companyId, Long tripId);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2")
+    int countTotalBookingByCompanyIdAndStatus(Long id, String status);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = ?3")
+    int countTotalBookingByCompanyIdAndTripIdAndStatus(Long companyId, Long tripId, String status);
+
+    @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2" +
+            " AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
+    int countTotalBookingByCompanyIdAndStatusLast7Days(Long id, String status);
+
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'")
+    BigDecimal getRevenueByCompanyId(Long id);
+
+    @Query(value = "SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'" +
+            " AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
+    BigDecimal getRevenueByCompanyIdLast7Days(Long id);
+
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = 'DONE'")
+    BigDecimal getRevenueByCompanyIdAndTripId(Long companyId, Long tripId);
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.createBookingTime BETWEEN ?2 AND ?3")
     int countTotalBookingByCompanyId(Long id, Timestamp from, Timestamp to);

@@ -42,6 +42,20 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT COUNT(a) FROM Account a WHERE a.role = ?1")
     int countAccountsByRole(String role);
 
-    @Query("SELECT COUNT(a) FROM Account a WHERE a.role = ?1 AND a.company.id = ?2 AND a.status = 'ACTIVE'")
-    int countAccountsByRoleAndCompanyId(String role, Long id);
+
+    //=======ADMIN=======
+
+
+    //=======COMPANY=======
+    @Query(value = "SELECT ((SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN accounts a ON b.account_id = a.account_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1) + (SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN customer c ON b.customer_id = c.customer_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1) ) AS TotalCustomer", nativeQuery = true)
+    int countTotalCustomerByCompanyId(Long id);
+
+    @Query(value = "SELECT ((SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN accounts a ON b.account_id = a.account_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1 AND t.trip_id = 1) + (SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN customer c ON b.customer_id = c.customer_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1 AND t.trip_id = 1) ) AS TotalCustomer", nativeQuery = true)
+    int countTotalCustomerByCompanyIdAndTripId(Long id, Long tripId);
+
+    @Query(value = "SELECT ((SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN accounts a ON b.account_id = a.account_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1 AND b.create_booking_time >= DATE(NOW() - INTERVAL 7 DAY)) + (SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN customer c ON b.customer_id = c.customer_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1 AND t.id = ? AND b.create_booking_time >= DATE(NOW() - INTERVAL 7 DAY) )) AS TotalCustomer", nativeQuery = true)
+    int countTotalCustomerByCompanyIdAndTripIdLast7Days(Long id, Long tripId);
+
+    @Query(value = "SELECT ((SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN accounts a ON b.account_id = a.account_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1 AND b.create_booking_time >= DATE(NOW() - INTERVAL 7 DAY)) + (SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN customer c ON b.customer_id = c.customer_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1 AND b.create_booking_time >= DATE(NOW() - INTERVAL 7 DAY) )) AS TotalCustomer", nativeQuery = true)
+    int countTotalCustomerByCompanyIdLast7Days(Long id);
 }

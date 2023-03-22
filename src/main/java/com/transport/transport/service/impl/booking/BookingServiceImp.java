@@ -35,7 +35,7 @@ public class BookingServiceImp implements BookingService {
     private final CustomerService customerService;
     private final VoucherService voucherService;
 
-    private static final long MILLIS_TO_WAIT = 60 * 30000L;
+    private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
     private final PayPalRepository payPalRepository;
 
@@ -142,12 +142,16 @@ public class BookingServiceImp implements BookingService {
         Long voucherID = booking.getVoucherId();
         if (voucherID != null) {
             Voucher voucher = voucherService.findById(booking.getVoucherId());
-            if (voucher != null) {
+            if (voucher != null && voucher.getQuantity() > 0) {
                 double discount = (totalPrice * Double.parseDouble(
                         String.valueOf(voucher.getDiscountValue()))) / 100;
                 totalPrice = totalPrice - discount;
                 voucher.setQuantity(voucher.getQuantity() - 1);
                 newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
+            } else if (voucher.getQuantity() == 0) {
+                throw new RuntimeException("Voucher is out of stock");
+            } else {
+                throw new RuntimeException("Voucher is not exist");
             }
         } else {
             newBooking.setTotalPrice(BigDecimal.valueOf(totalPrice));
@@ -163,9 +167,10 @@ public class BookingServiceImp implements BookingService {
         }
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
-        newBooking.setStatus(Status.Booking.PENDING.name());
         Booking after = bookingRepository.save(newBooking);
         PaymentRequest method = new PaymentRequest();
+        Voucher voucher = voucherService.findById(booking.getVoucherId());
+
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         // If after 10s, booking is not paid, booking will be rejected
         // else booking will be paid and seat will be inactive
@@ -173,7 +178,7 @@ public class BookingServiceImp implements BookingService {
             try {
                 Thread.sleep(MILLIS_TO_WAIT);
                 if (flag == 0) {
-                        reset(after, trip, vehicle, seatNumber, freeSeats);
+                        reset(after, trip, vehicle, seatNumber, freeSeats, voucher);
                     } else {
                         out.println("Booking is paid");
                         flag = 0;
@@ -212,7 +217,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,
-                       List<FreeSeat> freeSeats) {
+                       List<FreeSeat> freeSeats, Voucher voucher) {
 
         newBooking.setStatus(Status.Booking.REJECTED.name());
         newBooking.setRejectedNote("Time out");
@@ -223,6 +228,9 @@ public class BookingServiceImp implements BookingService {
         trip.setStatus(Status.Trip.ACTIVE.name());
         vehicle.setSeatCapacity(vehicle.getSeatCapacity() + seatNumber);
         vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+        if (voucher != null) {
+            voucher.setQuantity(voucher.getQuantity() + 1);
+        }
         bookingRepository.save(newBooking);
     }
 

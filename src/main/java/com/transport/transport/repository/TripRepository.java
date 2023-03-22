@@ -26,12 +26,24 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findAllByCompanyIdAndTimeArrival(Long companyId, Timestamp date);
     List<Trip> findAllByCompanyIdAndStatus(Long companyId, String status);
 
-    //Count
-    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1")
-    int countTotalVehicleByCompanyId(Long companyId);
+
+    //=======ADMIN=======
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE'")
+    int countTotalTrip();
+
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.timeArrival BETWEEN ?1 AND ?2")
+    int countTotalTrip(Timestamp from, Timestamp to);
 
     @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1")
     int countTotalTripByCompanyId(Long companyId);
+
+    @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1 AND t.id = ?2")
+    int countTotalTripByCompanyIdAndTripId(Long companyId, Long tripId);
+
+    @Query(value = "SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' " +
+            "AND t.company.id = ?1 AND t.timeArrival >= DATE(NOW() - INTERVAL 7 DAY)",
+            nativeQuery = true)
+    int countTotalTripByCompanyIdLast7Days(Long companyId);
 
     //By Date
     @Query("SELECT COUNT(t) FROM Trip t WHERE t.status LIKE 'ACTIVE' AND t.company.id = ?1 AND t.timeArrival BETWEEN ?2 AND ?3")

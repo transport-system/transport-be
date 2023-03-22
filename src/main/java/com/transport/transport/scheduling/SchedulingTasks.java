@@ -17,8 +17,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
-
 @Component
 @RequiredArgsConstructor
 @EnableAsync

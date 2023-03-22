@@ -18,8 +18,11 @@ public class CompanyResponse {
     private int totalTrip;
     private int totalVehicle;
     private int totalBooking;
-    private int totalBookingCancel;
     private int totalBookingPending;
-    private int totalBookingSuccess;
+    private int totalBookingDone;
+    private int totalBookingTimeout;
+    private int totalBookingRefunded;
+    private int totalBookingRequestRefund;
+    private int totalBookingAwaitPayment;
     private BigDecimal totalRevenue;
 }
