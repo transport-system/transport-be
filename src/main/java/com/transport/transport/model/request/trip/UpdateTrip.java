@@ -14,20 +14,17 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTrip implements Serializable {
-    @NotBlank
+
     private String employeeName;
-    @NotNull
-    @Min(10000)
-    @Max(100000000)
+
+
     private double price;
-    @NotBlank
-    private String image;
-    @NotBlank
+
     private String description;
-    @NotNull
+
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     private Timestamp timeDeparture;
-    @NotNull
+
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     private Timestamp timeArrival;
 }
