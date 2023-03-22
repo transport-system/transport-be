@@ -161,18 +161,16 @@ public class BookingServiceImp implements BookingService {
         if (capacity == 0) {
             trip.setStatus(Status.Trip.INACTIVE.name());
         }
-        if (booking.getStatus() != null) {
-            if (booking.getStatus().equalsIgnoreCase(Status.Booking.CASH.name())) {
-                newBooking.setStatus(Status.Booking.CASH.name());
-                List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
-                newBooking.setFreeSeats(freeSeats);
-                bookingRepository.save(newBooking);
-                return bookingRepository.save(newBooking);
-            }
-        }
-        List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
-        newBooking.setFreeSeats(freeSeats);
-        Booking after = bookingRepository.save(newBooking);
+        if (booking.getStatus().equalsIgnoreCase(Status.Booking.CASH.name())) {
+            newBooking.setStatus(Status.Booking.CASH.name());
+            List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
+            newBooking.setFreeSeats(freeSeats);
+            bookingRepository.save(newBooking);
+            return bookingRepository.save(newBooking);
+        } else {
+            List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
+            newBooking.setFreeSeats(freeSeats);
+            Booking after = bookingRepository.save(newBooking);
             PaymentRequest method = new PaymentRequest();
             final ExecutorService executor = Executors.newSingleThreadExecutor();
             // If after 10s, booking is not paid, booking will be rejected
@@ -191,6 +189,7 @@ public class BookingServiceImp implements BookingService {
                 }
             });
             return future.isDone() ? payBooking(method) : after;
+        }
     }
 
 
