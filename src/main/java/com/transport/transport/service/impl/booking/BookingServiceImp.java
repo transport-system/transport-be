@@ -161,6 +161,9 @@ public class BookingServiceImp implements BookingService {
         if (capacity == 0) {
             trip.setStatus(Status.Trip.INACTIVE.name());
         }
+        if(booking.getStatus() == null){
+            throw new RuntimeException("Status Cannot null");
+        }
         if (booking.getStatus().equalsIgnoreCase("PAYLATER")) {
             newBooking.setStatus(Status.Booking.PAYLATER.name());
             List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
