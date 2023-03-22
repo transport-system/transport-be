@@ -35,7 +35,7 @@ public class BookingServiceImp implements BookingService {
     private final CustomerService customerService;
     private final VoucherService voucherService;
 
-    private static final long MILLIS_TO_WAIT = 10 * 30000L;
+    private static final long MILLIS_TO_WAIT = 60 * 30000L;
     private static int flag = 0;
     private final PayPalRepository payPalRepository;
 
@@ -163,6 +163,7 @@ public class BookingServiceImp implements BookingService {
         }
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
+        newBooking.setStatus(Status.Booking.PENDING.name());
         Booking after = bookingRepository.save(newBooking);
         PaymentRequest method = new PaymentRequest();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
