@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +41,13 @@ public class BookingServiceImp implements BookingService {
     private static final long MILLIS_TO_WAIT = 30000L;
     private static int flag = 0;
     private final PayPalRepository payPalRepository;
+
+    public String checkDate(Timestamp date1){
+        Date date2 = new Date(date1.getTime());
+        SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = sm.format(date2);
+        return strDate;
+    }
 
     @Override
     public List<Booking> findAll() {
@@ -276,6 +286,11 @@ public class BookingServiceImp implements BookingService {
     @Override
     public void requestRefund(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
+        Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
+        Timestamp ts = Timestamp.from(Instant.now());
+        if(ts.after(timeReturn)){
+            throw new RuntimeException("Ticket refund overdue");
+        }
         if(change.getStatus().equalsIgnoreCase("DONE")){
             change.setStatus(Status.Booking.REQUESTREFUND.name());
             bookingRepository.save(change);
