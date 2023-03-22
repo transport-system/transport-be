@@ -22,8 +22,6 @@ public class BookingRequest {
     private String phone;
     private String email;
     private Long tripId;
-
-    private String status;
     private Long voucherId;
     private List<Integer> seatNumber;
 }

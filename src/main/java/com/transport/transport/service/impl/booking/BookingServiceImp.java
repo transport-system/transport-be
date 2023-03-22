@@ -161,27 +161,17 @@ public class BookingServiceImp implements BookingService {
         if (capacity == 0) {
             trip.setStatus(Status.Trip.INACTIVE.name());
         }
-        if(booking.getStatus() == null){
-            throw new RuntimeException("Status Cannot null");
-        }
-        if (booking.getStatus().equalsIgnoreCase("PAYLATER")) {
-            newBooking.setStatus(Status.Booking.PAYLATER.name());
-            List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
-            newBooking.setFreeSeats(freeSeats);
-            bookingRepository.save(newBooking);
-            return bookingRepository.save(newBooking);
-        } else {
-            List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
-            newBooking.setFreeSeats(freeSeats);
-            Booking after = bookingRepository.save(newBooking);
-            PaymentRequest method = new PaymentRequest();
-            final ExecutorService executor = Executors.newSingleThreadExecutor();
-            // If after 10s, booking is not paid, booking will be rejected
-            // else booking will be paid and seat will be inactive
-            final Future<?> future = executor.submit(() -> {
-                try {
-                    Thread.sleep(MILLIS_TO_WAIT);
-                    if (flag == 0) {
+        List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
+        newBooking.setFreeSeats(freeSeats);
+        Booking after = bookingRepository.save(newBooking);
+        PaymentRequest method = new PaymentRequest();
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        // If after 10s, booking is not paid, booking will be rejected
+        // else booking will be paid and seat will be inactive
+        final Future<?> future = executor.submit(() -> {
+            try {
+                Thread.sleep(MILLIS_TO_WAIT);
+                if (flag == 0) {
                         reset(after, trip, vehicle, seatNumber, freeSeats);
                     } else {
                         out.println("Booking is paid");
@@ -191,8 +181,7 @@ public class BookingServiceImp implements BookingService {
                     out.println("Thread interrupted");
                 }
             });
-            return future.isDone() ? payBooking(method) : after;
-        }
+        return future.isDone() ? payBooking(method) : after;
     }
 
 
@@ -200,13 +189,16 @@ public class BookingServiceImp implements BookingService {
     public Booking payBooking(PaymentRequest method) {
         return bookingRepository.findById(method.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-                booking.setStatus(Status.Booking.DONE.name());
-                if (method.getMethod().equalsIgnoreCase(PaymentType.CARD.name())
-                        || method.getMethod().equalsIgnoreCase(PaymentType.CASH.name())) {
-                    booking.setPaymentMethod(method.getMethod().toUpperCase());
-                } else {
+                if(method.getMethod().equalsIgnoreCase(PaymentType.CARD.name())){
+                    booking.setStatus(Status.Booking.DONE.name());
+                }
+                if(method.getMethod().equalsIgnoreCase(PaymentType.CASH.name())){
+                    booking.setStatus(Status.Booking.PAYLATER.name());
+                }
+                else{
                     throw new BadRequestException("Payment method is not valid");
                 }
+                booking.setPaymentMethod(method.getMethod().toUpperCase());
                 booking.getFreeSeats().forEach((seat) -> {
                     seat.setStatus(Status.Seat.INACTIVE.name());
                 });
