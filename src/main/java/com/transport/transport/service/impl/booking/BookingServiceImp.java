@@ -182,70 +182,70 @@ public class BookingServiceImp implements BookingService {
         List<FreeSeat> freeSeats = addSeat(booking.getSeatNumber(), newBooking);
         newBooking.setFreeSeats(freeSeats);
         Booking after = bookingRepository.save(newBooking);
-//        PaymentRequest method = new PaymentRequest();
-//
-//        final ExecutorService executor = Executors.newSingleThreadExecutor();
-//        // If after 10s, booking is not paid, booking will be rejected
-//        // else booking will be paid and seat will be inactive
-//        final Future<?> future = executor.submit(() -> {
-//            try {
-//                Thread.sleep(MILLIS_TO_WAIT);
-//                if (flag == 0) {
-//                    reset(after, trip, vehicle, seatNumber, freeSeats);
-//                    } else {
-//                        out.println("Booking is paid");
-//                        flag = 0;
-//                    }
-//                } catch (InterruptedException e) {
-//                    out.println("Thread interrupted");
-//                }
-//            });
-//        return future.isDone() ? payBooking(method) : after;
-        return after;
-    }
+        PaymentRequest method = new PaymentRequest();
 
-
-//    @Override
-//    public Booking payBooking(PaymentRequest method) {
-//        return bookingRepository.findById(method.getBookingId()).map((booking) -> {
-//            if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-//                if(method.getMethod().equalsIgnoreCase("CARD")){
-//                    booking.setStatus(Status.Booking.DONE.name());
-//                }
-//                if(method.getMethod().equalsIgnoreCase("CASH")){
-//                    booking.setStatus(Status.Booking.PAYLATER.name());
-//                }
-//                else{
-//                    throw new BadRequestException("Payment method is not valid");
-//                }
-//                booking.setPaymentMethod(method.getMethod().toUpperCase());
-//                booking.getFreeSeats().forEach((seat) -> {
-//                    seat.setStatus(Status.Seat.INACTIVE.name());
-//                });
-//                flag++;
-//                return bookingRepository.save(booking);
-//            } else {
-//                throw new BadRequestException("Can't pay booking");
-//            }
-//        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
-//    }
-    @Override
-    public Booking payBooking(PaymentRequest method){
-        Booking payBooking = bookingRepository.findById(method.getBookingId()).get();
-        if (payBooking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-            payBooking.setStatus(Status.Booking.DONE.name());
-            if(method.getMethod().equalsIgnoreCase("CASH")){
-                payBooking.setStatus(Status.Booking.PAYLATER.name());
-            }
-            payBooking.getFreeSeats().forEach((seat) -> {
-                seat.setStatus(Status.Seat.INACTIVE.name());
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        // If after 10s, booking is not paid, booking will be rejected
+        // else booking will be paid and seat will be inactive
+        final Future<?> future = executor.submit(() -> {
+            try {
+                Thread.sleep(MILLIS_TO_WAIT);
+                if (flag == 0) {
+                    reset(after, trip, vehicle, seatNumber, freeSeats);
+                    } else {
+                        out.println("Booking is paid");
+                        flag = 0;
+                    }
+                } catch (InterruptedException e) {
+                    out.println("Thread interrupted");
+                }
             });
-            flag++;
-        } else {
-            throw new BadRequestException("Can't pay booking");
-        }
-        return bookingRepository.save(payBooking);
+        return future.isDone() ? payBooking(method) : after;
     }
+
+
+    @Override
+    public Booking payBooking(PaymentRequest method) {
+        return bookingRepository.findById(method.getBookingId()).map((booking) -> {
+            if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
+                if(method.getMethod().equalsIgnoreCase("CARD")){
+                    booking.setStatus(Status.Booking.DONE.name());
+                }
+                if(method.getMethod().equalsIgnoreCase("CASH")){
+                    booking.setStatus(Status.Booking.PAYLATER.name());
+                }
+                else{
+                    throw new BadRequestException("Payment method is not valid");
+                }
+                booking.setPaymentMethod(method.getMethod().toUpperCase());
+                booking.getFreeSeats().forEach((seat) -> {
+                    seat.setStatus(Status.Seat.INACTIVE.name());
+                });
+                flag++;
+                return bookingRepository.save(booking);
+            } else {
+                throw new BadRequestException("Can't pay booking");
+            }
+        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
+    }
+//    @Override
+//    public Booking payBooking(PaymentRequest method){
+//        Booking payBooking = bookingRepository.findById(method.getBookingId()).get();
+//        if (payBooking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
+//            payBooking.setStatus(Status.Booking.DONE.name());
+//            if(method.getMethod().equalsIgnoreCase("CASH")){
+//                payBooking.setStatus(Status.Booking.PAYLATER.name());
+//            }
+//            payBooking.setPaymentMethod(method.getMethod().toUpperCase());
+//            payBooking.getFreeSeats().forEach((seat) -> {
+//                seat.setStatus(Status.Seat.INACTIVE.name());
+//            });
+//            flag++;
+//        } else {
+//            throw new BadRequestException("Can't pay booking");
+//        }
+//        return bookingRepository.save(payBooking);
+//    }
 
     private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,
                        List<FreeSeat> freeSeats) {
