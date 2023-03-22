@@ -233,9 +233,7 @@ public class BookingServiceImp implements BookingService {
     public Booking payBooking(PaymentRequest method){
         Booking payBooking = bookingRepository.findById(method.getBookingId()).get();
         if (payBooking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-            if(method.getMethod().equalsIgnoreCase("CARD")){
-                payBooking.setStatus(Status.Booking.DONE.name());
-            }
+            payBooking.setStatus(Status.Booking.DONE.name());
             if(method.getMethod().equalsIgnoreCase("CASH")){
                 payBooking.setStatus(Status.Booking.PAYLATER.name());
             }
