@@ -7,6 +7,7 @@ import com.transport.transport.utils.ConvertUtils;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -14,7 +15,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingRequest {
+
+public class BookingRequest implements Serializable {
     private String note;
     private Long accountId;
     private String firstname;
