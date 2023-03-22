@@ -42,7 +42,7 @@ public class BookingServiceImp implements BookingService {
     private static int flag = 0;
     private final PayPalRepository payPalRepository;
 
-    public String checkDate(Timestamp date1){
+    public String checkDate(Timestamp date1) {
         Date date2 = new Date(date1.getTime());
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = sm.format(date2);
@@ -91,8 +91,8 @@ public class BookingServiceImp implements BookingService {
     public List<Booking> findAllByCompany(Long id) {
         List<Booking> booklist = bookingRepository.findAll();
         List<Booking> list = new ArrayList<>();
-        for(Booking booking : booklist){
-            if(booking.getTrip().getCompany().getId() == id){
+        for (Booking booking : booklist) {
+            if (booking.getTrip().getCompany().getId() == id) {
                 list.add(booking);
             }
         }
@@ -141,11 +141,11 @@ public class BookingServiceImp implements BookingService {
         newBooking.setNumberOfSeats(seatNumber);
 
         if (seatNumber > 5) {
-            throw new RuntimeException("Require is less 5" +seatId);
+            throw new RuntimeException("Require is less 5" + seatId);
         }
 
         if (seatNumber == 0) {
-            throw new RuntimeException("Require is more 0" +seatId);
+            throw new RuntimeException("Require is more 0" + seatId);
         }
 //      Calculate price
         double totalPrice = newBooking.getTrip().getPrice() * seatNumber;
@@ -163,8 +163,7 @@ public class BookingServiceImp implements BookingService {
                 throw new RuntimeException("Voucher is out of stock");
             } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
                 throw new RuntimeException("Voucher is expired");
-            }
-            else {
+            } else {
                 throw new RuntimeException("Voucher is not exist");
             }
         } else {
@@ -192,14 +191,14 @@ public class BookingServiceImp implements BookingService {
                 Thread.sleep(MILLIS_TO_WAIT);
                 if (flag == 0) {
                     reset(after, trip, vehicle, seatNumber, freeSeats);
-                    } else {
-                        out.println("Booking is paid");
-                        flag = 0;
-                    }
-                } catch (InterruptedException e) {
-                    out.println("Thread interrupted");
+                } else {
+                    out.println("Booking is paid");
+                    flag = 0;
                 }
-            });
+            } catch (InterruptedException e) {
+                out.println("Thread interrupted");
+            }
+        });
         return future.isDone() ? payBooking(method) : after;
     }
 
@@ -208,13 +207,13 @@ public class BookingServiceImp implements BookingService {
     public Booking payBooking(PaymentRequest method) {
         return bookingRepository.findById(method.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
+                if (method.getMethod().equalsIgnoreCase("CASH")) {
                     booking.setStatus(Status.Booking.DONE.name());
-                if(method.getMethod().equalsIgnoreCase("CASH")){
+                } else if (method.getMethod().equalsIgnoreCase("CARD")) {
                     booking.setStatus(Status.Booking.PAYLATER.name());
+                } else {
+                    throw new BadRequestException("Payment method is not valid");
                 }
-//                else{
-//                    throw new BadRequestException("Payment method is not valid");
-//                }
                 booking.setPaymentMethod(method.getMethod().toUpperCase());
                 booking.getFreeSeats().forEach((seat) -> {
                     seat.setStatus(Status.Seat.INACTIVE.name());
@@ -230,10 +229,13 @@ public class BookingServiceImp implements BookingService {
 //    public Booking payBooking(PaymentRequest method){
 //        Booking payBooking = bookingRepository.findById(method.getBookingId()).get();
 //        if (payBooking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-//            payBooking.setStatus(Status.Booking.DONE.name());
-//            if(method.getMethod().equalsIgnoreCase("CASH")){
-//                payBooking.setStatus(Status.Booking.PAYLATER.name());
-//            }
+//if (method.getMethod().equalsIgnoreCase("CASH")) {
+//        payBooking.setStatus(Status.Booking.DONE.name());
+//    } else if (method.getMethod().equalsIgnoreCase("CARD")) {
+//        payBooking.setStatus(Status.Booking.PAYLATER.name());
+//    } else {
+//        throw new BadRequestException("Payment method is not valid");
+//    }
 //            payBooking.setPaymentMethod(method.getMethod().toUpperCase());
 //            payBooking.getFreeSeats().forEach((seat) -> {
 //                seat.setStatus(Status.Seat.INACTIVE.name());
@@ -285,14 +287,14 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).get();
         List<FreeSeat> numberSeat = booking.getFreeSeats();
         for(FreeSeat seat: numberSeat) {
-            FreeSeat freeSeat = seatRepository.findByBooking_IdAndSeatNumber(seat.getSeatNumber(), bookingId);
+            FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
             freeSeat.setStatus(Status.Seat.INACTIVE.name());
             seatRepository.save(freeSeat);
         }
         Vehicle vehicle = booking.getTrip().getVehicle();
         int capacity = vehicle.getSeatCapacity() - numberSeat.size();
         vehicle.setSeatCapacity(capacity);
-        double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
+        double price = booking.getTotalPrice().doubleValue()/booking.getNumberOfSeats();
         double newPrice = 0;
         newPrice = booking.getTotalPrice().doubleValue()*0.1;
         booking.setTotalPrice(BigDecimal.valueOf(newPrice));

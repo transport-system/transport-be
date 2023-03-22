@@ -270,7 +270,7 @@ public class TripServiceImp implements TripService {
             check = true;
         }
         else{
-            throw new RuntimeException("Cannot Delete this Trip");
+            throw new RuntimeException("Cannot Inactive this Trip");
         }
     }
 
