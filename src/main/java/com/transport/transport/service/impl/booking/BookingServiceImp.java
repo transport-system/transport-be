@@ -263,6 +263,9 @@ public class BookingServiceImp implements BookingService {
             freeSeat.setStatus(Status.Seat.INACTIVE.name());
             seatRepository.save(freeSeat);
         }
+        Vehicle vehicle = booking.getTrip().getVehicle();
+        int capacity = vehicle.getSeatCapacity() - numberSeat.size();
+        vehicle.setSeatCapacity(capacity);
         double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
         double newPrice = 0;
         newPrice = booking.getTotalPrice().doubleValue()*0.1;
