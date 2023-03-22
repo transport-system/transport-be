@@ -16,4 +16,6 @@ public interface SeatRepository extends JpaRepository<FreeSeat, Long> {
 
     @Query("SELECT s FROM FreeSeat s WHERE s.seatNumber = ?1 and s.vehicle.id = ?2 ")
     FreeSeat findByVehicleIdAndSeatNumber(Integer seatNumber, Long vehicleId);
+
+    FreeSeat findBySeatNumberAndAndBooking_Id(int seat, Long id);
 }
