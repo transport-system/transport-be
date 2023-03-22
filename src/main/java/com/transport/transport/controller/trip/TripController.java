@@ -76,7 +76,8 @@ public class TripController {
         return new ResponseEntity<>(new TripMsg("List", listTrip, id), HttpStatus.OK);
     }
     @GetMapping("/company/{CompanyId}/{id}")
-    public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id, @PathVariable(name = "CompanyId") Long CompanyId) {
+    public ResponseEntity<?> getByIdOfCompany(@PathVariable(name = "id") Long id,
+                                              @PathVariable(name = "CompanyId") Long CompanyId) {
         return new ResponseEntity<>(tripService.findByIdOfCompany(CompanyId, id), HttpStatus.OK);
     }
     @GetMapping("/company/status/{CompanyId}/{status}")

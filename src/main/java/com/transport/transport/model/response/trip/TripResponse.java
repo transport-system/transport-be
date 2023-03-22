@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Getter
@@ -13,7 +15,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TripResponse {
+public class TripResponse implements Serializable {
     private Long tripId;
     private Long companyId;
     private Long vehicleId;

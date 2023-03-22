@@ -36,5 +36,4 @@ public class TripResponseForId {
     private int companyRating;
     private List<FeedBack> feadbacks;
 
-
 }

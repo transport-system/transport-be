@@ -29,6 +29,7 @@ public interface TripMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "seatQuantity", target = "seatQuantity")
     @Mapping(source = "id", target = "tripId")
+    @Mapping(source = "vehicle.seatCapacity", target = "vehicle.seatCapacity")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
     TripResponeOfConpany mapTripResponseFromTripOfCompany(Trip trip);
