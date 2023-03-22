@@ -306,12 +306,10 @@ public class BookingServiceImp implements BookingService {
         Timestamp ts = Timestamp.from(Instant.now());
         if(ts.after(timeReturn)){
             throw new RuntimeException("Ticket refund overdue");
-        }
-        if(change.getStatus().equalsIgnoreCase("DONE")){
+        } else if (change.getStatus().equalsIgnoreCase("DONE")) {
             change.setStatus(Status.Booking.REQUESTREFUND.name());
             bookingRepository.save(change);
-        }
-        else {
+        } else {
             throw  new RuntimeException("You have not paid for this order yet");
         }
     }
