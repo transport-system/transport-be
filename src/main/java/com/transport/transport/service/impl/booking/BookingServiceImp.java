@@ -271,9 +271,11 @@ public class BookingServiceImp implements BookingService {
         }
         List<FreeSeat> numberSeat = booking.getFreeSeats();
         for (FreeSeat seat : numberSeat) {
-            FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
-            freeSeat.setStatus(Status.Seat.ACTIVE.name());
-            seatRepository.save(freeSeat);
+            if(seat.getSeatNumber() == booking.getNumberOfSeats()) {
+                FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
+                freeSeat.setStatus(Status.Seat.ACTIVE.name());
+                seatRepository.save(freeSeat);
+            }
         }
         Vehicle vehicle = booking.getTrip().getVehicle();
         int capacity = vehicle.getSeatCapacity() - numberSeat.size();
