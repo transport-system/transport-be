@@ -225,28 +225,6 @@ public class BookingServiceImp implements BookingService {
             }
         }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
     }
-//    @Override
-//    public Booking payBooking(PaymentRequest method){
-//        Booking payBooking = bookingRepository.findById(method.getBookingId()).get();
-//        if (payBooking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-//if (method.getMethod().equalsIgnoreCase("CASH")) {
-//        payBooking.setStatus(Status.Booking.DONE.name());
-//    } else if (method.getMethod().equalsIgnoreCase("CARD")) {
-//        payBooking.setStatus(Status.Booking.PAYLATER.name());
-//    } else {
-//        throw new BadRequestException("Payment method is not valid");
-//    }
-//            payBooking.setPaymentMethod(method.getMethod().toUpperCase());
-//            payBooking.getFreeSeats().forEach((seat) -> {
-//                seat.setStatus(Status.Seat.INACTIVE.name());
-//            });
-//            flag++;
-//        } else {
-//            throw new BadRequestException("Can't pay booking");
-//        }
-//        return bookingRepository.save(payBooking);
-//    }
-
     private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,
                        List<FreeSeat> freeSeats) {
 
@@ -288,7 +266,7 @@ public class BookingServiceImp implements BookingService {
         List<FreeSeat> numberSeat = booking.getFreeSeats();
         for(FreeSeat seat: numberSeat) {
             FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
-            freeSeat.setStatus(Status.Seat.INACTIVE.name());
+            freeSeat.setStatus(Status.Seat.ACTIVE.name());
             seatRepository.save(freeSeat);
         }
         Vehicle vehicle = booking.getTrip().getVehicle();
