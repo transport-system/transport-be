@@ -269,17 +269,12 @@ public class BookingServiceImp implements BookingService {
         if (now.after(timeReturn)) {
             throw new RuntimeException("Cannot refund Booking in past");
         }
-        List<FreeSeat> freeSeats = booking.getFreeSeats();
-        List<Integer> numberSeat = null;
-        numberSeat.forEach((seat) -> {
-            FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat, booking.getId());
+        List<FreeSeat> numberSeat = booking.getFreeSeats();
+        for (FreeSeat seat : numberSeat) {
+            FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
             freeSeat.setStatus(Status.Seat.ACTIVE.name());
-            freeSeat.setBooking(booking);
-            freeSeat.setVehicle(booking.getTrip().getVehicle());
-            freeSeats.add(freeSeat);
-        });
-
-
+            seatRepository.save(freeSeat);
+        }
         Vehicle vehicle = booking.getTrip().getVehicle();
         int capacity = vehicle.getSeatCapacity() - numberSeat.size();
         vehicle.setSeatCapacity(capacity);
@@ -287,14 +282,11 @@ public class BookingServiceImp implements BookingService {
         double newPrice = 0;
         newPrice = booking.getTotalPrice().doubleValue() * 0.1;
         booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-        if (booking.getStatus().equalsIgnoreCase("REQUESTREFUND")) {
+        if (booking.getStatus().equalsIgnoreCase("DONE")) {
             booking.setStatus(Status.Booking.REFUNDED.name());
-        } else {
-            throw new RuntimeException("ERROR PAY");
         }
         bookingRepository.save(booking);
     }
-
     @Override
     public void requestRefund(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
