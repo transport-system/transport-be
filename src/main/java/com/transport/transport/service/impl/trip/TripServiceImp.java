@@ -73,7 +73,7 @@ public class TripServiceImp implements TripService {
         List<Trip> listAll = tripRepo.findAll();
         List<Trip> list = new ArrayList<>();
         for(Trip listCheck: listAll){
-            if(listCheck.getStatus().equalsIgnoreCase("ACTIVE")) {
+            if(listCheck.getStatus().equalsIgnoreCase(Status.Trip.ACTIVE.name())) {
                 if (listCheck.getRoute().getCity2().getCity().equalsIgnoreCase(departure)
                     && listCheck.getRoute().getCity1().getCity().equalsIgnoreCase(arrival)) {
                     if(date != null) {

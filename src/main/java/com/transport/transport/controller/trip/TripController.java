@@ -119,6 +119,8 @@ public class TripController {
         return new ResponseEntity<>(new TripMsg("List", listTrip, arrival), HttpStatus.OK);
     }
 
+
+
     //===========================================================================================================
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
     @PostMapping("/create")
