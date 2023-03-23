@@ -224,6 +224,7 @@ public class BookingServiceImp implements BookingService {
             }
         }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
     }
+
     private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,
                        List<FreeSeat> freeSeats) {
 
@@ -238,6 +239,7 @@ public class BookingServiceImp implements BookingService {
         vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         bookingRepository.save(newBooking);
     }
+
     @Override
     public List<FreeSeat> addSeat(List<Integer> numberSeat, Booking booking) {
         Trip trip = booking.getTrip();
@@ -257,51 +259,54 @@ public class BookingServiceImp implements BookingService {
         });
         return freeSeats;
     }
+
     @Override
     public void refundTicket(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).get();
         // thoi gian cho phep refund la phai trip do phai o tuong lai th ela now befor time return
         Timestamp timeReturn = new Timestamp(booking.getTrip().getTimeReturn().getTime());
         Timestamp now = Timestamp.from(Instant.now());
-        if(now.after(timeReturn)){
+        if (now.after(timeReturn)) {
             throw new RuntimeException("Cannot refund Booking in past");
         }
-        List<FreeSeat> numberSeat = booking.getFreeSeats();
-        for(FreeSeat seat: numberSeat) {
-            List<FreeSeat> freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
-            seat.setStatus(Status.Seat.ACTIVE.name());
-            freeSeat.add(seat);
-            seatRepository.save(seat);
-        }
+        List<FreeSeat> freeSeats = booking.getFreeSeats();
+        List<Integer> numberSeat = null;
+        numberSeat.forEach((seat) -> {
+            FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat, booking.getId());
+            freeSeat.setStatus(Status.Seat.ACTIVE.name());
+            freeSeat.setBooking(booking);
+            freeSeat.setVehicle(booking.getTrip().getVehicle());
+            freeSeats.add(freeSeat);
+        });
 
 
         Vehicle vehicle = booking.getTrip().getVehicle();
         int capacity = vehicle.getSeatCapacity() - numberSeat.size();
         vehicle.setSeatCapacity(capacity);
-        double price = booking.getTotalPrice().doubleValue()/booking.getNumberOfSeats();
+        double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
         double newPrice = 0;
-        newPrice = booking.getTotalPrice().doubleValue()*0.1;
+        newPrice = booking.getTotalPrice().doubleValue() * 0.1;
         booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-         if (booking.getStatus().equalsIgnoreCase("REQUESTREFUND")){
+        if (booking.getStatus().equalsIgnoreCase("REQUESTREFUND")) {
             booking.setStatus(Status.Booking.REFUNDED.name());
-         }
-        else {
+        } else {
             throw new RuntimeException("ERROR PAY");
         }
         bookingRepository.save(booking);
     }
+
     @Override
     public void requestRefund(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
         Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
         Timestamp now = Timestamp.from(Instant.now());
-        if(now.after(timeReturn)){
+        if (now.after(timeReturn)) {
             throw new RuntimeException("Ticket refund overdue");
         } else if (change.getStatus().equalsIgnoreCase("DONE")) {
             change.setStatus(Status.Booking.REQUESTREFUND.name());
             bookingRepository.save(change);
         } else {
-            throw  new RuntimeException("You have not paid for this order yet");
+            throw new RuntimeException("You have not paid for this order yet");
         }
     }
 
