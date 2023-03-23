@@ -269,20 +269,23 @@ public class BookingServiceImp implements BookingService {
         if (now.after(timeReturn)) {
             throw new RuntimeException("Cannot refund Booking in past");
         }
+        Vehicle vehicle = booking.getTrip().getVehicle();
         List<FreeSeat> numberSeat = booking.getFreeSeats();
         for (FreeSeat seat : numberSeat) {
                 FreeSeat freeSeat = seatRepository.findFreeSeatsBySeatNumberAndBooking_Id(seat.getSeatNumber(), bookingId);
                 freeSeat.setStatus(Status.Seat.ACTIVE.name());
+                freeSeat.setVehicle(vehicle);
+                freeSeat.setBooking(booking);
                 seatRepository.save(freeSeat);
+                numberSeat.add(freeSeat);
         }
-        Vehicle vehicle = booking.getTrip().getVehicle();
         int capacity = vehicle.getSeatCapacity() - numberSeat.size();
         vehicle.setSeatCapacity(capacity);
         double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
         double newPrice = 0;
         newPrice = booking.getTotalPrice().doubleValue() * 0.1;
         booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-        if (booking.getStatus().equalsIgnoreCase("DONE")) {
+        if (booking.getStatus().equalsIgnoreCase("REQUESTREFUND")) {
             booking.setStatus(Status.Booking.REFUNDED.name());
         }
         bookingRepository.save(booking);
