@@ -279,7 +279,14 @@ public class BookingServiceImp implements BookingService {
         double newPrice = 0;
         newPrice = booking.getTotalPrice().doubleValue()*0.1;
         booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-        booking.setStatus(Status.Booking.REFUNDED.name());
+        if(booking.getStatus().equalsIgnoreCase("DONE")) {
+            booking.setStatus(Status.Booking.REFUNDED.name());
+        }else if (booking.getStatus().equalsIgnoreCase("PAYLATER")){
+            booking.setStatus(Status.Booking.REFUNDED.name());
+        }
+        else {
+            throw new RuntimeException("ERROR PAY");
+        }
         bookingRepository.save(booking);
     }
     @Override
