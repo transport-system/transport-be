@@ -207,9 +207,9 @@ public class BookingServiceImp implements BookingService {
     public Booking payBooking(PaymentRequest method) {
         return bookingRepository.findById(method.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-                if (method.getMethod().equalsIgnoreCase("CASH")) {
+                if (method.getMethod().equalsIgnoreCase("CARD")) {
                     booking.setStatus(Status.Booking.DONE.name());
-                } else if (method.getMethod().equalsIgnoreCase("CARD")) {
+                } else if (method.getMethod().equalsIgnoreCase("CASH")) {
                     booking.setStatus(Status.Booking.PAYLATER.name());
                 } else {
                     throw new BadRequestException("Payment method is not valid");
