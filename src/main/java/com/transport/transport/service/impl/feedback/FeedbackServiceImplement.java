@@ -46,11 +46,8 @@ public class FeedbackServiceImplement implements FeedbackService {
         List<FeedBack> feedbackList = company.getFeedBacks();
         // not call totalRatingScore =0 because it save n size
         int totalRatingScore = (int) (company.getRating() * feedbackList.size());
-
         int newRatingScore = request.getRatingScore();
-
         int newTotalRatingScore = totalRatingScore + newRatingScore;
-
         double newAverageRating = (double) newTotalRatingScore / (feedbackList.size() + 1);
         company.setRating(newAverageRating);
         return feedbackRepository.save(newFeedback);
