@@ -84,10 +84,8 @@ public class TripServiceImp implements TripService {
                     }
                     else{
                         Timestamp dateDeparture = new Timestamp(listCheck.getTimeDeparture().getTime());
-                        String date5 = checkDate(dateDeparture);
                         Timestamp ts = Timestamp.from(Instant.now());
-                        String date6 = checkDate(ts);
-                        if (date5.equalsIgnoreCase(date6)) {
+                        if (dateDeparture.after(ts)) {
                             list.add(listCheck);
                         }
                     }
