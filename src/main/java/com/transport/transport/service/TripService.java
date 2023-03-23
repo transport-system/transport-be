@@ -29,10 +29,11 @@ public interface TripService{
     List<Trip> findByTimeArrivalOfCompany(Long companyId,Timestamp date);
     List<Trip> findByStatusOfCompany(Long companyId,String status);
     void deleteTrip(Long id);
+    void switchStatusTrip(Long id);
     List<Trip> sortTripByTimeArrivalOfCompany(Long companyId);
 
     Trip createrTrip(TripRequest trip);
-    Trip updateTrip(UpdateTrip trip, Long Id);
+    Trip updateTrip(UpdateTrip trip);
 
     public City addCity(String city);
 

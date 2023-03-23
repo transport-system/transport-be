@@ -1,6 +1,7 @@
 package com.transport.transport.service.impl.trip;
 
 import com.transport.transport.common.Status;
+import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.trip.TripRequest;
@@ -28,30 +29,6 @@ public class TripServiceImp implements TripService {
 
     private final BookingRepository bookingRepository;
 
-//    public void autoUpdateTrip() {
-//        List<Trip> tripCheck = tripRepo.findAll();
-//        for (Trip trip : tripCheck) {
-//            if(trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())){
-//                break;
-//            }
-//            Timestamp now = Timestamp.from(Instant.now());
-//            if (trip.getTimeDeparture().before(now) && trip.getTimeArrival().after(now)) {
-//                trip.setStatus(Status.Trip.DOING.name());
-//            }
-//            if (trip.getTimeArrival().before(now)) {
-//                trip.setStatus(Status.Trip.INACTIVE.name());
-//                //Change status when trip is done
-//                Vehicle vehicle = trip.getVehicle();
-//                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
-//                vehicleRepository.save(vehicle);
-//            }
-//            if(trip.getVehicle().getSeatCapacity() <= 0) {
-//                Vehicle vehicle = trip.getVehicle();
-//                trip.setStatus(Status.Trip.INACTIVE.name());
-//                vehicleRepository.save(vehicle);
-//            }
-//        }
-//    }
     public Timestamp timeReturn(Timestamp depatureTime) {
         Calendar c = Calendar.getInstance();
         c.setTime(depatureTime);
@@ -155,7 +132,6 @@ public class TripServiceImp implements TripService {
     //Get of Company
     @Override
     public List<Trip> getAllTripOfCompany(Long companyId) {
-        //autoUpdateTrip();
         return tripRepo.findAllByCompanyId(companyId);
     }
     @Override
@@ -239,10 +215,17 @@ public class TripServiceImp implements TripService {
     }
 
     @Override
-    public Trip updateTrip(UpdateTrip trip, Long Id) {
-        Trip tripU = tripRepo.findById(Id).get();
-        if (!tripU.getStatus().equalsIgnoreCase("ACTIVE")) {
-            throw new RuntimeException("Cannot update ");
+    public Trip updateTrip(UpdateTrip trip) {
+        Trip tripU = tripRepo.findById(trip.getTripId()).get();
+        if (!tripU.getStatus().equalsIgnoreCase(Status.Trip.UPDATE.name())) {
+            throw new BadRequestException("Cannot update, please disable trip first ");
+        } else if(tripU.getTimeArrival().before(new Timestamp(System.currentTimeMillis()))){
+            throw new BadRequestException("Cannot update, time arrival is past ");
+        } else if (tripU.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
+            throw new BadRequestException("Cannot update when trip is inactive ");
+        } else if (trip.getTimeDeparture().before(new Timestamp(System.currentTimeMillis()))
+        || trip.getTimeArrival().before(new Timestamp(System.currentTimeMillis()))) {
+            throw new BadRequestException("Cannot update, because the time is past ");
         }
         tripU.setEmployeeName(trip.getEmployeeName());
         tripU.setPrice(trip.getPrice());
@@ -254,21 +237,35 @@ public class TripServiceImp implements TripService {
         tripU.setTimeDeparture(trip.getTimeDeparture());
         tripU.setTimeArrival(trip.getTimeArrival());
         tripU.setTimeReturn(timeReturn(trip.getTimeDeparture()));
-        //autoUpdateTrip();
         return tripRepo.save(tripU);
     }
 
     @Override
     public void deleteTrip(Long id) {
-        boolean check;
         Trip trip = tripRepo.findById(id).get();
+        if (trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
+            throw new BadRequestException("Cannot delete trip");
+        }
         if(bookingRepository.findAllByTrip_Id(id).isEmpty()){
             trip.setStatus(Status.Trip.INACTIVE.name());
             tripRepo.save(trip);
-            check = true;
         }
         else{
             throw new RuntimeException("Cannot Inactive this Trip");
+        }
+    }
+
+    @Override
+    public void switchStatusTrip(Long id) {
+        Trip trip = tripRepo.findById(id).get();
+        if (trip.getStatus().equalsIgnoreCase(Status.Trip.ACTIVE.name())) {
+            trip.setStatus(Status.Trip.UPDATE.name());
+            tripRepo.save(trip);
+        } else if (trip.getStatus().equalsIgnoreCase(Status.Trip.UPDATE.name())) {
+            trip.setStatus(Status.Trip.ACTIVE.name());
+            tripRepo.save(trip);
+        } else {
+            throw new BadRequestException("Trip not Exist");
         }
     }
 

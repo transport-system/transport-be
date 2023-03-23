@@ -15,8 +15,9 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UpdateTrip implements Serializable {
 
-    private String employeeName;
+    private Long tripId;
 
+    private String employeeName;
 
     private double price;
 

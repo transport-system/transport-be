@@ -25,6 +25,7 @@ public class BookingResponse {
     private Timestamp createBookingTime;
     private String note;
     private String paymentMethod;
+    private TripResponse trip;
     private Long examTime;
     private BigDecimal totalPrice;
     private Integer numberOfSeats;

@@ -38,7 +38,6 @@ public class TripController {
     private final TripMapper tripMapper;
 
     //Trip Of Admin
-
     @ApiOperation(value = "This is method get all trip.")
     @GetMapping("/all")
     public ResponseEntity<TripMsg> getAll() {
@@ -119,8 +118,6 @@ public class TripController {
         return new ResponseEntity<>(new TripMsg("List", listTrip, arrival), HttpStatus.OK);
     }
 
-
-
     //===========================================================================================================
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
     @PostMapping("/create")
@@ -129,15 +126,24 @@ public class TripController {
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
         return new ResponseEntity<>(new TripMsg("create success", response), null, 200);
     }
+    @ApiOperation(value = "This is method for update Trip.")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
-    @PutMapping("/{id}")
-    public ResponseEntity<TripMsg> update(@Valid @RequestBody UpdateTrip request,
-                                          @PathVariable(name = "id") Long id) {
-        Trip trip = tripService.updateTrip(request, id);
+    @PutMapping("update")
+    public ResponseEntity<TripMsg> update(@Valid @RequestBody UpdateTrip request) {
+        Trip trip = tripService.updateTrip(request);
         TripResponse response = tripMapper.mapTripResponseFromTrip(trip);
         return new ResponseEntity<>(new TripMsg("update success",
                 response), null, 200);
     }
+    @ApiOperation(value = "This is method for disable/enable update status.")
+    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).COMPANY)")
+    @GetMapping("/switchStatus/{id}")
+    public ResponseEntity<?> switchStatus(@PathVariable(name = "id") Long id) {
+        tripService.switchStatusTrip(id);
+        return new ResponseEntity<>("successfully disable/enable status", HttpStatus.OK);
+    }
+
+
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @PostMapping("/city/{city}")
     public ResponseEntity<?> addCity(@PathVariable(name = "city") String city) {
