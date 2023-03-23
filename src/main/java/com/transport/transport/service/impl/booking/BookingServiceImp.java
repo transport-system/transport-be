@@ -182,7 +182,6 @@ public class BookingServiceImp implements BookingService {
         newBooking.setFreeSeats(freeSeats);
         Booking after = bookingRepository.save(newBooking);
         PaymentRequest method = new PaymentRequest();
-
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         // If after 10s, booking is not paid, booking will be rejected
         // else booking will be paid and seat will be inactive
@@ -239,7 +238,6 @@ public class BookingServiceImp implements BookingService {
         vehicle.setStatus(Status.Vehicle.ACTIVE.name());
         bookingRepository.save(newBooking);
     }
-
     @Override
     public List<FreeSeat> addSeat(List<Integer> numberSeat, Booking booking) {
         Trip trip = booking.getTrip();
@@ -259,10 +257,15 @@ public class BookingServiceImp implements BookingService {
         });
         return freeSeats;
     }
-
     @Override
     public void refundTicket(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).get();
+        // thoi gian cho phep refund la phai trip do phai o tuong lai th ela now befor time return
+        Timestamp timeReturn = new Timestamp(booking.getTrip().getTimeReturn().getTime());
+        Timestamp now = Timestamp.from(Instant.now());
+        if(now.after(timeReturn)){
+            throw new RuntimeException("Cannot refund Booking in past");
+        }
         List<FreeSeat> numberSeat = booking.getFreeSeats();
         for(FreeSeat seat: numberSeat) {
             FreeSeat freeSeat = seatRepository.findBySeatNumberAndAndBooking_Id(seat.getSeatNumber(), bookingId);
@@ -283,8 +286,8 @@ public class BookingServiceImp implements BookingService {
     public void requestRefund(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
         Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
-        Timestamp ts = Timestamp.from(Instant.now());
-        if(ts.after(timeReturn)){
+        Timestamp now = Timestamp.from(Instant.now());
+        if(now.after(timeReturn)){
             throw new RuntimeException("Ticket refund overdue");
         } else if (change.getStatus().equalsIgnoreCase("DONE")) {
             change.setStatus(Status.Booking.REQUESTREFUND.name());
