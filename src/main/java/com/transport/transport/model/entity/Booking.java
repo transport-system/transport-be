@@ -70,6 +70,7 @@ public class Booking {
     private Customer customer;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id")
     private Voucher voucher;
 }

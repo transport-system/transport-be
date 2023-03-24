@@ -65,7 +65,6 @@ public class Voucher {
     private Customer customer;
 
     @JsonBackReference
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "booking_id", referencedColumnName = "booking_id")
-    private Booking booking;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "voucher" )
+    private List<Booking> bookings;
 }

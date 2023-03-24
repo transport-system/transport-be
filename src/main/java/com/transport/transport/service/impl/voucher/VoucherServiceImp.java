@@ -7,10 +7,12 @@ import com.transport.transport.config.security.user.Account;
 import com.transport.transport.exception.BadRequestException;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.VoucherMapper;
+import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.entity.Voucher;
 import com.transport.transport.model.request.voucher.UpdateVoucherRequest;
 import com.transport.transport.model.request.voucher.VoucherRequest;
 import com.transport.transport.repository.AccountRepository;
+import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.VoucherRepository;
 import com.transport.transport.service.VoucherService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class VoucherServiceImp implements VoucherService {
 
     private final VoucherRepository voucherRepository;
     private final AccountRepository accountRepository;
+    private final BookingRepository bookingRepository;
     private final JwtService jwtService;
     private final VoucherMapper mapper;
 
@@ -51,8 +54,12 @@ public class VoucherServiceImp implements VoucherService {
         if (voucher == null) {
             throw new NotFoundException("Voucher not found: " + id);
         }
-        voucher.setStatus(Status.Voucher.INACTIVE.name());
-        voucherRepository.save(voucher);
+        if (voucher.getBookings().size() > 0) {
+            throw new BadRequestException("Voucher is used");
+        }else {
+            voucher.setStatus(Status.Voucher.INACTIVE.name());
+            voucherRepository.save(voucher);
+        };
     }
 
     @Override
@@ -81,6 +88,15 @@ public class VoucherServiceImp implements VoucherService {
         if (voucherRepository.existsByVoucherCode(voucherRequest.getVoucherCode())) {
             throw new BadRequestException("You can not create voucher duplicate code");
         }
+        if (voucherRequest.getQuantity() <= 0) {
+            throw new BadRequestException("Quantity must be greater than 0");
+        }
+        if (voucherRequest.getDiscountValue().intValue() <= 0) {
+            throw new BadRequestException("Discount value must be greater than 0");
+        }
+        if (voucherRequest.getDiscountValue().intValue() >= 0) {
+            throw new BadRequestException("Discount value must be lest than 0");
+        }
         //get current time
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
@@ -108,9 +124,41 @@ public class VoucherServiceImp implements VoucherService {
     }
 
     @Override
-    public Voucher updateVoucher(UpdateVoucherRequest voucherRequest) {
+    public Voucher updateVoucher(UpdateVoucherRequest voucherRequest, String token) {
+        /** get a account from token **/
+        token = token.substring("Bearer ".length());
+        String username = jwtService.extractUsername(token);
+        Account account = accountRepository.findAccountByUsername(username);
+        Booking booking = bookingRepository.getBookingByVoucher_Id(voucherRequest.getVoucherId());
+        /** get voucher **/
         Voucher voucher = findById(voucherRequest.getVoucherId());
-        voucher = mapper.createVoucherFromUpdateVoucherRequest(voucherRequest);
+
+        /** get a current time **/
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        if (voucher.getVoucherCode().equalsIgnoreCase(voucherRequest.getVoucherCode())) {
+            throw new BadRequestException("You can not update voucher duplicate code");
+        } else if (voucherRequest.getExpiredTime().before(timestamp)) {
+            throw new BadRequestException("Expired time must be greater than current time");
+        } else if (voucherRequest.getQuantity() <= 0) {
+            throw new BadRequestException("Quantity must be greater than 0");
+        } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
+            throw new BadRequestException("Discount value must be greater than 0");
+        } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
+            throw new BadRequestException("Discount value must be less than 100");
+        } else if (!voucher.getOwner().equalsIgnoreCase(account.getRole())) {
+            throw new BadRequestException("You can not update voucher for other role");
+        } else if(voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
+            throw new BadRequestException("You can not update voucher inactive");
+        } else if (voucherRequest.getVoucherCode() == null || voucherRequest.getExpiredTime() == null) {
+            throw new BadRequestException("You can not update voucher with null value");
+        } else if (booking != null) {
+            throw new BadRequestException("You can not update voucher has been used");
+        }
+        else {
+            voucher = mapper.createVoucherFromUpdateVoucherRequest(voucherRequest);
+        }
         return voucherRepository.save(voucher);
     }
 

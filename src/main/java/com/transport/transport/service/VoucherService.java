@@ -6,6 +6,6 @@ import com.transport.transport.model.request.voucher.VoucherRequest;
 
 public interface VoucherService extends CRUDService<Voucher> {
     Voucher createVoucher(VoucherRequest voucherRequest, String token);
-    Voucher updateVoucher(UpdateVoucherRequest voucherRequest);
+    Voucher updateVoucher(UpdateVoucherRequest voucherRequest, String token);
     Voucher getVoucherByCode(String code);
 }

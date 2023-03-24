@@ -19,6 +19,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByAccountId(Long id);
 
+    Booking getBookingByVoucher_Id(Long id);
+
     //=======ADMIN=======
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE'")
     BigDecimal getRevenue();

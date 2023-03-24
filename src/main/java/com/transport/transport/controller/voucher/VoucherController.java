@@ -56,9 +56,10 @@ public class VoucherController {
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
-    public ResponseEntity<VoucherResponse> updateVoucher(@Valid @RequestBody UpdateVoucherRequest req) {
-        Voucher voucher = voucherService.updateVoucher(req);
+    @PreAuthorize("hasAnyAuthority(T(com.transport.transport.common.RoleEnum).ADMIN, T(com.transport.transport.common.RoleEnum).COMPANY) ")
+    public ResponseEntity<VoucherResponse> updateVoucher(@Valid @RequestBody UpdateVoucherRequest req,
+                                                         @RequestHeader(AUTHORIZATION) String token) {
+        Voucher voucher = voucherService.updateVoucher(req, token);
         return new ResponseEntity<>(
                 voucherMapper.createVoucherResponseFromEntity(voucher),
                 null,
