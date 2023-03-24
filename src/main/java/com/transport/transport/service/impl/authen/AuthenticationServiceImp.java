@@ -73,7 +73,10 @@ public class AuthenticationServiceImp implements AuthenticationService {
     private AuthenticationResponse getAuthenticationResponse(RegisterRequestV2 request, Account user) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new BadRequestException("Password and confirm password not match");
-        } else if (repository.existsByEmail(request.getEmail())) {
+        } else if (repository.existsByUsername(request.getUsername())) {
+            throw new BadRequestException("UserName already exists");
+        }
+        else if (repository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already exists");
         } else if (repository.existsByPhone(request.getPhone())) {
             throw new BadRequestException("Phone already exists");
@@ -109,7 +112,10 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .build();
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new BadRequestException("Password and confirm password not match");
-        } else if (repository.existsByEmail(request.getEmail())) {
+        }else if (repository.existsByUsername(request.getUsername())) {
+            throw new BadRequestException("UserName already exists");
+        }
+        else if (repository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already exists");
         } else if (repository.existsByPhone(request.getPhone())) {
             throw new BadRequestException("Phone already exists");
