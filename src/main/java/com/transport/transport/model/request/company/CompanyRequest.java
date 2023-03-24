@@ -35,14 +35,17 @@ public class CompanyRequest implements Trimmable {
     private String phone;
     private String avatarImage;
 
-    //private LocalDate dateOfBirth;
-
     @NotEmpty(message = "Gender is required")
     private String gender;
     private String status = "ACTIVE";
 
     @NotBlank
+    @Max(value = 255, message = "must be less than or equal to 255")
+    @Min(value = 20, message = "must be greater than or equal to 255")
     private String companyName;
+
     @NotBlank
+    @Max(value = 1000, message = "must be less than or equal to 1000")
+    @Min(value = 50, message = "must be greater than or equal to 50")
     private String description;
 }

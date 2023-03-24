@@ -1,6 +1,5 @@
 package com.transport.transport.repository;
 
-import com.transport.transport.common.RoleEnum;
 import com.transport.transport.model.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

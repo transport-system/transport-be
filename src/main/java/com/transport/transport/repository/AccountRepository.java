@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +39,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT COUNT(a) FROM Account a WHERE a.role = ?1")
     int countAccountsByRole(String role);
-
 
     //=======ADMIN=======
 

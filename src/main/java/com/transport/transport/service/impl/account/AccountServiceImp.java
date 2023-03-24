@@ -1,37 +1,20 @@
 package com.transport.transport.service.impl.account;
 
-import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
 import com.transport.transport.config.security.user.Account;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.mapper.AccountMapper;
 import com.transport.transport.model.request.account.ChangePasswordRequest;
-import com.transport.transport.model.request.account.RegisterRequest;
 import com.transport.transport.model.request.account.UpdateRequest;
 import com.transport.transport.repository.AccountRepository;
-import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.service.AccountService;
-import com.transport.transport.service.FileService;
-import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Date;
 import java.util.List;
 
 @Service
