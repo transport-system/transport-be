@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class UpdateVoucherRequest implements Serializable {
     private Long voucherId;
     private String voucherCode;
+    private Timestamp startTime;
     private Timestamp expiredTime;
     private Integer quantity;
     private BigDecimal discountValue;

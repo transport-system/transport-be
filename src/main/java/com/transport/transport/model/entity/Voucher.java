@@ -32,6 +32,9 @@ public class Voucher {
     @Column(name = "created_time")
     private Timestamp createdTime;
 
+    @Column(name = "start_time")
+    private Timestamp startTime;
+
     @Column(name = "expired_time")
     private Timestamp expiredTime;
 

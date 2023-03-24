@@ -119,6 +119,10 @@ public class VoucherServiceImp implements VoucherService {
         }
         if (voucher.getExpiredTime().before(timestamp)) {
             throw new BadRequestException("Expired time must be greater than current time");
+        } else if (voucher.getStartTime().before(timestamp)) {
+            throw new BadRequestException("Start time must be greater than current time");
+        } else if (voucher.getStartTime().after(voucher.getExpiredTime())) {
+            throw new BadRequestException("Start time must be less than expired time");
         }
         return voucherRepository.save(voucher);
     }
@@ -141,6 +145,10 @@ public class VoucherServiceImp implements VoucherService {
             throw new BadRequestException("You can not update voucher duplicate code");
         } else if (voucherRequest.getExpiredTime().before(timestamp)) {
             throw new BadRequestException("Expired time must be greater than current time");
+        } else if (voucherRequest.getStartTime().before(timestamp)) {
+            throw new BadRequestException("Start time must be greater than current time");
+        } else if (voucherRequest.getStartTime().after(voucherRequest.getExpiredTime())) {
+            throw new BadRequestException("Start time must be less than expired time");
         } else if (voucherRequest.getQuantity() <= 0) {
             throw new BadRequestException("Quantity must be greater than 0");
         } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
@@ -165,5 +173,10 @@ public class VoucherServiceImp implements VoucherService {
     @Override
     public Voucher getVoucherByCode(String code) {
         return voucherRepository.findByVoucherCode(code);
+    }
+
+    @Override
+    public List<Voucher> getVouchersByCompany(Long id) {
+        return voucherRepository.getVouchersByCompany_Id(id);
     }
 }

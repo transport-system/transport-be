@@ -26,6 +26,7 @@ public interface VoucherMapper {
     @Mapping(target = "createdTime", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(source = "voucherCode", target = "voucherCode")
+    @Mapping(source = "startTime", target = "startTime")
     @Mapping(source = "expiredTime", target = "expiredTime")
     @Mapping(source = "quantity", target = "quantity")
     @Mapping(source = "discountValue", target = "discountValue")

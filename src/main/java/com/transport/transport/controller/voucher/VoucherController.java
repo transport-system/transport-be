@@ -86,4 +86,15 @@ public class VoucherController {
                 null,
                 HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Get voucher by company", response = VoucherResponse.class)
+    @GetMapping("/getVoucherByCompany/{companyId}")
+    public ResponseEntity<VoucherResponseMsg> getVoucherByCompany(@PathVariable Long companyId) {
+        return new ResponseEntity<>(
+                new VoucherResponseMsg(
+                        "Get voucher by company successfully",
+                        voucherMapper.createVoucherResponseFromEntity(voucherService.getVouchersByCompany(companyId))),
+                null,
+                HttpStatus.OK);
+    }
 }

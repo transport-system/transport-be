@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class VoucherRequest implements Serializable {
     private String voucherCode;
+    private Timestamp startTime;
     private Timestamp expiredTime;
     private Integer quantity;
     private BigDecimal discountValue;
