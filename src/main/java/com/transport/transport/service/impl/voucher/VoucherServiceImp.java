@@ -176,7 +176,18 @@ public class VoucherServiceImp implements VoucherService {
     }
 
     @Override
-    public List<Voucher> getVouchersByCompany(Long id) {
-        return voucherRepository.getVouchersByCompany_Id(id);
+    public List<Voucher> getVouchersByRole(Long accountId) {
+        Account account = accountRepository.findById(accountId).get();
+        if (account == null) {
+            throw new NotFoundException("Account not found: " + accountId);
+        } else {
+            if (account.getRole().equalsIgnoreCase(RoleEnum.ADMIN.name())) {
+                return voucherRepository.getVouchersByOwner(RoleEnum.ADMIN.name());
+            } else if (account.getRole().equalsIgnoreCase(RoleEnum.COMPANY.name())) {
+                return voucherRepository.getVouchersByOwner(RoleEnum.COMPANY.name());
+            } else {
+                throw new BadRequestException("User can not get voucher");
+            }
+        }
     }
 }

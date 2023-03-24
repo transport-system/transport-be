@@ -10,5 +10,5 @@ public interface VoucherService extends CRUDService<Voucher> {
     Voucher createVoucher(VoucherRequest voucherRequest, String token);
     Voucher updateVoucher(UpdateVoucherRequest voucherRequest, String token);
     Voucher getVoucherByCode(String code);
-    List<Voucher> getVouchersByCompany(Long companyId);
+    List<Voucher> getVouchersByRole(Long accountId);
 }

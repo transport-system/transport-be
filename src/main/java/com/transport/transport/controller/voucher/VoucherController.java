@@ -87,13 +87,13 @@ public class VoucherController {
                 HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get voucher by company", response = VoucherResponse.class)
-    @GetMapping("/getVoucherByCompany/{companyId}")
-    public ResponseEntity<VoucherResponseMsg> getVoucherByCompany(@PathVariable Long companyId) {
+    @ApiOperation(value = "Get voucher each role ", response = VoucherResponse.class)
+    @GetMapping("/getVoucherByRole/{accountId}")
+    public ResponseEntity<VoucherResponseMsg> getVoucherByCompany(@PathVariable Long accountId) {
         return new ResponseEntity<>(
                 new VoucherResponseMsg(
                         "Get voucher by company successfully",
-                        voucherMapper.createVoucherResponseFromEntity(voucherService.getVouchersByCompany(companyId))),
+                        voucherMapper.createVoucherResponseFromEntity(voucherService.getVouchersByRole(accountId))),
                 null,
                 HttpStatus.OK);
     }
