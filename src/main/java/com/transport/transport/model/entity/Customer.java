@@ -32,8 +32,14 @@ public class Customer {
     private String email;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "customer",
+    @OneToOne(mappedBy = "customer",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
-    private List<Booking> bookings;
+    private Booking booking;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private Voucher voucher;
 }

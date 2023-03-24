@@ -51,4 +51,9 @@ public class Company {
     @JsonManagedReference
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FeedBack> feedBacks;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Voucher> vouchers;
+
 }

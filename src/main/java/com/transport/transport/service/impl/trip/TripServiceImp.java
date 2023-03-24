@@ -190,7 +190,6 @@ public class TripServiceImp implements TripService {
             throw new RuntimeException("Not exsit route");
         }
 
-
         //set Company
         Company company = companyRepository.findById(trip.getCompanyId())
                 .orElseThrow(() -> new NotFoundException("Company not found: " + trip.getCompanyId()));
@@ -232,7 +231,7 @@ public class TripServiceImp implements TripService {
         tripU.setDescription(trip.getDescription());
         if (trip.getTimeDeparture().after(trip.getTimeArrival())
                 || trip.getTimeArrival().equals(trip.getTimeDeparture())) {
-            throw new RuntimeException("TIME ERROR");
+            throw new RuntimeException("Cannot update, because arrival time is before departure time");
         }
         tripU.setTimeDeparture(trip.getTimeDeparture());
         tripU.setTimeArrival(trip.getTimeArrival());

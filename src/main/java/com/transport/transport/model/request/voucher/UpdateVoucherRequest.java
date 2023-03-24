@@ -11,10 +11,11 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VoucherRequest implements Serializable {
+public class UpdateVoucherRequest implements Serializable {
+    private Long voucherId;
     private String voucherCode;
     private Timestamp expiredTime;
     private Integer quantity;
     private BigDecimal discountValue;
-    private Long ownerId;
 }
+

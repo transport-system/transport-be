@@ -2,10 +2,7 @@ package com.transport.transport.config.security.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.transport.transport.model.entity.Booking;
-import com.transport.transport.model.entity.Company;
-import com.transport.transport.model.entity.FeedBack;
-import com.transport.transport.model.entity.Token;
+import com.transport.transport.model.entity.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -82,6 +79,10 @@ public class Account implements UserDetails {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Company company;
+
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accounts")
+    private List<Voucher> vouchers;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

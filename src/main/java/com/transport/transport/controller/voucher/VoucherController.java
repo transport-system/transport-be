@@ -4,6 +4,7 @@ package com.transport.transport.controller.voucher;
 import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.mapper.VoucherMapper;
 import com.transport.transport.model.entity.Voucher;
+import com.transport.transport.model.request.voucher.UpdateVoucherRequest;
 import com.transport.transport.model.request.voucher.VoucherRequest;
 import com.transport.transport.model.response.voucher.VoucherResponse;
 import com.transport.transport.model.response.voucher.VoucherResponseMsg;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = EndpointConstant.Voucher.VOUCHER_ENDPOINT)
@@ -26,9 +29,10 @@ public class VoucherController {
     private final VoucherMapper voucherMapper;
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
-    public ResponseEntity<VoucherResponseMsg> createVoucher(@Valid @RequestBody VoucherRequest req) {
-        Voucher voucher =  voucherService.createVoucher(req);
+    @PreAuthorize("hasAnyAuthority(T(com.transport.transport.common.RoleEnum).ADMIN, T(com.transport.transport.common.RoleEnum).COMPANY) ")
+    public ResponseEntity<VoucherResponseMsg> createVoucher(@Valid @RequestBody VoucherRequest req,
+                                                            @RequestHeader(AUTHORIZATION) String token) {
+        Voucher voucher =  voucherService.createVoucher(req, token);
         return new ResponseEntity<>(new VoucherResponseMsg(
                 "Create voucher successfully",
                 voucherMapper.createVoucherResponseFromEntity(voucher)), null, HttpStatus.CREATED);
@@ -51,11 +55,10 @@ public class VoucherController {
                 HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update")
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
-    public ResponseEntity<VoucherResponse> updateVoucher(@PathVariable Long id,
-                                                         @Valid @RequestBody VoucherRequest req) {
-        Voucher voucher = voucherService.updateVoucher(id, req);
+    public ResponseEntity<VoucherResponse> updateVoucher(@Valid @RequestBody UpdateVoucherRequest req) {
+        Voucher voucher = voucherService.updateVoucher(req);
         return new ResponseEntity<>(
                 voucherMapper.createVoucherResponseFromEntity(voucher),
                 null,

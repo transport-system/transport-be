@@ -17,11 +17,10 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByUsername(String username);
-
+    Account findAccountByUsername(String username);
     List<Account> findAllByStatusIsNotNull(Pageable pageable);
     Account findAccountByUsernameAndStatus(String username, String status);
 
-    boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String username);
