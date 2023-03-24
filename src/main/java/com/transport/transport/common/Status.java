@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Status {
     public enum Feedback {
-        REPORT,
+        APPROVAL,
         ACTIVE,
         INACTIVE
     }

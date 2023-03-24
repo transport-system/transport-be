@@ -69,7 +69,7 @@ public class TripServiceImp implements TripService {
                 }
             }
         }
-        Collections.sort(list, Comparator.comparing(Trip::getTimeDeparture));
+        Collections.sort(list, Comparator.comparing(Trip::getTimeDeparture).reversed());
         if(list == null || list.size() == 0){
             throw new RuntimeException("Not Found Trip");
         }

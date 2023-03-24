@@ -67,15 +67,9 @@ public class FeedBackController {
         List<FeedbackResponse> list =  feedbackMapper.mapToFeedbackResponse(feedBack);
         return new ResponseEntity<>(new FeedbackMsg("List", list), HttpStatus.OK);
     }
-
-    @GetMapping("/company/report/{id}")
-    public ResponseEntity<?> reportFeedback(@PathVariable(name = "id") Long id){
-        feedbackService.reportFeedback(id);
-        return new ResponseEntity<>("Report Success", HttpStatus.OK);
-    }
-    @GetMapping("/admin/report/{id}")
-    public ResponseEntity<?> acceptReport(@PathVariable(name = "id") Long id){
-        feedbackService.accpectReport(id);
+    @GetMapping("/admin/ApprovalFeedback/{id}")
+    public ResponseEntity<?> approvalFeedback(@PathVariable(name = "id") Long id){
+        feedbackService.approvalFeedback(id);
         return new ResponseEntity<>("Report Success", HttpStatus.OK);
     }
 

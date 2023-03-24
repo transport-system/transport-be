@@ -47,37 +47,30 @@ public class BookingServiceImp implements BookingService {
     private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
     private final PayPalRepository payPalRepository;
-
     public String checkDate(Timestamp date1) {
         Date date2 = new Date(date1.getTime());
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = sm.format(date2);
         return strDate;
     }
-
     @Override
     public List<Booking> findAll() {
         return bookingRepository.findAll();
     }
-
     @Override
     public Booking findById(Long id) {
         return bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking id not found: " + id));
     }
-
     @Override
     public void save(Booking entity) {
         bookingRepository.save(entity);
     }
-
     @Override
     public void delete(Long id) {
         Booking booking = findById(id);
         booking.setStatus(Status.Booking.REJECTED.name());
         bookingRepository.save(booking);
     }
-
-
     @Override
     public void update(Booking entity) {
         bookingRepository.save(entity);
@@ -303,6 +296,8 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
     }
+
+    //Dung Timer để lên task chạy theo thời gian
     List<Task> tasks = new ArrayList<>();
     private Timer timer = new Timer();
     @Override
