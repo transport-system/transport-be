@@ -6,8 +6,10 @@ import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.request.booking.CancelBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
+import com.transport.transport.model.request.booking.VoucherRequest;
 import com.transport.transport.model.response.booking.BookingResponse;
 import com.transport.transport.service.BookingService;
+import com.transport.transport.service.VoucherService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,8 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
+
+    private final VoucherService voucherService;
 
     @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
     @GetMapping()
@@ -76,23 +80,36 @@ public class BookingController {
         return new ResponseEntity<>(responses, null, 201);
     }
 
-    @GetMapping("/returnTicket/{id}")
-    public ResponseEntity<?> returnTicket(@PathVariable("id") Long id){
-        bookingService.refundTicket(id);
+    @GetMapping("/RefundedBooking/{id}")
+    public ResponseEntity<?> refundedBooking(@PathVariable("id") Long id){
+        bookingService.refunded(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @GetMapping("/refund/{id}")
-    public ResponseEntity<?> requestRefund(@PathVariable("id") Long id){
-        bookingService.requestRefund(id);
+    @GetMapping("/RequestRefunded/{id}")
+    public ResponseEntity<?> requestRefunded(@PathVariable("id") Long id){
+        bookingService.requestRefunded(id);
+        return new ResponseEntity<>("Request has been sent", HttpStatus.OK);
+    }
+    @GetMapping("/CancelRequestRefunded/{id}")
+    public ResponseEntity<?> cancelRequestRefunded(@PathVariable("id") Long id){
+        bookingService.cancelRequestRefunded(id);
+        return new ResponseEntity<>("Request has cancel", HttpStatus.OK);
+    }
+    @GetMapping("/CancalBooking/{id}")
+    public ResponseEntity<?> cancelBooking(@PathVariable("id") Long id){
+        bookingService.requestRefunded(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-
-    @GetMapping("/cashTicket/{id}")
+    @GetMapping("/cash/{id}")
     public ResponseEntity<?> cash(@PathVariable("id") Long id){
         bookingService.doneCash(id);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseEntity<>("Payment success", HttpStatus.OK);
     }
 
-
+    @GetMapping("/voucher")
+    public ResponseEntity<?> voucher(@RequestBody VoucherRequest voucherRequest){
+        bookingService.voucher(voucherRequest);
+        return new ResponseEntity<>("Voucher has Accepted", HttpStatus.OK);
+    }
 }

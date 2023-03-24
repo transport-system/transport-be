@@ -14,6 +14,7 @@ import com.transport.transport.model.response.trip.TripResponeOfConpany;
 import com.transport.transport.model.response.trip.TripResponse;
 import com.transport.transport.model.response.trip.TripResponseForId;
 import com.transport.transport.model.response.trip.customer.TripForCustomer;
+import com.transport.transport.service.BookingService;
 import com.transport.transport.service.RouteService;
 import com.transport.transport.service.TripService;
 import io.swagger.annotations.Api;
@@ -36,6 +37,7 @@ import java.util.List;
 public class TripController {
     private final TripService tripService;
     private final TripMapper tripMapper;
+    private final BookingService bookingService;
 
     //Trip Of Admin
     @ApiOperation(value = "This is method get all trip.")
@@ -64,8 +66,6 @@ public class TripController {
     public ResponseEntity<?> sortByTimeArrival() {
         return new ResponseEntity<>(tripService.sortTripByTimeArrival(), HttpStatus.OK);
     }
-
-
 
     //Trip of Company
     @GetMapping("/company/{id}")

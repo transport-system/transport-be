@@ -9,6 +9,5 @@ public class FeedbackRequest {
     private String detail;
     private int ratingScore;
     private Long bookingId;
-    private Long companyId;
     private Long accountId;
 }

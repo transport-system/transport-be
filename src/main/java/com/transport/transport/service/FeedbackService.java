@@ -16,5 +16,6 @@ public interface FeedbackService {
     List<FeedBack> getAll();
     FeedBack upadteFeedBack(FeedbackRequest request, Long feedbackId);
 
-
+    public void reportFeedback(Long id);
+    public void accpectReport(Long id);
 }

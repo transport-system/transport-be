@@ -6,6 +6,7 @@ import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.entity.FeedBack;
 import com.transport.transport.model.request.feedback.FeedbackRequest;
 import com.transport.transport.repository.AccountRepository;
+import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.CompanyRepository;
 import com.transport.transport.repository.FeedbackRepository;
 import com.transport.transport.service.FeedbackService;
@@ -27,6 +28,8 @@ public class FeedbackServiceImplement implements FeedbackService {
     private final AccountRepository accountRepository;
     private final CompanyRepository companyRepository;
 
+    private final BookingRepository bookingRepository;
+
     @Override
     public FeedBack createFeedback(FeedbackRequest request) throws ParseException {
         FeedBack newFeedback = new FeedBack();
@@ -38,11 +41,7 @@ public class FeedbackServiceImplement implements FeedbackService {
         newFeedback.setAccount(accountRepository.findById(request.getAccountId())
                 .orElseThrow(() -> new NotFoundException("account not found: " + request.getAccountId())));
 
-        Company company = companyRepository.findById(request.getCompanyId())
-                .orElseThrow(() -> new NotFoundException("company not found: " + request.getCompanyId()));
-
-        newFeedback.setCompany(company);
-
+        Company company = bookingRepository.findById(request.getBookingId()).get().getTrip().getCompany();
         List<FeedBack> feedbackList = company.getFeedBacks();
         // not call totalRatingScore =0 because it save n size
         int totalRatingScore = (int) (company.getRating() * feedbackList.size());
@@ -97,6 +96,26 @@ public class FeedbackServiceImplement implements FeedbackService {
         feedBack.setCreateTime(date);
         return feedbackRepository.save(feedBack);
 
+    }
+
+    @Override
+    public void reportFeedback(Long id) {
+        FeedBack change = feedbackRepository.findById(id).get();
+        if (change == null) {
+            throw new RuntimeException("Not Exit Feedback");
+        }
+        change.setStatus(Status.Feedback.REPORT.name());
+        feedbackRepository.save(change);
+    }
+
+    @Override
+    public void accpectReport(Long id) {
+        FeedBack change = feedbackRepository.findById(id).get();
+        if (change == null) {
+            throw new RuntimeException("Not Exit Feedback");
+        }
+        change.setStatus(Status.Feedback.INACTIVE.name());
+        feedbackRepository.save(change);
     }
 
     @Override

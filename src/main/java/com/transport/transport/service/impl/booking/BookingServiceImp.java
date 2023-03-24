@@ -1,6 +1,5 @@
 package com.transport.transport.service.impl.booking;
 
-import com.transport.transport.common.PaymentType;
 import com.transport.transport.common.Status;
 import com.transport.transport.config.security.user.Account;
 import com.transport.transport.exception.BadRequestException;
@@ -8,9 +7,12 @@ import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.request.booking.PaymentRequest;
+import com.transport.transport.model.request.booking.VoucherRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.PayPalRepository;
 import com.transport.transport.repository.SeatRepository;
+import com.transport.transport.repository.VehicleRepository;
+import com.transport.transport.scheduling.Task;
 import com.transport.transport.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import static java.lang.System.out;
@@ -38,6 +40,9 @@ public class BookingServiceImp implements BookingService {
     private final TripService tripService;
     private final CustomerService customerService;
     private final VoucherService voucherService;
+    private final VehicleRepository vehicleRepository;
+
+    private List<TimerTask> scheduledTasks = new ArrayList<>();
 
     private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
@@ -262,54 +267,127 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public void refundTicket(Long bookingId) {
+    public void refunded(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).get();
-        // thoi gian cho phep refund la phai trip do phai o tuong lai th ela now befor time return
-        Timestamp timeReturn = new Timestamp(booking.getTrip().getTimeReturn().getTime());
-        Timestamp now = Timestamp.from(Instant.now());
-        if (now.after(timeReturn)) {
-            throw new RuntimeException("Cannot refund Booking in past");
+        //Nếu trip đã hoàn thành (status là INACTIVE) thì không thể refund
+        if (!booking.getTrip().getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
+            String status = booking.getStatus();
+            if (status.equalsIgnoreCase(Status.Booking.DONE.name()) || status.equalsIgnoreCase(Status.Booking.PAYLATER.name())) {
+                Vehicle vehicle = booking.getTrip().getVehicle();
+                //FreeSeat
+                List<FreeSeat> numberSeat = booking.getFreeSeats();
+                List<FreeSeat> freeSeats = booking.getFreeSeats().stream()
+                        .peek(seat -> {
+                            seat.setStatus(Status.Seat.ACTIVE.name());
+                            seat.setVehicle(vehicle);
+                            seat.setBooking(booking);
+                        })
+                        .collect(Collectors.toList());
+                double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
+                double newPrice = 0;
+                newPrice = booking.getTotalPrice().doubleValue() * 0.1;
+                //Vehical
+                int capacity = vehicle.getSeatCapacity() - numberSeat.size();
+                vehicle.setSeatCapacity(capacity);
+                //Booking
+                booking.setTotalPrice(BigDecimal.valueOf(newPrice));
+                booking.setStatus(Status.Booking.REFUNDED.name());
+
+                vehicleRepository.save(vehicle);
+                seatRepository.saveAll(freeSeats);
+                bookingRepository.save(booking);
+            } else {
+                throw new RuntimeException("This ticket is non-refundable");
+            }
+        } else {
+            throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
-        Vehicle vehicle = booking.getTrip().getVehicle();
-        List<FreeSeat> numberSeat = booking.getFreeSeats();
-        List<FreeSeat> freeSeats = booking.getFreeSeats().stream()
-                .peek(seat -> {
-                    seat.setStatus(Status.Seat.ACTIVE.name());
-                    seat.setVehicle(vehicle);
-                    seat.setBooking(booking);
-                })
-                .collect(Collectors.toList());
-        seatRepository.saveAll(freeSeats);
-        int capacity = vehicle.getSeatCapacity() - numberSeat.size();
-        vehicle.setSeatCapacity(capacity);
-        double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
-        double newPrice = 0;
-        newPrice = booking.getTotalPrice().doubleValue() * 0.1;
-        booking.setTotalPrice(BigDecimal.valueOf(newPrice));
-            booking.setStatus(Status.Booking.REFUNDED.name());
-        bookingRepository.save(booking);
+    }
+    List<Task> tasks = new ArrayList<>();
+    private Timer timer = new Timer();
+    @Override
+    public void requestRefunded(Long bookingId) {
+
+        Runnable cancelTask = new TimerTask() {
+            @Override
+            public void run() {
+                Booking change = bookingRepository.findById(bookingId).get();
+                Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
+                Timestamp now = Timestamp.from(Instant.now());
+                if (now.before(timeReturn)) { //nếu thời hian hiện tại trước thời gian Return trip cho phép
+                    if (change.getStatus().equalsIgnoreCase("DONE")) { // chi cho phep khi Đã thanh toán
+                        change.setStatus(Status.Booking.REQUESTREFUND.name());
+                        bookingRepository.save(change);
+                    } else {
+                        throw new RuntimeException("your ticket has not been paid");
+                    }
+                } else {
+                    throw new RuntimeException("Your ticket is non-refundable");
+                }
+            }
+        };
+        tasks.add(new Task(cancelTask, bookingId));
+        Timer timer = new Timer();
+        for (Task task : tasks) {
+            if (task.getId() == bookingId) {
+                timer.schedule(task, 15 * 60 * 1000L);
+            }
+        }
     }
     @Override
-    public void requestRefund(Long bookingId) {
-        Booking change = bookingRepository.findById(bookingId).get();
-        Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
-        Timestamp now = Timestamp.from(Instant.now());
-        if (now.after(timeReturn)) {
-            throw new RuntimeException("Ticket refund overdue");
-        } else if (change.getStatus().equalsIgnoreCase("DONE")) {
-            change.setStatus(Status.Booking.REQUESTREFUND.name());
-            bookingRepository.save(change);
+    public void cancelRequestRefunded(Long bookingId) {
+        if (timer != null) {
+            // Dừng task cụ thể
+            for(Task task : tasks){
+                if (task.getId() == bookingId) {
+                    timer.cancel();
+                }
+            }
+            // Huỷ Timer nếu không còn task nào
+            if (tasks.size() == 0) {
+                timer.cancel();
+                timer = null;
+            }
         } else {
-            throw new RuntimeException("You have not paid for this order yet");
+            // Tạo Timer mới nếu Timer đã bị huỷ trước đó
+            timer = new Timer();
         }
-    }
 
+
+
+
+
+    }
     @Override
     public void doneCash(Long bookingId) {
-        Booking change = bookingRepository.findById(bookingId).get();
-        change.setStatus(Status.Booking.DONE.name());
-        bookingRepository.save(change);
+        Booking booking = bookingRepository.findById(bookingId).get();
+        if (booking.getStatus().equalsIgnoreCase(Status.Booking.PAYLATER.name())){
+            booking.setStatus(Status.Booking.DONE.name());
+            bookingRepository.save(booking);
+        }
+        else{
+            throw new RuntimeException("Only accept payment for customers using cash payment method !");
+        }
+    }
+    @Override
+    public void voucher(VoucherRequest request) {
+        Voucher voucher = voucherService.getVoucherByCode(request.getCode());
+        Booking booking = bookingRepository.findById(request.getBookingId()).get();
+        double totalDiscount = booking.getTotalPrice().doubleValue();
+        if (voucher != null) {
+            double discount = (totalDiscount * Double.parseDouble(
+                    String.valueOf(voucher.getDiscountValue()))) / 100;
+            totalDiscount = totalDiscount - discount;
+            voucher.setQuantity(voucher.getQuantity() - 1);
+            booking.setTotalPrice(BigDecimal.valueOf(totalDiscount));
+        } else if (voucher.getQuantity() == 0) {
+            throw new RuntimeException("Voucher is out of stock");
+        } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
+            throw new RuntimeException("Voucher is expired");
+        } else {
+            throw new RuntimeException("Voucher is not exist");
+        }
     }
 
-
 }
+

@@ -29,6 +29,7 @@ public interface TripMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "seatQuantity", target = "seatQuantity")
     @Mapping(source = "id", target = "tripId")
+    @Mapping(source = "employeeName", target = "employeeName")
     @Mapping(source = "vehicle.seatCapacity", target = "vehicle.seatCapacity")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
@@ -42,6 +43,8 @@ public interface TripMapper {
     @Mapping(source = "seatQuantity", target = "seatQuantity")
     @Mapping(source = "id", target = "tripId")
     @Mapping(source = "company", target = "company")
+    @Mapping(source = "vehicle.licensePlates", target = "vehicle.licensePlates")
+    @Mapping(source = "vehicle.vehicleType", target = "vehicle.vehicleType")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
     TripForCustomer mapTripResponseFromTripOfCustomer(Trip trip);

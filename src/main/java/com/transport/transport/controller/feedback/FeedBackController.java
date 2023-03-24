@@ -68,5 +68,16 @@ public class FeedBackController {
         return new ResponseEntity<>(new FeedbackMsg("List", list), HttpStatus.OK);
     }
 
+    @GetMapping("/company/report/{id}")
+    public ResponseEntity<?> reportFeedback(@PathVariable(name = "id") Long id){
+        feedbackService.reportFeedback(id);
+        return new ResponseEntity<>("Report Success", HttpStatus.OK);
+    }
+    @GetMapping("/admin/report/{id}")
+    public ResponseEntity<?> acceptReport(@PathVariable(name = "id") Long id){
+        feedbackService.accpectReport(id);
+        return new ResponseEntity<>("Report Success", HttpStatus.OK);
+    }
+
 }
 

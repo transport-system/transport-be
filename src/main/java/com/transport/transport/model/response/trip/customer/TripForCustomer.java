@@ -2,6 +2,8 @@ package com.transport.transport.model.response.trip.customer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.transport.transport.model.entity.Company;
+import com.transport.transport.model.entity.Vehicle;
+import com.transport.transport.model.response.vehicle.VehicleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +31,6 @@ public class TripForCustomer {
     private String status;
     private String arrival;
     private String departure;
+
+    private VehicleResponse vehicle;
 }
