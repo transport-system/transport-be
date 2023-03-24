@@ -10,6 +10,7 @@ import com.transport.transport.model.response.voucher.VoucherResponse;
 import com.transport.transport.model.response.voucher.VoucherResponseMsg;
 import com.transport.transport.service.VoucherService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,15 @@ public class VoucherController {
         voucherService.delete(id);
         return new ResponseEntity<>(
                 voucherMapper.createVoucherResponseFromEntity(voucher),
+                null,
+                HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Get voucher by code", response = VoucherResponse.class)
+    @GetMapping("/getVoucherByCode/{code}")
+    public ResponseEntity<VoucherResponse> getVoucherByCode(@PathVariable String code) {
+        return new ResponseEntity<>(
+                voucherMapper.createVoucherResponseFromEntity(voucherService.getVoucherByCode(code)),
                 null,
                 HttpStatus.OK);
     }

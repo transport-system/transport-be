@@ -14,14 +14,11 @@ import com.transport.transport.model.response.Authen.AuthenticationResponse;
 import com.transport.transport.repository.AccountRepository;
 import com.transport.transport.repository.TokenRepository;
 import com.transport.transport.service.AuthenticationService;
-import com.transport.transport.utils.ConvertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -105,7 +102,6 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .dateOfBirth(request.getDateOfBirth())
                 .avatarImage(request.getAvatarImage())
                 .gender(request.getGender())
                 .role(RoleEnum.COMPANY.name())
