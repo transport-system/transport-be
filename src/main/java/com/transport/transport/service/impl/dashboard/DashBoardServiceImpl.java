@@ -73,7 +73,11 @@ public class DashBoardServiceImpl implements DashBoardService {
     public CompanyResponse getCompanyDashboardLast7Days(Long companyId) {
         if (companyRepository.findById(companyId).isEmpty()) {
             throw new NotFoundException("Company not found");
-        } else {
+        }
+        else if(accountRepository.countTotalCustomerByCompanyIdLast7Days(companyId)==0){
+            throw new NotFoundException("Date khong ton tai trong 7day ");
+        }
+        else {
             CompanyResponse companyResponse = new CompanyResponse();
             companyResponse.setTotalCustomer(accountRepository.countTotalCustomerByCompanyIdLast7Days(companyId));
             companyResponse.setTotalTrip(tripRepository.countTotalTripByCompanyIdLast7Days(companyId));
