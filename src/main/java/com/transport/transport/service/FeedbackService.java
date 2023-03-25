@@ -8,14 +8,11 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface FeedbackService {
-
     FeedBack createFeedback(FeedbackRequest request) throws ParseException;
     public void changeStatus(Long id);
     List<FeedBack> getAllByCompany(Long id);
     List<FeedBack> getAllByUserId(Long id);
     List<FeedBack> getAll();
     FeedBack upadteFeedBack(FeedbackRequest request, Long feedbackId);
-
-    public void reportFeedback(Long id);
-    public void accpectReport(Long id);
+    public void approvalFeedback(Long id);
 }
