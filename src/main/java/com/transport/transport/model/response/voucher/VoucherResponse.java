@@ -22,4 +22,5 @@ public class VoucherResponse implements Serializable {
     private String status;
     private String discountValue;
     private String owner;
+
 }

@@ -88,7 +88,7 @@ public class VoucherController {
     }
 
     @ApiOperation(value = "Get voucher each role ", response = VoucherResponse.class)
-    @GetMapping("/getVoucherByRole/{accountId}")
+    @GetMapping("/getVoucherByOwner/{accountId}")
     public ResponseEntity<VoucherResponseMsg> getVoucherByCompany(@PathVariable Long accountId) {
         return new ResponseEntity<>(
                 new VoucherResponseMsg(
@@ -97,4 +97,24 @@ public class VoucherController {
                 null,
                 HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Account take and save voucher")
+    @GetMapping("/takeAndSaveVoucher/{voucherId}")
+    public ResponseEntity<?> accountTakeAndSaveVoucher(@PathVariable Long voucherId,
+                                                       @RequestHeader(AUTHORIZATION) String token) {
+        voucherService.accountTakeAndSaveVoucher(token, voucherId);
+        return new ResponseEntity<>("Get voucher successfully", null, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Take all voucher that customer has")
+    @GetMapping("/getAllVoucherOfAccountId/{accountId}")
+    public ResponseEntity<VoucherResponseMsg> getAllVouchersOfAccount(Long accountId) {
+        return new ResponseEntity<>(
+                new VoucherResponseMsg(
+                        "Get voucher by company successfully",
+                        voucherMapper.createVoucherResponseFromEntity(voucherService.getAllVouchersOfAccount(accountId))),
+                null,
+                HttpStatus.OK);
+    }
+
 }

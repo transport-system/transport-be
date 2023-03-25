@@ -18,7 +18,11 @@ import com.transport.transport.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +35,9 @@ public class VoucherServiceImp implements VoucherService {
     private final BookingRepository bookingRepository;
     private final JwtService jwtService;
     private final VoucherMapper mapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<Voucher> findAll() {
@@ -190,4 +197,43 @@ public class VoucherServiceImp implements VoucherService {
             }
         }
     }
+
+    @Override
+    public List<Voucher> getAllVouchersOfAccount(Long accountId) {
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new NotFoundException("Account not found: " + accountId));
+        return voucherRepository.getAllVouchersByAccount(accountId);
+    }
+
+    @Override
+    public void accountTakeAndSaveVoucher(String token, Long voucherId) {
+        token = token.substring("Bearer ".length());
+        String username = jwtService.extractUsername(token);
+        Account account = accountRepository.findAccountByUsername(username);
+
+        Voucher voucher = voucherRepository.findById(voucherId)
+                .orElseThrow(() -> new BadRequestException("Voucher not found: " + voucherId));
+
+        if (voucher.getQuantity() <= 0) {
+            throw new BadRequestException("Voucher is out of stock");
+        }
+        if (voucher.getStartTime().after(new Date())) {
+            throw new BadRequestException("Voucher is not started");
+        }
+        if (voucher.getExpiredTime().before(new Date())) {
+            throw new BadRequestException("Voucher is expired");
+        }
+        if (voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
+            throw new BadRequestException("Voucher is inactive");
+        }
+        if (voucher.getAccounts().contains(account)) {
+            throw new BadRequestException("Account has taken this voucher");
+        } else {
+            voucher.getAccounts().add(account);
+            account.getVouchers().add(voucher);
+        }
+        accountRepository.save(account);
+        voucherRepository.save(voucher);
+    }
+
 }

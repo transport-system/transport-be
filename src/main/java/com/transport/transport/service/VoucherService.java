@@ -1,5 +1,6 @@
 package com.transport.transport.service;
 
+import com.transport.transport.config.security.user.Account;
 import com.transport.transport.model.entity.Voucher;
 import com.transport.transport.model.request.voucher.UpdateVoucherRequest;
 import com.transport.transport.model.request.voucher.VoucherRequest;
@@ -11,4 +12,6 @@ public interface VoucherService extends CRUDService<Voucher> {
     Voucher updateVoucher(UpdateVoucherRequest voucherRequest, String token);
     Voucher getVoucherByCode(String code);
     List<Voucher> getVouchersByRole(Long accountId);
+    List<Voucher> getAllVouchersOfAccount(Long accountId);
+    void accountTakeAndSaveVoucher(String token, Long voucherId);
 }
