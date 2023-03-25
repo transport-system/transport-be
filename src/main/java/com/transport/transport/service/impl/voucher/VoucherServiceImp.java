@@ -94,14 +94,11 @@ public class VoucherServiceImp implements VoucherService {
         Account account = accountRepository.findAccountByUsername(username);
         if (voucherRepository.existsByVoucherCode(voucherRequest.getVoucherCode())) {
             throw new BadRequestException("You can not create voucher duplicate code");
-        }
-        if (voucherRequest.getQuantity() <= 0) {
+        } if (voucherRequest.getQuantity() <= 0) {
             throw new BadRequestException("Quantity must be greater than 0");
-        }
-        if (voucherRequest.getDiscountValue().intValue() <= 0) {
+        } if (voucherRequest.getDiscountValue().intValue() <= 0) {
             throw new BadRequestException("Discount value must be greater than 0");
-        }
-        if (voucherRequest.getDiscountValue().intValue() >= 100) {
+        } if (voucherRequest.getDiscountValue().intValue() >= 100) {
             throw new BadRequestException("Discount value must be lest than 0");
         }
         //get current time
@@ -130,6 +127,8 @@ public class VoucherServiceImp implements VoucherService {
             throw new BadRequestException("Start time must be greater than current time");
         } else if (voucher.getStartTime().after(voucher.getExpiredTime())) {
             throw new BadRequestException("Start time must be less than expired time");
+        } else if (voucher.getStartTime().equals(voucher.getExpiredTime())) {
+            throw new BadRequestException("Start time not equals with expired time");
         }
         return voucherRepository.save(voucher);
     }
