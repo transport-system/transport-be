@@ -381,24 +381,31 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(request.getBookingId()).get();
         double total = booking.getTotalPrice().doubleValue();
         double newTotal;
+
         if (voucher != null) {
-            double discount = total*0.2;
-            newTotal = total - discount;
-            voucher.setQuantity(voucher.getQuantity() - 1);
-            booking.setTotalPrice(BigDecimal.valueOf(newTotal));
-            booking.setVoucher(voucher);
-            voucherRepository.save(voucher);
-            bookingRepository.save(booking);
-        } else if (voucher.getQuantity() <= 0) {
-            throw new RuntimeException("Voucher is out of stock");
-        } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
-            throw new RuntimeException("Voucher is expired");
-        }else if (booking.getVoucher() != null){
-            throw new RuntimeException("Only one voucher for this trip");
+            if (voucher.getQuantity() <= 0) {
+                throw new RuntimeException("Voucher is out of stock");
+            }
+            else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
+                throw new RuntimeException("Voucher is expired");
+            }
+            else if (booking.getVoucher() != null) {
+                throw new RuntimeException("Only one voucher for this trip");
+            } else {
+                double discount = total * 0.2;
+                newTotal = total - discount;
+                voucher.setQuantity(voucher.getQuantity() - 1);
+                booking.setTotalPrice(BigDecimal.valueOf(newTotal));
+                booking.setVoucher(voucher);
+                voucherRepository.save(voucher);
+                bookingRepository.save(booking);
+            }
         }
         else {
             throw new RuntimeException("Voucher is not exist");
         }
+
+
     }
 
 }
