@@ -66,8 +66,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2 AND b.createBookingTime BETWEEN ?3 AND ?4")
     int countTotalBookingByCompanyIdAndStatus(Long id, String status, Timestamp from, Timestamp to);
 
-
-    @Query("SELECT c.id, COUNT(total_voucher) AS total_voucher FROM Company c JOIN Account a ON c.account.id = a.id JOIN Voucher v on c.id = v.company.id Where c.id = ?1  GROUP BY c.id")
+    @Query("SELECT COUNT(*) as total_voucher FROM Voucher WHERE Company.id= :companyId")
+        //  @Query("SELECT c.id, COUNT(total_voucher) AS total_voucher FROM Company c JOIN Account a ON c.account.id = a.id JOIN Voucher v on c.id = v.company.id Where c.id = ?1  GROUP BY c.id")
     int countTotalVoucherHaveByCompanyId(Long id);
 
 
