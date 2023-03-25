@@ -106,7 +106,7 @@ public class BookingController {
         return new ResponseEntity<>("Payment success", HttpStatus.OK);
     }
     @GetMapping("/voucher")
-    public ResponseEntity<?> voucher(@RequestBody VoucherBookingRequest voucherRequest){
+    public ResponseEntity<?> vouchers(@RequestBody VoucherBookingRequest voucherRequest){
         bookingService.vouchers(voucherRequest);
         return new ResponseEntity<>("Voucher has Accepted", HttpStatus.OK);
     }
