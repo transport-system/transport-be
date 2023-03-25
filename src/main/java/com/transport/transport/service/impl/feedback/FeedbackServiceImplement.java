@@ -4,6 +4,7 @@ import com.transport.transport.common.Status;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.Company;
 import com.transport.transport.model.entity.FeedBack;
+import com.transport.transport.model.entity.Trip;
 import com.transport.transport.model.request.feedback.FeedbackRequest;
 import com.transport.transport.repository.AccountRepository;
 import com.transport.transport.repository.BookingRepository;
@@ -17,6 +18,8 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,7 +40,7 @@ public class FeedbackServiceImplement implements FeedbackService {
         newFeedback.setRatingScore(request.getRatingScore());
         Date date = Date.valueOf(LocalDate.now());
         newFeedback.setCreateTime(date);
-        newFeedback.setStatus(Status.Feedback.ACTIVE.name());
+        newFeedback.setStatus(Status.Feedback.APPROVAL.name());
         newFeedback.setAccount(accountRepository.findById(request.getAccountId())
                 .orElseThrow(() -> new NotFoundException("account not found: " + request.getAccountId())));
 
@@ -72,6 +75,7 @@ public class FeedbackServiceImplement implements FeedbackService {
                 listCompany.add(l);
             }
         }
+        Collections.sort(listCompany, Comparator.comparing(FeedBack::getCreateTime).reversed());
         return listCompany;
     }
 
@@ -99,22 +103,12 @@ public class FeedbackServiceImplement implements FeedbackService {
     }
 
     @Override
-    public void reportFeedback(Long id) {
+    public void approvalFeedback(Long id) {
         FeedBack change = feedbackRepository.findById(id).get();
         if (change == null) {
             throw new RuntimeException("Not Exit Feedback");
         }
-        change.setStatus(Status.Feedback.REPORT.name());
-        feedbackRepository.save(change);
-    }
-
-    @Override
-    public void accpectReport(Long id) {
-        FeedBack change = feedbackRepository.findById(id).get();
-        if (change == null) {
-            throw new RuntimeException("Not Exit Feedback");
-        }
-        change.setStatus(Status.Feedback.INACTIVE.name());
+        change.setStatus(Status.Feedback.ACTIVE.name());
         feedbackRepository.save(change);
     }
 

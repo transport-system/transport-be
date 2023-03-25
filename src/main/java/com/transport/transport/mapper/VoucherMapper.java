@@ -32,7 +32,6 @@ public interface VoucherMapper {
     @Mapping(source = "discountValue", target = "discountValue")
     Voucher createVoucherFromUpdateVoucherRequest(UpdateVoucherRequest voucherRequest);
 
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "owner", target = "owner")
     VoucherResponse createVoucherResponseFromEntity(Voucher voucher);
@@ -40,4 +39,5 @@ public interface VoucherMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @InheritConfiguration(name = "createVoucherResponseFromEntity")
     List<VoucherResponse> createVoucherResponseFromEntity(List<Voucher> voucher);
+
 }
