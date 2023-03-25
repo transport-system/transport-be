@@ -36,4 +36,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     int countVehicleByCompanyId(Long id);
 
+
 }

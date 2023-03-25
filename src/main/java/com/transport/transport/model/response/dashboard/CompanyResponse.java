@@ -28,7 +28,8 @@ public class CompanyResponse {
     private int totalBookingPaymentCash;
     private int totalBookingPaymentCard;
     private BigDecimal totalRevenue;
-    private int totalVoucherHave;
+    private int totalVoucherCompanyHave;
     private int totalVoucherIsBooked;
+    private int totalVoucherisBookedinTripId;
 
 }

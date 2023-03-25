@@ -80,7 +80,7 @@ public class DashBoardServiceImpl implements DashBoardService {
             companyResponse.setTotalRevenue(bookingRepository.countBookingsByTotalPriceAndaAndAccountCompanyIdAnAndStatus(companyId));
 
 
-            companyResponse.setTotalVoucherHave(voucherRepository.countVoucherByCompanyId(companyId));
+            companyResponse.setTotalVoucherCompanyHave(voucherRepository.countVoucherByCompanyId(companyId));
             companyResponse.setTotalVoucherIsBooked(voucherRepository.countVouchersByBookings(companyId));
             return companyResponse;
         }
@@ -120,17 +120,22 @@ public class DashBoardServiceImpl implements DashBoardService {
             throw new NotFoundException("Company not found");
         } else {
             CompanyResponse companyResponse = new CompanyResponse();
-           // companyResponse.setTotalCustomer(accountRepository.countTotalCustomerByCompanyIdAndTripId(companyId, tripId));
+            companyResponse.setTotalCustomer(accountRepository.countAccountsByCompanyIdAndTripId(companyId, tripId));
+            companyResponse.setTotalVehicle(tripRepository.countVehicleByCompanyIdAndTripId(companyId,tripId));
             companyResponse.setTotalTrip(tripRepository.countTripsByCompanyIdAndStatus(companyId, Status.Trip.ACTIVE.name()));
-            companyResponse.setTotalBooking(bookingRepository.countBookingByAccountCompanyIdAndTripId(companyId, tripId));
-            companyResponse.setTotalBookingPending(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.PENDING.name()));
-            companyResponse.setTotalBookingDone(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.DONE.name()));
-            companyResponse.setTotalBookingTimeout(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REJECTED.name()));
-            companyResponse.setTotalBookingRefunded(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REFUNDED.name()));
-            companyResponse.setTotalBookingRequestRefund(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REQUESTREFUND.name()));
-            companyResponse.setTotalBookingAwaitPayment(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.PAYLATER.name()));
+            companyResponse.setTotalBooking(bookingRepository.countBookingByCompanyIdAndTripId(companyId, tripId));
+            companyResponse.setTotalBookingPending(bookingRepository.countBookingByTripCompanyIdAndTripAndStatus(companyId, tripId, Status.Booking.PENDING.name()));
+            companyResponse.setTotalBookingDone(bookingRepository.countBookingByTripCompanyIdAndTripAndStatus(companyId, tripId, Status.Booking.DONE.name()));
+            companyResponse.setTotalBookingTimeout(bookingRepository.countBookingByTripCompanyIdAndTripAndStatus(companyId, tripId, Status.Booking.REJECTED.name()));
+            companyResponse.setTotalBookingRefunded(bookingRepository.countBookingByTripCompanyIdAndTripAndStatus(companyId, tripId, Status.Booking.REFUNDED.name()));
+            companyResponse.setTotalBookingRequestRefund(bookingRepository.countBookingByTripCompanyIdAndTripAndStatus(companyId, tripId, Status.Booking.REQUESTREFUND.name()));
+            companyResponse.setTotalBookingAwaitPayment(bookingRepository.countBookingByTripCompanyIdAndTripAndStatus(companyId, tripId, Status.Booking.PAYLATER.name()));
             companyResponse.setTotalRevenue(bookingRepository.getRevenueByCompanyIdAndTripId(companyId, tripId));
+            companyResponse.setTotalBookingPaymentCash(bookingRepository.countBookingByTripCompanyIdAndTripIdAndMAndPaymentMethod(companyId,tripId,PaymentType.CASH.name()));
+            companyResponse.setTotalBookingPaymentCard(bookingRepository.countBookingByTripCompanyIdAndTripIdAndMAndPaymentMethod(companyId,tripId,PaymentType.CARD.name()));
 
+            companyResponse.setTotalVoucherCompanyHave(voucherRepository.countVoucherByCompanyId(companyId)); // k có bảng cột trip voucher nên chỉ lấy tổng company th
+            companyResponse.setTotalVoucherisBookedinTripId(voucherRepository.countVouchersByCompanyIdAndTripId(companyId,tripId));
             return companyResponse;
         }
     }

@@ -39,14 +39,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     int countTotalBookingByCompanyIdLast7Days(Long id);
 
-//    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2")
-//    int countTotalBookingByCompanyIdAndTripId(Long companyId, Long tripId);
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2")
+    int countBookingByCompanyIdAndTripId(Long companyId, Long tripId);
 
-    int countBookingByAccountCompanyIdAndTripId(Long companyId, Long tripId);
     int countBookingsByAccountCompanyIdAndStatus(Long id, String status);
 
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = ?3")
-    int countTotalBookingByCompanyIdAndTripIdAndStatus(Long companyId, Long tripId, String status);
+    @Query("SELECT count(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = ?3")
+    int countBookingByTripCompanyIdAndTripAndStatus(Long companyId, Long tripId, String status);
 
     @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2  AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     int countTotalBookingByCompanyIdAndStatusLast7Days(Long id, String status);
@@ -66,9 +65,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2 AND b.createBookingTime BETWEEN ?3 AND ?4")
     int countTotalBookingByCompanyIdAndStatus(Long id, String status, Timestamp from, Timestamp to);
 
-
     int countBookingsByAccountCompanyIdAndPaymentMethod(Long id, String paymentMethod);
-
-
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.paymentMethod = ?3")
+    int countBookingByTripCompanyIdAndTripIdAndMAndPaymentMethod(Long id, Long tripid, String paymentMethod);
 
 }

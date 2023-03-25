@@ -16,11 +16,15 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByUsername(String username);
+
     Account findAccountByUsername(String username);
+
     List<Account> findAllByStatusIsNotNull(Pageable pageable);
+
     Account findAccountByUsernameAndStatus(String username, String status);
 
     boolean existsByEmail(String email);
+
     boolean existsByUsername(String username);
 
     boolean existsByPhone(String username);
@@ -48,6 +52,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query(value = "SELECT ((SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN accounts a ON b.account_id = a.account_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1? AND t.trip_id = 2?) + (SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN customer c ON b.customer_id = c.customer_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1? AND t.trip_id = 2?) ) AS TotalCustomer", nativeQuery = true)
     int countTotalCustomerByCompanyIdAndTripId(Long id, Long tripId);
+
+    @Query("SELECT COUNT(b.account.id) FROM Booking b WHERE b.trip.company.id=?1 AND b.trip.id=?2")
+    int countAccountsByCompanyIdAndTripId(Long id, Long tripId);
+
 
     @Query(value = "SELECT ((SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN accounts a ON b.account_id = a.account_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1? AND b.create_booking_time >= DATE(NOW() - INTERVAL 7 DAY)) + (SELECT COUNT(b.booking_id) as TotalCustomer FROM booking b JOIN customer c ON b.customer_id = c.customer_id JOIN trip t ON b.trip_id = t.trip_id JOIN company c2 ON t.company_id = c2.company_id AND b.status = 'DONE' WHERE c2.company_id = 1? AND t.id = ? AND b.create_booking_time >= DATE(NOW() - INTERVAL 7 DAY) )) AS TotalCustomer", nativeQuery = true)
     int countTotalCustomerByCompanyIdAndTripIdLast7Days(Long id, Long tripId);

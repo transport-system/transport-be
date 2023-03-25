@@ -53,4 +53,7 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
             (String arrival, String departure, Timestamp date, double price, double rating, String name);
 
     List<Trip> findAllByRoute_City1_CityAndRoute_City2_CityAndPriceAndCompany_Rating(String a, String b, double c, double d);
+
+    @Query("SELECT COUNT(t.vehicle) FROM Trip t WHERE t.company.id=?1 AND t.id = ?2 AND t.vehicle.status='Active'")
+    int countVehicleByCompanyIdAndTripId(Long id , Long tripId);
 }

@@ -23,4 +23,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     @Query("SELECT COUNT(voucher.id) FROM Booking WHERE account.id = ?1 AND voucher.id IS NOT NULL\n")
     int countVouchersByBookings(Long id);
+
+    @Query("SELECT COUNT(b.voucher.id) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.voucher.id IS NOT NULL\n ")
+    int countVouchersByCompanyIdAndTripId(Long id,Long tripid);
 }
