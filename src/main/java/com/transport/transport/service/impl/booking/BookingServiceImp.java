@@ -11,6 +11,7 @@ import com.transport.transport.model.request.booking.VoucherBookingRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.SeatRepository;
 import com.transport.transport.repository.VehicleRepository;
+import com.transport.transport.repository.VoucherRepository;
 import com.transport.transport.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,8 @@ public class BookingServiceImp implements BookingService {
     private List<TimerTask> scheduledTasks = new ArrayList<>();
     private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
+    private final VoucherRepository voucherRepository;
+
     public String checkDate(Timestamp date1) {
         Date date2 = new Date(date1.getTime());
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
@@ -383,6 +386,8 @@ public class BookingServiceImp implements BookingService {
             totalDiscount = totalDiscount - discount;
             voucher.setQuantity(voucher.getQuantity() - 1);
             booking.setTotalPrice(BigDecimal.valueOf(totalDiscount));
+            voucherRepository.save(voucher);
+            bookingRepository.save(booking);
         } else if (voucher.getQuantity() == 0) {
             throw new RuntimeException("Voucher is out of stock");
         } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
