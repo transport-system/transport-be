@@ -95,7 +95,7 @@ public class BookingController {
         bookingService.cancelRequestRefunded(id);
         return new ResponseEntity<>("Request has cancel", HttpStatus.OK);
     }
-    @GetMapping("/CancalBooking/{id}")
+    @GetMapping("/CancelBooking/{id}")
     public ResponseEntity<?> cancelBooking(@PathVariable("id") Long id){
         bookingService.requestRefunded(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
