@@ -28,9 +28,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE' AND b.createBookingTime BETWEEN ?1 AND ?2")
     BigDecimal getRevenue(Timestamp from, Timestamp to);
 
-    @Query(value = "SELECT MONTH(b.createBookingTime) as month, SUM(b.totalPrice) as revenue FROM Booking b " +
-            "WHERE b.id IN (SELECT t.id FROM Trip t WHERE t.company.id = ?1) AND b.status = 'DONE' " +
-            "GROUP BY MONTH(b.createBookingTime)")
+    @Query(value = "SELECT MONTH(b.createBookingTime) as month, SUM(b.totalPrice) as revenue FROM Booking b WHERE b.id IN (SELECT t.id FROM Trip t WHERE t.company.id = ?1) AND b.status = 'DONE' GROUP BY MONTH(b.createBookingTime)")
     List<Object[]> getRevenueByMonth(Long id);
 
 
@@ -38,8 +36,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1")
     int countTotalBookingByCompanyId(Long id);
 
-    @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1" +
-            " AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
+    @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     int countTotalBookingByCompanyIdLast7Days(Long id);
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2")
@@ -51,15 +48,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = ?3")
     int countTotalBookingByCompanyIdAndTripIdAndStatus(Long companyId, Long tripId, String status);
 
-    @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2" +
-            " AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
+    @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2  AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     int countTotalBookingByCompanyIdAndStatusLast7Days(Long id, String status);
 
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'")
     BigDecimal getRevenueByCompanyId(Long id);
 
-    @Query(value = "SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'" +
-            " AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
+    @Query(value = "SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     BigDecimal getRevenueByCompanyIdLast7Days(Long id);
 
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = 'DONE'")
@@ -77,9 +72,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
     @Query("select c.id,Count(b.paymentMethod) from Company c join Booking b on c.account.id=b.account.id where c.id=?1 AND b.paymentMethod =?2 group by c.id")
-    int countTotalBookingByTotalPayMenthodwithCompanyID(Long id ,String paymentMethod);
-@Query("SELECT c.id,COUNT(b.voucher.id) AS total_vouchers\n" +
-        "FROM Booking b join Account a on b.account.id=a.id join Company c on c.account.id=a.id\n" +
-        "WHERE c.id=?1 group by c.id")
+    int countTotalBookingByTotalPayMenthodwithCompanyID(Long id, String paymentMethod);
+
+    @Query("SELECT c.id,COUNT(b.voucher.id) AS total_vouchers  FROM Booking b join Account a on b.account.id=a.id join Company c on c.account.id=a.id WHERE c.id=?1 group by c.id")
     int countTotalVoucherisBookedByCompanyId(Long id);
 }
