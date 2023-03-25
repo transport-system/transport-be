@@ -379,16 +379,17 @@ public class BookingServiceImp implements BookingService {
     public void vouchers(VoucherBookingRequest request) {
         Voucher voucher = voucherService.getVoucherByCode(request.getCode());
         Booking booking = bookingRepository.findById(request.getBookingId()).get();
-        double totalDiscount = booking.getTotalPrice().doubleValue();
+        double total = booking.getTotalPrice().doubleValue();
+        double newTotal;
         if (voucher != null) {
-            double discount = (totalDiscount * Double.parseDouble(String.valueOf(voucher.getDiscountValue()))) / 100;
-            totalDiscount = totalDiscount - discount;
+            double discount = total*0.2;
+            newTotal = total - discount;
             voucher.setQuantity(voucher.getQuantity() - 1);
-            booking.setTotalPrice(BigDecimal.valueOf(totalDiscount));
+            booking.setTotalPrice(BigDecimal.valueOf(newTotal));
             booking.setVoucher(voucher);
             voucherRepository.save(voucher);
             bookingRepository.save(booking);
-        } else if (voucher.getQuantity() == 0) {
+        } else if (voucher.getQuantity() <= 0) {
             throw new RuntimeException("Voucher is out of stock");
         } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
             throw new RuntimeException("Voucher is expired");
