@@ -24,5 +24,10 @@ public class CompanyResponse {
     private int totalBookingRefunded;
     private int totalBookingRequestRefund;
     private int totalBookingAwaitPayment;
+    private int totalBookingPaymentCash;
+    private int totalBookingPaymentCard;
     private BigDecimal totalRevenue;
+    private int totalVoucherHave;
+    private int totalVoucherIsBooked;
+
 }
