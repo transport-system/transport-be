@@ -265,7 +265,7 @@ public class BookingServiceImp implements BookingService {
         //Nếu trip đã hoàn thành (status là INACTIVE) thì không thể refund
         if (!booking.getTrip().getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
             String status = booking.getStatus();
-            if (status.equalsIgnoreCase(Status.Booking.DONE.name()) || status.equalsIgnoreCase(Status.Booking.PAYLATER.name())) {
+            if (status.equalsIgnoreCase(Status.Booking.REQUESTREFUND.name())) {
                 Vehicle vehicle = booking.getTrip().getVehicle();
                 //FreeSeat
                 List<FreeSeat> numberSeat = booking.getFreeSeats();
@@ -296,7 +296,43 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
     }
+    @Override
+    public void cancelBooing(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).get();
+        //Nếu trip đã hoàn thành (status là INACTIVE) thì không thể refund
+        if (!booking.getTrip().getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
+            String status = booking.getStatus();
+            if (status.equalsIgnoreCase(Status.Booking.DONE.name()) || status.equalsIgnoreCase(Status.Booking.PAYLATER.name())) {
+                Vehicle vehicle = booking.getTrip().getVehicle();
+                //FreeSeat
+                List<FreeSeat> numberSeat = booking.getFreeSeats();
+                List<FreeSeat> freeSeats = booking.getFreeSeats().stream()
+                        .peek(seat -> {
+                            seat.setStatus(Status.Seat.ACTIVE.name());
+                            seat.setVehicle(vehicle);
+                            seat.setBooking(booking);
+                        })
+                        .collect(Collectors.toList());
+                double price = booking.getTotalPrice().doubleValue() / booking.getNumberOfSeats();
+                double newPrice = 0;
+                newPrice = booking.getTotalPrice().doubleValue() * 0.1;
+                //Vehical
+                int capacity = vehicle.getSeatCapacity() - numberSeat.size();
+                vehicle.setSeatCapacity(capacity);
+                //Booking
+                booking.setTotalPrice(BigDecimal.valueOf(newPrice));
+                booking.setStatus(Status.Booking.REJECTED.name());
 
+                vehicleRepository.save(vehicle);
+                seatRepository.saveAll(freeSeats);
+                bookingRepository.save(booking);
+            } else {
+                throw new RuntimeException("This ticket is non-refundable");
+            }
+        } else {
+            throw new RuntimeException("Tickets cannot be refunded for past trip");
+        }
+    }
     //Dung Timer để lên task chạy theo thời gian
     List<Task> tasks = new ArrayList<>();
     private Timer timer = new Timer();

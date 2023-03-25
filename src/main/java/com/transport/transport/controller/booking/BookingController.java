@@ -97,7 +97,7 @@ public class BookingController {
     }
     @GetMapping("/CancelBooking/{id}")
     public ResponseEntity<?> cancelBooking(@PathVariable("id") Long id){
-        bookingService.requestRefunded(id);
+        bookingService.cancelBooing(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @GetMapping("/cash/{id}")
