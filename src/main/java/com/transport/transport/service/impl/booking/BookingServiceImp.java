@@ -381,8 +381,7 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(request.getBookingId()).get();
         double totalDiscount = booking.getTotalPrice().doubleValue();
         if (voucher != null) {
-            double discount = (totalDiscount * Double.parseDouble(
-                    String.valueOf(voucher.getDiscountValue()))) / 100;
+            double discount = (totalDiscount * Double.parseDouble(String.valueOf(voucher.getDiscountValue()))) / 100;
             totalDiscount = totalDiscount - discount;
             voucher.setQuantity(voucher.getQuantity() - 1);
             booking.setTotalPrice(BigDecimal.valueOf(totalDiscount));
