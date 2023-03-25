@@ -1,5 +1,6 @@
 package com.transport.transport.service.impl.dashboard;
 
+import com.transport.transport.common.PaymentType;
 import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
 import com.transport.transport.exception.NotFoundException;
@@ -65,6 +66,10 @@ public class DashBoardServiceImpl implements DashBoardService {
             companyResponse.setTotalBookingAwaitPayment(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
                     Status.Booking.PAYLATER.name()));
             companyResponse.setTotalRevenue(bookingRepository.getRevenueByCompanyId(companyId));
+            companyResponse.setTotalVoucherHave(bookingRepository.countTotalVoucherHaveByCompanyId(companyId));
+            companyResponse.setTotalBookingPaymentCard(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CARD.name()));
+            companyResponse.setTotalBookingPaymentCash(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CASH.name()));
+            companyResponse.setTotalVoucherIsBooked(bookingRepository.countTotalVoucherisBookedByCompanyId(companyId));
             return companyResponse;
         }
     }

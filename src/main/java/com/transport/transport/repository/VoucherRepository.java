@@ -13,6 +13,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     boolean existsByVoucherCode(String voucherCode);
     Voucher findByVoucherCode(String voucherCode);
 
+
     @Query("SELECT v FROM Account a JOIN a.vouchers v WHERE a.id = ?1")
     List<Voucher> getAllVouchersByAccount(Long accountId);
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VoucherRequest {
+public class VoucherBookingRequest {
     private String code;
     private Long bookingId;
 }
