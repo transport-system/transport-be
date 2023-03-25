@@ -4,9 +4,8 @@ import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.mapper.BookingMapper;
 import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.request.booking.BookingRequest;
-import com.transport.transport.model.request.booking.CancelBooking;
 import com.transport.transport.model.request.booking.PaymentRequest;
-import com.transport.transport.model.request.booking.VoucherRequest;
+import com.transport.transport.model.request.booking.VoucherBookingRequest;
 import com.transport.transport.model.response.booking.BookingResponse;
 import com.transport.transport.service.BookingService;
 import com.transport.transport.service.VoucherService;
@@ -108,7 +107,7 @@ public class BookingController {
     }
 
     @GetMapping("/voucher")
-    public ResponseEntity<?> voucher(@RequestBody VoucherRequest voucherRequest){
+    public ResponseEntity<?> voucher(@RequestBody VoucherBookingRequest voucherRequest){
         bookingService.voucher(voucherRequest);
         return new ResponseEntity<>("Voucher has Accepted", HttpStatus.OK);
     }
