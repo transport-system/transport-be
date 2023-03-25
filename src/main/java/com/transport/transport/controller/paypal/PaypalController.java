@@ -5,8 +5,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.model.entity.PayPal;
-import com.transport.transport.model.request.booking.CancelBooking;
-import com.transport.transport.model.request.paypal.PaypalRequest;
+
 import com.transport.transport.service.PaypalService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor

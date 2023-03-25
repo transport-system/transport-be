@@ -33,17 +33,17 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
     //=======COMPANY=======
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1")
-    int countTotalBookingByCompanyId(Long id);
+
+    int countBookingsByAccountCompanyId(Long id);
 
     @Query(value = "SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     int countTotalBookingByCompanyIdLast7Days(Long id);
 
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2")
-    int countTotalBookingByCompanyIdAndTripId(Long companyId, Long tripId);
+//    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2")
+//    int countTotalBookingByCompanyIdAndTripId(Long companyId, Long tripId);
 
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2")
-    int countTotalBookingByCompanyIdAndStatus(Long id, String status);
+    int countBookingByAccountCompanyIdAndTripId(Long companyId, Long tripId);
+    int countBookingsByAccountCompanyIdAndStatus(Long id, String status);
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.status = ?3")
     int countTotalBookingByCompanyIdAndTripIdAndStatus(Long companyId, Long tripId, String status);
@@ -52,7 +52,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     int countTotalBookingByCompanyIdAndStatusLast7Days(Long id, String status);
 
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'")
-    BigDecimal getRevenueByCompanyId(Long id);
+    BigDecimal countBookingsByTotalPriceAndaAndAccountCompanyIdAnAndStatus(Long id);
 
     @Query(value = "SELECT SUM(b.totalPrice) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = 'DONE'AND b.createBookingTime >= DATE(NOW() - INTERVAL 7 DAY)", nativeQuery = true)
     BigDecimal getRevenueByCompanyIdLast7Days(Long id);
@@ -66,14 +66,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.status = ?2 AND b.createBookingTime BETWEEN ?3 AND ?4")
     int countTotalBookingByCompanyIdAndStatus(Long id, String status, Timestamp from, Timestamp to);
 
- //  @Query("SELECT COUNT(*) as total_voucher FROM Voucher WHERE Company.id= ?1")
-        //  @Query("SELECT c.id, COUNT(total_voucher) AS total_voucher FROM Company c JOIN Account a ON c.account.id = a.id JOIN Voucher v on c.id = v.company.id Where c.id = ?1  GROUP BY c.id")
-    //int countTotalVoucherHaveByCompanyId(Long id);
+
+    int countBookingsByAccountCompanyIdAndPaymentMethod(Long id, String paymentMethod);
 
 
-    @Query("select c.id,Count(b.paymentMethod) from Company c join Booking b on c.account.id=b.account.id where c.id=?1 AND b.paymentMethod =?2 group by c.id")
-    int countTotalBookingByTotalPayMenthodwithCompanyID(Long id, String paymentMethod);
 
-    @Query("SELECT c.id,COUNT(b.voucher.id) AS total_vouchers  FROM Booking b join Account a on b.account.id=a.id join Company c on c.account.id=a.id WHERE c.id=?1 group by c.id")
-    int countTotalVoucherisBookedByCompanyId(Long id);
 }

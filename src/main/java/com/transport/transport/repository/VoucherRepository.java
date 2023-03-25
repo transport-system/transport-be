@@ -10,10 +10,17 @@ import java.util.List;
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     List<Voucher> getVouchersByOwner(String owner);
+
     boolean existsByVoucherCode(String voucherCode);
+
     Voucher findByVoucherCode(String voucherCode);
 
 
     @Query("SELECT v FROM Account a JOIN a.vouchers v WHERE a.id = ?1")
     List<Voucher> getAllVouchersByAccount(Long accountId);
+
+    int countVoucherByCompanyId(Long id);
+
+    @Query("SELECT COUNT(voucher.id) FROM Booking WHERE account.id = ?1 AND voucher.id IS NOT NULL\n")
+    int countVouchersByBookings(Long id);
 }

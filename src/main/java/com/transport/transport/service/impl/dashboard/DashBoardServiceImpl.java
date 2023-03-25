@@ -4,6 +4,7 @@ import com.transport.transport.common.PaymentType;
 import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
 import com.transport.transport.exception.NotFoundException;
+import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.response.dashboard.AdminResponse;
 import com.transport.transport.model.response.dashboard.CompanyResponse;
 import com.transport.transport.model.response.dashboard.RevenueByMonth;
@@ -26,6 +27,7 @@ public class DashBoardServiceImpl implements DashBoardService {
     private final AccountRepository accountRepository;
     private final BookingRepository bookingRepository;
     private final VehicleRepository vehicleRepository;
+    private final VoucherRepository voucherRepository;
 
     @Override
     public AdminResponse getAdminDashboard() {
@@ -49,27 +51,37 @@ public class DashBoardServiceImpl implements DashBoardService {
             throw new NotFoundException("Company not found");
         } else {
             CompanyResponse companyResponse = new CompanyResponse();
-            companyResponse.setTotalCustomer(accountRepository.countTotalCustomerByCompanyId(companyId));
-            companyResponse.setTotalTrip(tripRepository.countTotalTripByCompanyId(companyId));
-//            companyResponse.setTotalVehicle(vehicleRepository.countTotalVehicleByCompanyId(companyId));
-            companyResponse.setTotalBooking(bookingRepository.countTotalBookingByCompanyId(companyId));
-            companyResponse.setTotalBookingPending(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
-                    Status.Booking.PENDING.name()));
-            companyResponse.setTotalBookingDone(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
-                    Status.Booking.DONE.name()));
-            companyResponse.setTotalBookingTimeout(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
+
+            companyResponse.setTotalCustomer(bookingRepository.countBookingsByAccountCompanyId(companyId));
+            companyResponse.setTotalTrip(tripRepository.countTripsByCompanyIdAndStatus(companyId,Status.Trip.ACTIVE.name()));
+            companyResponse.setTotalVehicle(vehicleRepository.countVehicleByCompanyId(companyId));
+
+            companyResponse.setTotalBooking(bookingRepository.countBookingsByAccountCompanyId(companyId));
+
+
+            companyResponse.setTotalBookingRejected(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
                     Status.Booking.REJECTED.name()));
-            companyResponse.setTotalBookingRefunded(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
+            companyResponse.setTotalBookingPending(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
+                    Status.Booking.PENDING.name()));
+            companyResponse.setTotalBookingDone(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
+                    Status.Booking.DONE.name()));
+            companyResponse.setTotalBookingTimeout(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
+                    Status.Booking.REJECTED.name()));
+            companyResponse.setTotalBookingRefunded(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
                     Status.Booking.REFUNDED.name()));
-            companyResponse.setTotalBookingRequestRefund(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
+            companyResponse.setTotalBookingRequestRefund(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
                     Status.Booking.REQUESTREFUND.name()));
-            companyResponse.setTotalBookingAwaitPayment(bookingRepository.countTotalBookingByCompanyIdAndStatus(companyId,
+            companyResponse.setTotalBookingAwaitPayment(bookingRepository.countBookingsByAccountCompanyIdAndStatus(companyId,
                     Status.Booking.PAYLATER.name()));
-            companyResponse.setTotalRevenue(bookingRepository.getRevenueByCompanyId(companyId));
-            //companyResponse.setTotalVoucherHave(bookingRepository.countTotalVoucherHaveByCompanyId(companyId));
-            //companyResponse.setTotalBookingPaymentCard(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CARD.name()));
-            //companyResponse.setTotalBookingPaymentCash(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CASH.name()));
-          //  companyResponse.setTotalVoucherIsBooked(bookingRepository.countTotalVoucherisBookedByCompanyId(companyId));
+
+            companyResponse.setTotalBookingPaymentCard(bookingRepository.countBookingsByAccountCompanyIdAndPaymentMethod(companyId, PaymentType.CARD.name()));
+            companyResponse.setTotalBookingPaymentCash(bookingRepository.countBookingsByAccountCompanyIdAndPaymentMethod(companyId, PaymentType.CASH.name()));
+
+            companyResponse.setTotalRevenue(bookingRepository.countBookingsByTotalPriceAndaAndAccountCompanyIdAnAndStatus(companyId));
+
+
+            companyResponse.setTotalVoucherHave(voucherRepository.countVoucherByCompanyId(companyId));
+            companyResponse.setTotalVoucherIsBooked(voucherRepository.countVouchersByBookings(companyId));
             return companyResponse;
         }
     }
@@ -78,11 +90,9 @@ public class DashBoardServiceImpl implements DashBoardService {
     public CompanyResponse getCompanyDashboardLast7Days(Long companyId) {
         if (companyRepository.findById(companyId).isEmpty()) {
             throw new NotFoundException("Company not found");
-        }
-        else if(accountRepository.countTotalCustomerByCompanyIdLast7Days(companyId)==0){
+        } else if (accountRepository.countTotalCustomerByCompanyIdLast7Days(companyId) == 0) {
             throw new NotFoundException("Date khong ton tai trong 7day ");
-        }
-        else {
+        } else {
             CompanyResponse companyResponse = new CompanyResponse();
             companyResponse.setTotalCustomer(accountRepository.countTotalCustomerByCompanyIdLast7Days(companyId));
             companyResponse.setTotalTrip(tripRepository.countTotalTripByCompanyIdLast7Days(companyId));
@@ -110,26 +120,17 @@ public class DashBoardServiceImpl implements DashBoardService {
             throw new NotFoundException("Company not found");
         } else {
             CompanyResponse companyResponse = new CompanyResponse();
-            companyResponse.setTotalCustomer(accountRepository
-                    .countTotalCustomerByCompanyIdAndTripId(companyId, tripId));
-            companyResponse.setTotalTrip(tripRepository
-                    .countTotalTripByCompanyIdAndTripId(companyId,  tripId));
-            companyResponse.setTotalBooking(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripId(companyId, tripId));
-            companyResponse.setTotalBookingPending(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.PENDING.name()));
-            companyResponse.setTotalBookingDone(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.DONE.name()));
-            companyResponse.setTotalBookingTimeout(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REJECTED.name()));
-            companyResponse.setTotalBookingRefunded(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REFUNDED.name()));
-            companyResponse.setTotalBookingRequestRefund(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REQUESTREFUND.name()));
-            companyResponse.setTotalBookingAwaitPayment(bookingRepository
-                    .countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.PAYLATER.name()));
-            companyResponse.setTotalRevenue(bookingRepository
-                    .getRevenueByCompanyIdAndTripId(companyId, tripId));
+           // companyResponse.setTotalCustomer(accountRepository.countTotalCustomerByCompanyIdAndTripId(companyId, tripId));
+            companyResponse.setTotalTrip(tripRepository.countTripsByCompanyIdAndStatus(companyId, Status.Trip.ACTIVE.name()));
+            companyResponse.setTotalBooking(bookingRepository.countBookingByAccountCompanyIdAndTripId(companyId, tripId));
+            companyResponse.setTotalBookingPending(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.PENDING.name()));
+            companyResponse.setTotalBookingDone(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.DONE.name()));
+            companyResponse.setTotalBookingTimeout(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REJECTED.name()));
+            companyResponse.setTotalBookingRefunded(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REFUNDED.name()));
+            companyResponse.setTotalBookingRequestRefund(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.REQUESTREFUND.name()));
+            companyResponse.setTotalBookingAwaitPayment(bookingRepository.countTotalBookingByCompanyIdAndTripIdAndStatus(companyId, tripId, Status.Booking.PAYLATER.name()));
+            companyResponse.setTotalRevenue(bookingRepository.getRevenueByCompanyIdAndTripId(companyId, tripId));
+
             return companyResponse;
         }
     }

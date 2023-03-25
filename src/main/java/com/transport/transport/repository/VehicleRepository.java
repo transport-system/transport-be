@@ -34,7 +34,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     Vehicle getVehicleByVehicleType(String vehicleType);
 
-    @Query("SELECT v FROM Vehicle v WHERE v.company.id = ?1")
-    int countTotalVehicleByCompanyId(Long id);
+    int countVehicleByCompanyId(Long id);
 
 }

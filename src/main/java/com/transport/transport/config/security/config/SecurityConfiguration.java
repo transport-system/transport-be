@@ -82,7 +82,8 @@ public class SecurityConfiguration {
                 "/csrf",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
-                "/error"
+                "/error",
+                "/postman"
         );
     }
 }

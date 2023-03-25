@@ -40,12 +40,12 @@ public class CompanyRequest implements Trimmable {
     private String status = "ACTIVE";
 
     @NotBlank
-    @Max(value = 255, message = "must be less than or equal to 255")
-    @Min(value = 20, message = "must be greater than or equal to 255")
+//    @Max(value = 255, message = "must be less than or equal to 255")
+//    @Min(value = 20, message = "must be greater than or equal to 255")
     private String companyName;
 
     @NotBlank
-    @Max(value = 1000, message = "must be less than or equal to 1000")
-    @Min(value = 50, message = "must be greater than or equal to 50")
+//    @Max(value = 1000, message = "must be less than or equal to 1000")
+//    @Min(value = 50, message = "must be greater than or equal to 50")
     private String description;
 }

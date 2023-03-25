@@ -22,6 +22,7 @@ public class CompanyResponse {
     private int totalBookingDone;
     private int totalBookingTimeout;
     private int totalBookingRefunded;
+    private int totalBookingRejected;
     private int totalBookingRequestRefund;
     private int totalBookingAwaitPayment;
     private int totalBookingPaymentCash;
