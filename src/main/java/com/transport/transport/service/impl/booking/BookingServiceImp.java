@@ -376,7 +376,7 @@ public class BookingServiceImp implements BookingService {
         }
     }
     @Override
-    public void voucher(VoucherBookingRequest request) {
+    public void vouchers(VoucherBookingRequest request) {
         Voucher voucher = voucherService.getVoucherByCode(request.getCode());
         Booking booking = bookingRepository.findById(request.getBookingId()).get();
         double totalDiscount = booking.getTotalPrice().doubleValue();
