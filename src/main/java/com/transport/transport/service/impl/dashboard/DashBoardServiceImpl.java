@@ -67,8 +67,8 @@ public class DashBoardServiceImpl implements DashBoardService {
                     Status.Booking.PAYLATER.name()));
             companyResponse.setTotalRevenue(bookingRepository.getRevenueByCompanyId(companyId));
            // companyResponse.setTotalVoucherHave(bookingRepository.countTotalVoucherHaveByCompanyId(companyId));
-            //companyResponse.setTotalBookingPaymentCard(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CARD.name()));
-           // companyResponse.setTotalBookingPaymentCash(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CASH.name()));
+            companyResponse.setTotalBookingPaymentCard(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CARD.name()));
+            companyResponse.setTotalBookingPaymentCash(bookingRepository.countTotalBookingByTotalPayMenthodwithCompanyID(companyId, PaymentType.CASH.name()));
           //  companyResponse.setTotalVoucherIsBooked(bookingRepository.countTotalVoucherisBookedByCompanyId(companyId));
             return companyResponse;
         }
