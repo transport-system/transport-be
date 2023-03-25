@@ -101,7 +101,7 @@ public class VoucherServiceImp implements VoucherService {
         if (voucherRequest.getDiscountValue().intValue() <= 0) {
             throw new BadRequestException("Discount value must be greater than 0");
         }
-        if (voucherRequest.getDiscountValue().intValue() >= 0) {
+        if (voucherRequest.getDiscountValue().intValue() >= 100) {
             throw new BadRequestException("Discount value must be lest than 0");
         }
         //get current time

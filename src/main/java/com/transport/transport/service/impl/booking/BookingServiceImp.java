@@ -7,7 +7,7 @@ import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.*;
 import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.request.booking.PaymentRequest;
-import com.transport.transport.model.request.booking.VoucherRequest;
+import com.transport.transport.model.request.booking.VoucherBookingRequest;
 import com.transport.transport.repository.BookingRepository;
 import com.transport.transport.repository.PayPalRepository;
 import com.transport.transport.repository.SeatRepository;
@@ -365,7 +365,7 @@ public class BookingServiceImp implements BookingService {
         }
     }
     @Override
-    public void voucher(VoucherRequest request) {
+    public void voucher(VoucherBookingRequest request) {
         Voucher voucher = voucherService.getVoucherByCode(request.getCode());
         Booking booking = bookingRepository.findById(request.getBookingId()).get();
         double totalDiscount = booking.getTotalPrice().doubleValue();
