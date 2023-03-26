@@ -19,7 +19,7 @@ public interface BookingService extends CRUDService<Booking> {
     public void refunded(Long bookingId);
     public void requestRefunded(Long bookingId);
     public void doneCash(Long bookingId);
-    public void voucher(VoucherBookingRequest request);
+    public void vouchers(VoucherBookingRequest request);
     public void cancelRequestRefunded(Long bookingId);
     public void cancelBooing(Long bookingId);
 

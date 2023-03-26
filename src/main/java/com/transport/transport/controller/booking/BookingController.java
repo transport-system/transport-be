@@ -101,14 +101,13 @@ public class BookingController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @GetMapping("/cash/{id}")
-    public ResponseEntity<?> cash(@PathVariable("id") Long id){
+    public ResponseEntity<?> cash(@PathVariable("id") Long id, @RequestBody VoucherBookingRequest voucherRequest){
         bookingService.doneCash(id);
         return new ResponseEntity<>("Payment success", HttpStatus.OK);
     }
-
-    @GetMapping("/voucher")
-    public ResponseEntity<?> voucher(@RequestBody VoucherBookingRequest voucherRequest){
-        bookingService.voucher(voucherRequest);
+    @PostMapping ("/voucher")
+    public ResponseEntity<?> vouchers(@RequestBody VoucherBookingRequest voucherRequest){
+        bookingService.vouchers(voucherRequest);
         return new ResponseEntity<>("Voucher has Accepted", HttpStatus.OK);
     }
 }

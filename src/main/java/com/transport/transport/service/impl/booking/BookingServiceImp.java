@@ -9,10 +9,9 @@ import com.transport.transport.model.request.booking.BookingRequest;
 import com.transport.transport.model.request.booking.PaymentRequest;
 import com.transport.transport.model.request.booking.VoucherBookingRequest;
 import com.transport.transport.repository.BookingRepository;
-import com.transport.transport.repository.PayPalRepository;
 import com.transport.transport.repository.SeatRepository;
 import com.transport.transport.repository.VehicleRepository;
-import com.transport.transport.scheduling.Task;
+import com.transport.transport.repository.VoucherRepository;
 import com.transport.transport.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static java.lang.System.out;
@@ -41,12 +41,11 @@ public class BookingServiceImp implements BookingService {
     private final CustomerService customerService;
     private final VoucherService voucherService;
     private final VehicleRepository vehicleRepository;
-
     private List<TimerTask> scheduledTasks = new ArrayList<>();
-
     private static final long MILLIS_TO_WAIT = 10 * 30000L;
     private static int flag = 0;
-    private final PayPalRepository payPalRepository;
+    private final VoucherRepository voucherRepository;
+
     public String checkDate(Timestamp date1) {
         Date date2 = new Date(date1.getTime());
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
@@ -334,61 +333,37 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
     }
-    //Dung Timer để lên task chạy theo thời gian
-    List<Task> tasks = new ArrayList<>();
-    private Timer timer = new Timer();
     @Override
     public void requestRefunded(Long bookingId) {
-
-        Runnable cancelTask = new TimerTask() {
-            @Override
-            public void run() {
-                Booking change = bookingRepository.findById(bookingId).get();
-                Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
-                Timestamp now = Timestamp.from(Instant.now());
-                if (now.before(timeReturn)) { //nếu thời hian hiện tại trước thời gian Return trip cho phép
-                    if (change.getStatus().equalsIgnoreCase("DONE")) { // chi cho phep khi Đã thanh toán
-                        change.setStatus(Status.Booking.REQUESTREFUND.name());
-                        bookingRepository.save(change);
-                    } else {
-                        throw new RuntimeException("your ticket has not been paid");
-                    }
-                } else {
-                    throw new RuntimeException("Your ticket is non-refundable");
-                }
+        Booking change = bookingRepository.findById(bookingId).get();
+        Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
+        Timestamp now = Timestamp.from(Instant.now());
+        if (now.before(timeReturn)) { //nếu thời hian hiện tại trước thời gian Return trip cho phép
+            if (change.getStatus().equalsIgnoreCase(Status.Booking.DONE.name())) { // chi cho phep khi Đã thanh toán
+                change.setStatus(Status.Booking.REQUESTREFUND.name());
+                bookingRepository.save(change);
+            } else {
+                throw new RuntimeException("your ticket has not been paid");
             }
-        };
-        tasks.add(new Task(cancelTask, bookingId));
-        Timer timer = new Timer();
-        for (Task task : tasks) {
-            if (task.getId() == bookingId) {
-                timer.schedule(task, 15 * 60 * 1000L);
-            }
+        } else {
+            throw new RuntimeException("Your ticket is non-refundable");
         }
     }
     @Override
     public void cancelRequestRefunded(Long bookingId) {
-        if (timer != null) {
-            // Dừng task cụ thể
-            for(Task task : tasks){
-                if (task.getId() == bookingId) {
-                    timer.cancel();
-                }
-            }
-            // Huỷ Timer nếu không còn task nào
-            if (tasks.size() == 0) {
-                timer.cancel();
-                timer = null;
+        Booking change = bookingRepository.findById(bookingId).get();
+        Timestamp timeReturn = new Timestamp(change.getTrip().getTimeReturn().getTime());
+        Timestamp now = Timestamp.from(Instant.now());
+        if (now.before(timeReturn)) { //nếu thời hian hiện tại trước thời gian Return trip cho phép
+            if (change.getStatus().equalsIgnoreCase(Status.Booking.REQUESTREFUND.name())) { // chi cho phep khi Đã thanh toán
+                change.setStatus(Status.Booking.DONE.name());
+                bookingRepository.save(change);
+            } else {
+                throw new RuntimeException("your ticket has not been paid");
             }
         } else {
-            // Tạo Timer mới nếu Timer đã bị huỷ trước đó
-            timer = new Timer();
+            throw new RuntimeException("Your ticket is non-refundable");
         }
-
-
-
-
-
     }
     @Override
     public void doneCash(Long bookingId) {
@@ -402,23 +377,41 @@ public class BookingServiceImp implements BookingService {
         }
     }
     @Override
-    public void voucher(VoucherBookingRequest request) {
+    public void vouchers(VoucherBookingRequest request) {
         Voucher voucher = voucherService.getVoucherByCode(request.getCode());
         Booking booking = bookingRepository.findById(request.getBookingId()).get();
-        double totalDiscount = booking.getTotalPrice().doubleValue();
+        double total = booking.getTotalPrice().doubleValue();
+        double newTotal;
+
         if (voucher != null) {
-            double discount = (totalDiscount * Double.parseDouble(
-                    String.valueOf(voucher.getDiscountValue()))) / 100;
-            totalDiscount = totalDiscount - discount;
-            voucher.setQuantity(voucher.getQuantity() - 1);
-            booking.setTotalPrice(BigDecimal.valueOf(totalDiscount));
-        } else if (voucher.getQuantity() == 0) {
-            throw new RuntimeException("Voucher is out of stock");
-        } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
-            throw new RuntimeException("Voucher is expired");
-        } else {
+            if(voucher.getCompany() != null){
+                if(!booking.getTrip().getCompany().getId().equals(voucher.getCompany().getId())){
+                   throw new RuntimeException("This voucher can't use with this trip");
+                }
+            }
+            if (voucher.getQuantity() <= 0) {
+                throw new RuntimeException("Voucher is out of stock");
+            }
+            else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
+                throw new RuntimeException("Voucher is expired");
+            }
+            else if (booking.getVoucher() != null) {
+                throw new RuntimeException("Only one voucher for this trip");
+            } else {
+                double discount = total * 0.2;
+                newTotal = total - discount;
+                voucher.setQuantity(voucher.getQuantity() - 1);
+                booking.setTotalPrice(BigDecimal.valueOf(newTotal));
+                booking.setVoucher(voucher);
+                voucherRepository.save(voucher);
+                bookingRepository.save(booking);
+            }
+        }
+        else {
             throw new RuntimeException("Voucher is not exist");
         }
+
+
     }
 
 }
