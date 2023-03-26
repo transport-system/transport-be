@@ -169,9 +169,15 @@ public class VoucherServiceImp implements VoucherService {
             throw new BadRequestException("You can not update voucher with null value");
         } else if (booking != null) {
             throw new BadRequestException("You can not update voucher has been used");
+        } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
+            throw new BadRequestException("Start time not equals with expired time");
         }
         else {
             voucher = mapper.createVoucherFromUpdateVoucherRequest(voucherRequest);
+        }
+        if(voucherRequest.getQuantity() > 0) {
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setStatus(Status.Voucher.ACTIVE.name());
         }
         return voucherRepository.save(voucher);
     }

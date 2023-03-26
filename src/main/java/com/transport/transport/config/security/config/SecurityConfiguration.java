@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 .antMatchers(EndpointConstant.Account.ACCOUNT_ENDPOINT + "/**").authenticated() //cho phép tất cả các role, nhưng phải login
                 .antMatchers(EndpointConstant.Company.COMPANY_ENDPOINT + "/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
                 .antMatchers(EndpointConstant.Vehicle.VEHICLE_ENDPOINT + "/**").hasAnyAuthority(RoleEnum.ADMIN.name(), RoleEnum.COMPANY.name())
-                .antMatchers(EndpointConstant.Voucher.VOUCHER_ENDPOINT + "/**").authenticated()
+                .antMatchers(EndpointConstant.Voucher.VOUCHER_ENDPOINT + "/**").permitAll()
                 .antMatchers(EndpointConstant.Route.ROUTE_ENDPOINT + "/**").permitAll()
                 .antMatchers(EndpointConstant.Feedback.FEEDBACK_ENDPOINT + "/**").permitAll()
                 .antMatchers(EndpointConstant.Trip.TRIP_ENDPOINT + "/**").permitAll()
