@@ -201,19 +201,11 @@ public class VoucherServiceImp implements VoucherService {
         } else {
             voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
-            if(voucherRequest.getQuantity() <= 0) {
-                throw new BadRequestException("Quantity must be greater than 0");
-            } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
-                throw new BadRequestException("Discount value must be greater than 0");
-            } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
-                throw new BadRequestException("Discount value must be less than 100");
-            } else {
-                voucher.setStartTime(voucherRequest.getStartTime());
-                voucher.setExpiredTime(voucherRequest.getExpiredTime());
-                voucher.setQuantity(voucherRequest.getQuantity());
-                voucher.setVoucherCode(voucher.getVoucherCode());
-                voucher.setDiscountValue(voucher.getDiscountValue());
-            }
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucher.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
         }
         return voucherRepository.save(voucher);
     }
