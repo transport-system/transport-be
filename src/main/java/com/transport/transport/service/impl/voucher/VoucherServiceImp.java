@@ -60,13 +60,18 @@ public class VoucherServiceImp implements VoucherService {
         Voucher voucher = findById(id);
         if (voucher == null) {
             throw new NotFoundException("Voucher not found: " + id);
-        }
-        if (voucher.getBookings().size() > 0) {
+        }else if (voucher.getBookings().size() > 0) {
             throw new BadRequestException("Voucher is used");
-        }else {
-            voucher.setStatus(Status.Voucher.INACTIVE.name());
+        } else if (voucher.getQuantity() > 0 ) {
+            if (voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
+                voucher.setStatus(Status.Voucher.ACTIVE.name());
+            } else {
+                voucher.setStatus(Status.Voucher.INACTIVE.name());
+            }
+        } else  {
+            throw new BadRequestException("Can not active/delete voucher because quantity is 0");
+        }
             voucherRepository.save(voucher);
-        };
     }
 
     @Override
@@ -147,6 +152,8 @@ public class VoucherServiceImp implements VoucherService {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
 
+        voucher.setOwner(account.getRole());
+        voucher.setStatus(Status.Voucher.ACTIVE.name());
         if (voucher.getVoucherCode().equalsIgnoreCase(voucherRequest.getVoucherCode())) {
             throw new BadRequestException("You can not update voucher duplicate code");
         } else if (voucherRequest.getExpiredTime().before(timestamp)) {
@@ -171,14 +178,11 @@ public class VoucherServiceImp implements VoucherService {
             throw new BadRequestException("You can not update voucher has been used");
         } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
             throw new BadRequestException("Start time not equals with expired time");
-        }
-        else {
+        } else {
             voucher = mapper.createVoucherFromUpdateVoucherRequest(voucherRequest);
         }
-        if(voucherRequest.getQuantity() > 0) {
-            voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setStatus(Status.Voucher.ACTIVE.name());
-        }
+        voucher.setOwner(account.getRole());
+        voucher.setStatus(Status.Voucher.ACTIVE.name());
         return voucherRepository.save(voucher);
     }
 

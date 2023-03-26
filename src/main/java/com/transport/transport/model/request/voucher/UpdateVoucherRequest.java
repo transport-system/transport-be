@@ -17,7 +17,6 @@ public class UpdateVoucherRequest implements Serializable {
     private Timestamp startTime;
     private Timestamp expiredTime;
     private Integer quantity;
-    private String status;
     private BigDecimal discountValue;
 }
 
