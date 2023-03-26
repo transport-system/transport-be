@@ -68,7 +68,7 @@ public class VoucherController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority(T(com.transport.transport.common.RoleEnum).ADMIN)")
+    @PreAuthorize("hasAnyAuthority(T(com.transport.transport.common.RoleEnum).ADMIN,  T(com.transport.transport.common.RoleEnum).COMPANY)")
     public ResponseEntity<VoucherResponse> deleteVoucher(@PathVariable Long id) {
         Voucher voucher = voucherService.findById(id);
         voucherService.delete(id);
