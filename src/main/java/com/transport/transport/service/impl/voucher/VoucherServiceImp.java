@@ -172,7 +172,7 @@ public class VoucherServiceImp implements VoucherService {
             throw new BadRequestException("You can not update voucher for other role");
         } else if(voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
             throw new BadRequestException("You can not update voucher inactive");
-        } else if (voucherRequest.getVoucherCode() == null || voucherRequest.getExpiredTime() == null) {
+        } else if (voucherRequest.getStartTime() == null || voucherRequest.getExpiredTime() == null || voucherRequest.getQuantity() == 0) {
             throw new BadRequestException("You can not update voucher with null value");
         } else if (booking != null) {
             voucher.setStartTime(voucherRequest.getStartTime());
