@@ -169,19 +169,11 @@ public class VoucherServiceImp implements VoucherService {
         } else if (voucherRequest.getStartTime() == null || voucherRequest.getExpiredTime() == null || voucherRequest.getQuantity() == 0) {
             throw new BadRequestException("You can not update voucher with null value");
         } else if (booking != null) {
-            if(voucherRequest.getQuantity() <= 0) {
-                throw new BadRequestException("Quantity must be greater than 0");
-            } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
-                throw new BadRequestException("Discount value must be greater than 0");
-            } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
-                throw new BadRequestException("Discount value must be less than 100");
-            } else {
-                voucher.setStartTime(voucherRequest.getStartTime());
-                voucher.setExpiredTime(voucherRequest.getExpiredTime());
-                voucher.setQuantity(voucherRequest.getQuantity());
-                voucher.setVoucherCode(voucher.getVoucherCode());
-                voucher.setDiscountValue(voucher.getDiscountValue());
-            }
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucher.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
             if (voucherRequest.getVoucherCode() != null) {
                 throw new BadRequestException("You can not update voucher code");
             }
