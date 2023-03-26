@@ -383,6 +383,11 @@ public class BookingServiceImp implements BookingService {
         double newTotal;
 
         if (voucher != null) {
+            if(voucher.getCompany() != null){
+                if(!booking.getTrip().getCompany().getId().equals(voucher.getCompany().getId())){
+                   throw new RuntimeException("This voucher can't use with this trip");
+                }
+            }
             if (voucher.getQuantity() <= 0) {
                 throw new RuntimeException("Voucher is out of stock");
             }
