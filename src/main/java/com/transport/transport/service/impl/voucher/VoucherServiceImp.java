@@ -187,10 +187,14 @@ public class VoucherServiceImp implements VoucherService {
         } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
             throw new BadRequestException("Start time not equals with expired time");
         } else {
-            voucher = mapper.createVoucherFromUpdateVoucherRequest(voucherRequest);
+            voucher.setOwner(account.getRole());
+            voucher.setStatus(Status.Voucher.ACTIVE.name());
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucherRequest.getVoucherCode());
+            voucher.setDiscountValue(voucherRequest.getDiscountValue());
         }
-        voucher.setOwner(account.getRole());
-        voucher.setStatus(Status.Voucher.ACTIVE.name());
         return voucherRepository.save(voucher);
     }
 
