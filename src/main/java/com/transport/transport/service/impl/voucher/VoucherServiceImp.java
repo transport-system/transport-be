@@ -162,12 +162,6 @@ public class VoucherServiceImp implements VoucherService {
             throw new BadRequestException("Start time must be greater than current time");
         } else if (voucherRequest.getStartTime().after(voucherRequest.getExpiredTime())) {
             throw new BadRequestException("Start time must be less than expired time");
-        } else if (voucherRequest.getQuantity() <= 0) {
-            throw new BadRequestException("Quantity must be greater than 0");
-        } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
-            throw new BadRequestException("Discount value must be greater than 0");
-        } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
-            throw new BadRequestException("Discount value must be less than 100");
         } else if (!voucher.getOwner().equalsIgnoreCase(account.getRole())) {
             throw new BadRequestException("You can not update voucher for other role");
         } else if(voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
@@ -175,11 +169,19 @@ public class VoucherServiceImp implements VoucherService {
         } else if (voucherRequest.getStartTime() == null || voucherRequest.getExpiredTime() == null || voucherRequest.getQuantity() == 0) {
             throw new BadRequestException("You can not update voucher with null value");
         } else if (booking != null) {
-            voucher.setStartTime(voucherRequest.getStartTime());
-            voucher.setExpiredTime(voucherRequest.getExpiredTime());
-            voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setVoucherCode(voucher.getVoucherCode());
-            voucher.setDiscountValue(voucher.getDiscountValue());
+            if(voucherRequest.getQuantity() <= 0) {
+                throw new BadRequestException("Quantity must be greater than 0");
+            } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
+                throw new BadRequestException("Discount value must be greater than 0");
+            } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
+                throw new BadRequestException("Discount value must be less than 100");
+            } else {
+                voucher.setStartTime(voucherRequest.getStartTime());
+                voucher.setExpiredTime(voucherRequest.getExpiredTime());
+                voucher.setQuantity(voucherRequest.getQuantity());
+                voucher.setVoucherCode(voucher.getVoucherCode());
+                voucher.setDiscountValue(voucher.getDiscountValue());
+            }
             if (voucherRequest.getVoucherCode() != null) {
                 throw new BadRequestException("You can not update voucher code");
             }
@@ -199,11 +201,19 @@ public class VoucherServiceImp implements VoucherService {
         } else {
             voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
-            voucher.setStartTime(voucherRequest.getStartTime());
-            voucher.setExpiredTime(voucherRequest.getExpiredTime());
-            voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setVoucherCode(voucherRequest.getVoucherCode());
-            voucher.setDiscountValue(voucherRequest.getDiscountValue());
+            if(voucherRequest.getQuantity() <= 0) {
+                throw new BadRequestException("Quantity must be greater than 0");
+            } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
+                throw new BadRequestException("Discount value must be greater than 0");
+            } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
+                throw new BadRequestException("Discount value must be less than 100");
+            } else {
+                voucher.setStartTime(voucherRequest.getStartTime());
+                voucher.setExpiredTime(voucherRequest.getExpiredTime());
+                voucher.setQuantity(voucherRequest.getQuantity());
+                voucher.setVoucherCode(voucher.getVoucherCode());
+                voucher.setDiscountValue(voucher.getDiscountValue());
+            }
         }
         return voucherRepository.save(voucher);
     }
