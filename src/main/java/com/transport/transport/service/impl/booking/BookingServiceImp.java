@@ -280,7 +280,7 @@ public class BookingServiceImp implements BookingService {
                 double newPrice = 0;
                 newPrice = booking.getTotalPrice().doubleValue() * 0.1;
                 //Vehical
-                int capacity = vehicle.getSeatCapacity() - numberSeat.size();
+                int capacity = vehicle.getSeatCapacity() + numberSeat.size();
                 vehicle.setSeatCapacity(capacity);
                 //Booking
                 booking.setTotalPrice(BigDecimal.valueOf(newPrice));
@@ -294,6 +294,12 @@ public class BookingServiceImp implements BookingService {
             }
         } else {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
+        }
+        if(booking.getTrip().getVehicle().getSeatCapacity() > 0){
+            booking.getTrip().setStatus(Status.Trip.ACTIVE.name());
+        }
+        if(booking.getTrip().getVehicle().getSeatCapacity() <= 0){
+            booking.getTrip().setStatus(Status.Trip.INACTIVE.name());
         }
     }
     @Override
@@ -317,7 +323,7 @@ public class BookingServiceImp implements BookingService {
                 double newPrice = 0;
                 newPrice = booking.getTotalPrice().doubleValue() * 0.1;
                 //Vehical
-                int capacity = vehicle.getSeatCapacity() - numberSeat.size();
+                int capacity = vehicle.getSeatCapacity() + numberSeat.size();
                 vehicle.setSeatCapacity(capacity);
                 //Booking
                 booking.setTotalPrice(BigDecimal.valueOf(newPrice));
@@ -332,6 +338,14 @@ public class BookingServiceImp implements BookingService {
         } else {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
+
+        if(booking.getTrip().getVehicle().getSeatCapacity() > 0){
+            booking.getTrip().setStatus(Status.Trip.ACTIVE.name());
+        }
+        if(booking.getTrip().getVehicle().getSeatCapacity() <= 0){
+            booking.getTrip().setStatus(Status.Trip.INACTIVE.name());
+        }
+
     }
     @Override
     public void requestRefunded(Long bookingId) {
@@ -410,8 +424,10 @@ public class BookingServiceImp implements BookingService {
         else {
             throw new RuntimeException("Voucher is not exist");
         }
-
-
+        if(voucher.getQuantity() == 0){
+            voucher.setStatus(Status.Voucher.INACTIVE.name());
+            voucherRepository.save(voucher);
+        }
     }
 
 }
