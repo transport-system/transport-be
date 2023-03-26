@@ -260,6 +260,15 @@ public class TripServiceImp implements TripService {
     @Override
     public void switchStatusTrip(Long id) {
         Trip trip = tripRepo.findById(id).get();
+
+        /** get a current time **/
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        if(trip.getTimeArrival().after(timestamp)){
+            throw new BadRequestException("Cannot switch status, time arrival is past ");
+        }
+
         if (trip.getStatus().equalsIgnoreCase(Status.Trip.ACTIVE.name())) {
             trip.setStatus(Status.Trip.UPDATE.name());
             tripRepo.save(trip);

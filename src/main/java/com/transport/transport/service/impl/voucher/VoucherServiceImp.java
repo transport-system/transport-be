@@ -60,13 +60,18 @@ public class VoucherServiceImp implements VoucherService {
         Voucher voucher = findById(id);
         if (voucher == null) {
             throw new NotFoundException("Voucher not found: " + id);
-        }
-        if (voucher.getBookings().size() > 0) {
+        }else if (voucher.getBookings().size() > 0) {
             throw new BadRequestException("Voucher is used");
-        }else {
-            voucher.setStatus(Status.Voucher.INACTIVE.name());
+        } else if (voucher.getQuantity() > 0 ) {
+            if (voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
+                voucher.setStatus(Status.Voucher.ACTIVE.name());
+            } else {
+                voucher.setStatus(Status.Voucher.INACTIVE.name());
+            }
+        } else  {
+            throw new BadRequestException("Can not active/delete voucher because quantity is 0");
+        }
             voucherRepository.save(voucher);
-        };
     }
 
     @Override
@@ -147,37 +152,36 @@ public class VoucherServiceImp implements VoucherService {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
 
-        if (voucher.getVoucherCode().equalsIgnoreCase(voucherRequest.getVoucherCode())) {
-            throw new BadRequestException("You can not update voucher duplicate code");
-        } else if (voucherRequest.getExpiredTime().before(timestamp)) {
+        voucher.setOwner(account.getRole());
+        voucher.setStatus(Status.Voucher.ACTIVE.name());
+        if (voucherRequest.getExpiredTime().before(timestamp)) {
             throw new BadRequestException("Expired time must be greater than current time");
         } else if (voucherRequest.getStartTime().before(timestamp)) {
             throw new BadRequestException("Start time must be greater than current time");
         } else if (voucherRequest.getStartTime().after(voucherRequest.getExpiredTime())) {
             throw new BadRequestException("Start time must be less than expired time");
-        } else if (voucherRequest.getQuantity() <= 0) {
-            throw new BadRequestException("Quantity must be greater than 0");
-        } else if (voucherRequest.getDiscountValue().intValue() <= 0) {
-            throw new BadRequestException("Discount value must be greater than 0");
-        } else if (voucherRequest.getDiscountValue().intValue() >= 100) {
-            throw new BadRequestException("Discount value must be less than 100");
         } else if (!voucher.getOwner().equalsIgnoreCase(account.getRole())) {
             throw new BadRequestException("You can not update voucher for other role");
         } else if(voucher.getStatus().equalsIgnoreCase(Status.Voucher.INACTIVE.name())) {
             throw new BadRequestException("You can not update voucher inactive");
-        } else if (voucherRequest.getVoucherCode() == null || voucherRequest.getExpiredTime() == null) {
+        } else if (voucherRequest.getStartTime() == null || voucherRequest.getExpiredTime() == null || voucherRequest.getQuantity() == 0) {
             throw new BadRequestException("You can not update voucher with null value");
         } else if (booking != null) {
-            throw new BadRequestException("You can not update voucher has been used");
-        } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
-            throw new BadRequestException("Start time not equals with expired time");
-        }
-        else {
-            voucher = mapper.createVoucherFromUpdateVoucherRequest(voucherRequest);
-        }
-        if(voucherRequest.getQuantity() > 0) {
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
             voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucher.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
+        } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
+            throw new BadRequestException("Start time not equals with expired time");}
+        else {
+            voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucher.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
         }
         return voucherRepository.save(voucher);
     }
