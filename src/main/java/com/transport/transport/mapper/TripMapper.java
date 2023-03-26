@@ -20,7 +20,6 @@ public interface TripMapper {
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
     @Mapping(source = "vehicle", target = "vehicle")
-    @Mapping(source = "specialDay",target = "specialDay")
     TripResponse mapTripResponseFromTrip(Trip trip);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -34,7 +33,6 @@ public interface TripMapper {
     @Mapping(source = "vehicle.seatCapacity", target = "vehicle.seatCapacity")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
-    @Mapping(source = "specialDay",target = "specialDay")
 
     TripResponeOfConpany mapTripResponseFromTripOfCompany(Trip trip);
 
@@ -50,7 +48,6 @@ public interface TripMapper {
     @Mapping(source = "vehicle.vehicleType", target = "vehicle.vehicleType")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
-    @Mapping(source = "specialDay",target = "specialDay")
     TripForCustomer mapTripResponseFromTripOfCustomer(Trip trip);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -69,7 +66,6 @@ public interface TripMapper {
     @Mapping(source = "vehicle.vehicleType", target = "vehicleType")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
-    @Mapping(source = "specialDay",target = "specialDay")
     TripResponseForId mapTripResponseIdFromTrip(Trip trip);
 
 

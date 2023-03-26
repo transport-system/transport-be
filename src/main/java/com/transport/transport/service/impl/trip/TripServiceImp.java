@@ -169,7 +169,6 @@ public class TripServiceImp implements TripService {
         newTrip.setImage(trip.getImage());
         newTrip.setDescription(trip.getDescription());
         newTrip.setStatus(Status.Trip.ACTIVE.name());
-        newTrip.setSpecialDay(trip.getSpecialDay());
 
 
         //set Time
@@ -239,7 +238,6 @@ public class TripServiceImp implements TripService {
         tripU.setTimeDeparture(trip.getTimeDeparture());
         tripU.setTimeArrival(trip.getTimeArrival());
         tripU.setTimeReturn(timeReturn(trip.getTimeDeparture()));
-        tripU.setSpecialDay(trip.getSpecialDay());
 
         return tripRepo.save(tripU);
     }

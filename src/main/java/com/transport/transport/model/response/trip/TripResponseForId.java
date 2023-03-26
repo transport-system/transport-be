@@ -35,6 +35,5 @@ public class TripResponseForId {
     private String companyName;
     private int companyRating;
     private List<FeedBack> feadbacks;
-    private  String specialDay;
 
 }

@@ -33,5 +33,4 @@ public class TripForCustomer {
     private String departure;
 
     private VehicleResponse vehicle;
-    private  String specialDay;
 }
