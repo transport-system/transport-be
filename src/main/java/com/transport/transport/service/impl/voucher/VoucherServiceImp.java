@@ -190,14 +190,30 @@ public class VoucherServiceImp implements VoucherService {
             voucher.setQuantity(voucherRequest.getQuantity());
             voucher.setVoucherCode(voucher.getVoucherCode());
             voucher.setDiscountValue(voucher.getDiscountValue());
-        } else {
+        } else if(voucherRequest.getDiscountValue() == null && voucherRequest.getVoucherCode() != null) {
+            voucher.setOwner(account.getRole());
+            voucher.setStatus(Status.Voucher.ACTIVE.name());
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucherRequest.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
+        } else if (voucherRequest.getDiscountValue() != null && voucherRequest.getVoucherCode() == null) {
             voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
             voucher.setStartTime(voucherRequest.getStartTime());
             voucher.setExpiredTime(voucherRequest.getExpiredTime());
             voucher.setQuantity(voucherRequest.getQuantity());
             voucher.setVoucherCode(voucher.getVoucherCode());
-            voucher.setDiscountValue(voucher.getDiscountValue());
+            voucher.setDiscountValue(voucherRequest.getDiscountValue());
+        } else {
+            voucher.setOwner(account.getRole());
+            voucher.setStatus(Status.Voucher.ACTIVE.name());
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucherRequest.getVoucherCode());
+            voucher.setDiscountValue(voucherRequest.getDiscountValue());
         }
         return voucherRepository.save(voucher);
     }
