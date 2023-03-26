@@ -52,24 +52,29 @@ public class BookingServiceImp implements BookingService {
         String strDate = sm.format(date2);
         return strDate;
     }
+
     @Override
     public List<Booking> findAll() {
         return bookingRepository.findAll();
     }
+
     @Override
     public Booking findById(Long id) {
         return bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking id not found: " + id));
     }
+
     @Override
     public void save(Booking entity) {
         bookingRepository.save(entity);
     }
+
     @Override
     public void delete(Long id) {
         Booking booking = findById(id);
         booking.setStatus(Status.Booking.REJECTED.name());
         bookingRepository.save(booking);
     }
+
     @Override
     public void update(Booking entity) {
         bookingRepository.save(entity);
@@ -205,18 +210,27 @@ public class BookingServiceImp implements BookingService {
     public Booking payBooking(PaymentRequest methodd) {
         return bookingRepository.findById(methodd.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-                if (methodd.getMethod().equalsIgnoreCase("CARD")) {
-                    booking.setStatus(Status.Booking.DONE.name());
-                } else if (methodd.getMethod().equalsIgnoreCase("CASH") || booking.getTrip().getSpecialDay().equalsIgnoreCase("TRUE")) {
-                    booking.setStatus(Status.Booking.PAYLATER.name());
-                } else {
-                    throw new BadRequestException("Payment method is not valid");
+                if (booking.getTrip().getSpecialDay().equalsIgnoreCase("TRUE")) {
+                    if (methodd.getMethod().equalsIgnoreCase("CASH")) {
+                        booking.setStatus(Status.Booking.PAYLATER.name());
+                    } else if (methodd.getMethod().equalsIgnoreCase("CARD")) {
+                        throw new BadRequestException("Payment method is not valid");
+                    }
+
+                } else if (booking.getTrip().getSpecialDay().equalsIgnoreCase("False")) {
+                    if (methodd.getMethod().equalsIgnoreCase("CARD")) {
+                        booking.setStatus(Status.Booking.DONE.name());
+                    } else if (methodd.getMethod().equalsIgnoreCase("CASH")) {
+                        booking.setStatus(Status.Booking.PAYLATER.name());
+                    } else {
+                        throw new BadRequestException("Payment method is not valid");
+                    }
+                    booking.setPaymentMethod(methodd.getMethod().toUpperCase());
+                    booking.getFreeSeats().forEach((seat) -> {
+                        seat.setStatus(Status.Seat.INACTIVE.name());
+                    });
+                    flag++;
                 }
-                booking.setPaymentMethod(methodd.getMethod().toUpperCase());
-                booking.getFreeSeats().forEach((seat) -> {
-                    seat.setStatus(Status.Seat.INACTIVE.name());
-                });
-                flag++;
                 return bookingRepository.save(booking);
             } else {
                 throw new BadRequestException("Can't pay booking");
@@ -296,6 +310,7 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
     }
+
     @Override
     public void cancelBooing(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).get();
@@ -333,6 +348,7 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Tickets cannot be refunded for past trip");
         }
     }
+
     @Override
     public void requestRefunded(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
@@ -349,6 +365,7 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Your ticket is non-refundable");
         }
     }
+
     @Override
     public void cancelRequestRefunded(Long bookingId) {
         Booking change = bookingRepository.findById(bookingId).get();
@@ -365,17 +382,18 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Your ticket is non-refundable");
         }
     }
+
     @Override
     public void doneCash(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).get();
-        if (booking.getStatus().equalsIgnoreCase(Status.Booking.PAYLATER.name())){
+        if (booking.getStatus().equalsIgnoreCase(Status.Booking.PAYLATER.name())) {
             booking.setStatus(Status.Booking.DONE.name());
             bookingRepository.save(booking);
-        }
-        else{
+        } else {
             throw new RuntimeException("Only accept payment for customers using cash payment method !");
         }
     }
+
     @Override
     public void vouchers(VoucherBookingRequest request) {
         Voucher voucher = voucherService.getVoucherByCode(request.getCode());
@@ -384,18 +402,16 @@ public class BookingServiceImp implements BookingService {
         double newTotal;
 
         if (voucher != null) {
-            if(voucher.getCompany() != null){
-                if(!booking.getTrip().getCompany().getId().equals(voucher.getCompany().getId())){
-                   throw new RuntimeException("This voucher can't use with this trip");
+            if (voucher.getCompany() != null) {
+                if (!booking.getTrip().getCompany().getId().equals(voucher.getCompany().getId())) {
+                    throw new RuntimeException("This voucher can't use with this trip");
                 }
             }
             if (voucher.getQuantity() <= 0) {
                 throw new RuntimeException("Voucher is out of stock");
-            }
-            else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
+            } else if (voucher.getExpiredTime().equals(System.currentTimeMillis())) {
                 throw new RuntimeException("Voucher is expired");
-            }
-            else if (booking.getVoucher() != null) {
+            } else if (booking.getVoucher() != null) {
                 throw new RuntimeException("Only one voucher for this trip");
             } else {
                 double discount = total * 0.2;
@@ -406,8 +422,7 @@ public class BookingServiceImp implements BookingService {
                 voucherRepository.save(voucher);
                 bookingRepository.save(booking);
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("Voucher is not exist");
         }
 
