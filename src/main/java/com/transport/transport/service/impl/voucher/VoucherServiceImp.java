@@ -178,6 +178,8 @@ public class VoucherServiceImp implements VoucherService {
             voucher.setStartTime(voucherRequest.getStartTime());
             voucher.setExpiredTime(voucherRequest.getExpiredTime());
             voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucher.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
             if (voucherRequest.getVoucherCode() != null) {
                 throw new BadRequestException("You can not update voucher code");
             }
@@ -186,14 +188,14 @@ public class VoucherServiceImp implements VoucherService {
             }
         } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
             throw new BadRequestException("Start time not equals with expired time");
-        } else {
+        } else if(voucherRequest.getDiscountValue() == null || voucherRequest.getVoucherCode() == null) {
             voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
             voucher.setStartTime(voucherRequest.getStartTime());
             voucher.setExpiredTime(voucherRequest.getExpiredTime());
             voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setVoucherCode(voucherRequest.getVoucherCode());
-            voucher.setDiscountValue(voucherRequest.getDiscountValue());
+            voucher.setVoucherCode(voucher.getVoucherCode());
+            voucher.setDiscountValue(voucher.getDiscountValue());
         }
         return voucherRepository.save(voucher);
     }
