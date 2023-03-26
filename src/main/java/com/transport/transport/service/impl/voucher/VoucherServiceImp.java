@@ -187,8 +187,8 @@ public class VoucherServiceImp implements VoucherService {
                 throw new BadRequestException("You can not update discount value");
             }
         } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
-            throw new BadRequestException("Start time not equals with expired time");
-        } else if(voucherRequest.getDiscountValue() == null || voucherRequest.getVoucherCode() == null) {
+            throw new BadRequestException("Start time not equals with expired time");}
+        if(voucherRequest.getDiscountValue() == null || voucherRequest.getVoucherCode() == null) {
             voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
             voucher.setStartTime(voucherRequest.getStartTime());
@@ -196,6 +196,14 @@ public class VoucherServiceImp implements VoucherService {
             voucher.setQuantity(voucherRequest.getQuantity());
             voucher.setVoucherCode(voucher.getVoucherCode());
             voucher.setDiscountValue(voucher.getDiscountValue());
+        } else {
+            voucher.setOwner(account.getRole());
+            voucher.setStatus(Status.Voucher.ACTIVE.name());
+            voucher.setStartTime(voucherRequest.getStartTime());
+            voucher.setExpiredTime(voucherRequest.getExpiredTime());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setVoucherCode(voucherRequest.getVoucherCode());
+            voucher.setDiscountValue(voucherRequest.getDiscountValue());
         }
         return voucherRepository.save(voucher);
     }
