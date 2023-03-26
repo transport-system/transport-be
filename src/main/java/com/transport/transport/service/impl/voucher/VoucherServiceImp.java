@@ -154,9 +154,7 @@ public class VoucherServiceImp implements VoucherService {
 
         voucher.setOwner(account.getRole());
         voucher.setStatus(Status.Voucher.ACTIVE.name());
-        if (voucher.getVoucherCode().equalsIgnoreCase(voucherRequest.getVoucherCode())) {
-            throw new BadRequestException("You can not update voucher duplicate code");
-        } else if (voucherRequest.getExpiredTime().before(timestamp)) {
+        if (voucherRequest.getExpiredTime().before(timestamp)) {
             throw new BadRequestException("Expired time must be greater than current time");
         } else if (voucherRequest.getStartTime().before(timestamp)) {
             throw new BadRequestException("Start time must be greater than current time");
@@ -174,15 +172,9 @@ public class VoucherServiceImp implements VoucherService {
             voucher.setQuantity(voucherRequest.getQuantity());
             voucher.setVoucherCode(voucher.getVoucherCode());
             voucher.setDiscountValue(voucher.getDiscountValue());
-            if (voucherRequest.getVoucherCode() != null) {
-                throw new BadRequestException("You can not update voucher code");
-            }
-            if (voucherRequest.getDiscountValue() != null) {
-                throw new BadRequestException("You can not update discount value");
-            }
         } else if(voucherRequest.getStartTime().equals(voucherRequest.getExpiredTime())) {
             throw new BadRequestException("Start time not equals with expired time");}
-        if(voucherRequest.getDiscountValue() == null && voucherRequest.getVoucherCode() == null) {
+        else {
             voucher.setOwner(account.getRole());
             voucher.setStatus(Status.Voucher.ACTIVE.name());
             voucher.setStartTime(voucherRequest.getStartTime());
@@ -190,30 +182,6 @@ public class VoucherServiceImp implements VoucherService {
             voucher.setQuantity(voucherRequest.getQuantity());
             voucher.setVoucherCode(voucher.getVoucherCode());
             voucher.setDiscountValue(voucher.getDiscountValue());
-        } else if(voucherRequest.getDiscountValue() == null && voucherRequest.getVoucherCode() != null) {
-            voucher.setOwner(account.getRole());
-            voucher.setStatus(Status.Voucher.ACTIVE.name());
-            voucher.setStartTime(voucherRequest.getStartTime());
-            voucher.setExpiredTime(voucherRequest.getExpiredTime());
-            voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setVoucherCode(voucherRequest.getVoucherCode());
-            voucher.setDiscountValue(voucher.getDiscountValue());
-        } else if (voucherRequest.getDiscountValue() != null && voucherRequest.getVoucherCode() == null) {
-            voucher.setOwner(account.getRole());
-            voucher.setStatus(Status.Voucher.ACTIVE.name());
-            voucher.setStartTime(voucherRequest.getStartTime());
-            voucher.setExpiredTime(voucherRequest.getExpiredTime());
-            voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setVoucherCode(voucher.getVoucherCode());
-            voucher.setDiscountValue(voucherRequest.getDiscountValue());
-        } else {
-            voucher.setOwner(account.getRole());
-            voucher.setStatus(Status.Voucher.ACTIVE.name());
-            voucher.setStartTime(voucherRequest.getStartTime());
-            voucher.setExpiredTime(voucherRequest.getExpiredTime());
-            voucher.setQuantity(voucherRequest.getQuantity());
-            voucher.setVoucherCode(voucherRequest.getVoucherCode());
-            voucher.setDiscountValue(voucherRequest.getDiscountValue());
         }
         return voucherRepository.save(voucher);
     }
