@@ -125,6 +125,7 @@ public class BookingServiceImp implements BookingService {
         }
         newBooking.setStatus(Status.Booking.PENDING.name());
 
+
 //      Set Time Create
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         newBooking.setCreateBookingTime(timestamp);
@@ -202,17 +203,17 @@ public class BookingServiceImp implements BookingService {
 
 
     @Override
-    public Booking payBooking(PaymentRequest method) {
-        return bookingRepository.findById(method.getBookingId()).map((booking) -> {
+    public Booking payBooking(PaymentRequest methodd) {
+        return bookingRepository.findById(methodd.getBookingId()).map((booking) -> {
             if (booking.getStatus().equalsIgnoreCase(Status.Booking.PENDING.name())) {
-                if (method.getMethod().equalsIgnoreCase("CARD")) {
+                if (methodd.getMethod().equalsIgnoreCase("CARD")) {
                     booking.setStatus(Status.Booking.DONE.name());
-                } else if (method.getMethod().equalsIgnoreCase("CASH")) {
+                } else if (methodd.getMethod().equalsIgnoreCase("CASH") || booking.getTrip().getSpecialDay().equalsIgnoreCase("TRUE")) {
                     booking.setStatus(Status.Booking.PAYLATER.name());
                 } else {
                     throw new BadRequestException("Payment method is not valid");
                 }
-                booking.setPaymentMethod(method.getMethod().toUpperCase());
+                booking.setPaymentMethod(methodd.getMethod().toUpperCase());
                 booking.getFreeSeats().forEach((seat) -> {
                     seat.setStatus(Status.Seat.INACTIVE.name());
                 });
@@ -221,7 +222,7 @@ public class BookingServiceImp implements BookingService {
             } else {
                 throw new BadRequestException("Can't pay booking");
             }
-        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + method.getBookingId()));
+        }).orElseThrow(() -> new NotFoundException("Booking id not found: " + methodd.getBookingId()));
     }
 
     private void reset(Booking newBooking, Trip trip, Vehicle vehicle, int seatNumber,

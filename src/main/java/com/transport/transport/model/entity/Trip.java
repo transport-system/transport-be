@@ -46,7 +46,8 @@ public class Trip {
 
     @Column(name = "seat_quantity")
     private int seatQuantity;
-
+    @Column(name = "specialDay")
+    private  String specialDay;
 
     @Column(name = "status")
     private String status;

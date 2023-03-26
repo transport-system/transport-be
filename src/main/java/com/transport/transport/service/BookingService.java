@@ -14,7 +14,7 @@ public interface BookingService extends CRUDService<Booking> {
     List<Booking> findAllByCustomerId(Long id);
     List<Booking> findAllByCompany(Long id);
     Booking createBooking(BookingRequest booking);
-    Booking payBooking(PaymentRequest method);
+    Booking payBooking(PaymentRequest methodd);
     List<FreeSeat> addSeat(List<Integer> numberSeat, Booking booking);
     public void refunded(Long bookingId);
     public void requestRefunded(Long bookingId);

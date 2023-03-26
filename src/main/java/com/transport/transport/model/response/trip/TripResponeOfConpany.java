@@ -27,4 +27,5 @@ public class TripResponeOfConpany {
     private String arrival;
     private String departure;
     private VehicleResponse vehicle;
+    private  String specialDay;
 }

@@ -28,4 +28,5 @@ public class UpdateTrip implements Serializable {
 
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     private Timestamp timeArrival;
+    private  String specialDay;
 }

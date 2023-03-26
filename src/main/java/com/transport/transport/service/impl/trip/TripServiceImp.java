@@ -169,6 +169,8 @@ public class TripServiceImp implements TripService {
         newTrip.setImage(trip.getImage());
         newTrip.setDescription(trip.getDescription());
         newTrip.setStatus(Status.Trip.ACTIVE.name());
+        newTrip.setSpecialDay(trip.getSpecialDay());
+
 
         //set Time
         if (trip.getTimeDeparture().after(trip.getTimeArrival())
@@ -194,6 +196,7 @@ public class TripServiceImp implements TripService {
         Company company = companyRepository.findById(trip.getCompanyId())
                 .orElseThrow(() -> new NotFoundException("Company not found: " + trip.getCompanyId()));
         newTrip.setCompany(company);
+
 
         //set Vehicle
         Vehicle vehicle = vehicleRepository.findById(trip.getVehicleId())
@@ -236,6 +239,8 @@ public class TripServiceImp implements TripService {
         tripU.setTimeDeparture(trip.getTimeDeparture());
         tripU.setTimeArrival(trip.getTimeArrival());
         tripU.setTimeReturn(timeReturn(trip.getTimeDeparture()));
+        tripU.setSpecialDay(trip.getSpecialDay());
+
         return tripRepo.save(tripU);
     }
 

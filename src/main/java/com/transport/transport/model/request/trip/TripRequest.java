@@ -37,4 +37,5 @@ public class TripRequest implements Serializable {
     private String cityArrival;
     @NotNull
     private Long companyId;
+    private  String specialDay;
 }
