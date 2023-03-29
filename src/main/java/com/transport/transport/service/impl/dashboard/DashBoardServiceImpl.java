@@ -7,6 +7,7 @@ import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.Booking;
 import com.transport.transport.model.response.dashboard.AdminResponse;
 import com.transport.transport.model.response.dashboard.CompanyResponse;
+import com.transport.transport.model.response.dashboard.DashboardLast7days;
 import com.transport.transport.model.response.dashboard.RevenueByMonth;
 import com.transport.transport.repository.*;
 import com.transport.transport.service.DashBoardService;
@@ -172,4 +173,17 @@ public class DashBoardServiceImpl implements DashBoardService {
         }
         return revenueByMonths;
     }
+
+    @Override
+    public List<DashboardLast7days> getDashboardLast7Days() {
+        List<DashboardLast7days> dashboardLast7days = new ArrayList<>();
+        bookingRepository.getAllBookingLast7Days().forEach(obj -> {
+            DashboardLast7days dashboardLast7day = new DashboardLast7days();
+            dashboardLast7day.setTotalBooking(obj);
+            dashboardLast7days.add(dashboardLast7day);
+        });
+        return dashboardLast7days;
+    }
+
+
 }

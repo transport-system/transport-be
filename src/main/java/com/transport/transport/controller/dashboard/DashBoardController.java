@@ -73,4 +73,11 @@ public class DashBoardController {
     public List<RevenueByMonth> getRevenueByMonth(@PathVariable Long id) {
         return dashBoardService.getRevenueByMonth(id);
     }
+
+    @ApiOperation(value = "Get <T> by last 7 days")
+    @GetMapping("/last7days")
+    public <T> T getLast7Days(Class<T> clazz) {
+        return (T) dashBoardService.getDashboardLast7Days();
+    }
+
 }

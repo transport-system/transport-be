@@ -74,4 +74,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.trip.company.id = ?1 AND b.trip.id = ?2 AND b.paymentMethod = ?3")
     int countBookingByTripCompanyIdAndTripIdAndMAndPaymentMethod(Long id, Long tripid, String paymentMethod);
 
+
+    /** Get last 7 days **/
+    @Query(value = "SELECT count(booking_id) as booking_time FROM booking\n" +
+            "WHERE date(create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY)\n" +
+            "GROUP BY DATE(create_booking_time) ", nativeQuery = true)
+    List<Integer> getAllBookingLast7Days();
 }

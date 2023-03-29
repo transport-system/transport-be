@@ -7,7 +7,7 @@ import com.transport.transport.model.response.dashboard.RevenueByMonth;
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface DashBoardService {
+public interface DashBoardService<T> {
     AdminResponse getAdminDashboard();
     AdminResponse getAdminDashboardLast7Days();
 
@@ -18,4 +18,6 @@ public interface DashBoardService {
     CompanyResponse getCompanyByTripDashboardLast7Days(Long companyId, Long tripId);
 
     List<RevenueByMonth> getRevenueByMonth(Long companyId);
+
+    List<T> getDashboardLast7Days();
 }
