@@ -35,7 +35,6 @@ public class SchedulingTasks {
         List<Trip> tripCheck = tripRepo.findAll();
         for (Trip trip : tripCheck) {
             if(trip.getStatus().equalsIgnoreCase(Status.Trip.ACTIVE.name()) || trip.getStatus().equalsIgnoreCase(Status.Trip.DOING.name())) {
-                System.out.println(trip.getId());
                 Timestamp now = new Timestamp(System.currentTimeMillis());
                 if (now.before(trip.getTimeArrival()) && now.after(trip.getTimeDeparture())) {
                     trip.setStatus(Status.Trip.DOING.name());
