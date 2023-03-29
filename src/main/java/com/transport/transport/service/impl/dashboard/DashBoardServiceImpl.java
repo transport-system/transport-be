@@ -182,5 +182,13 @@ public class DashBoardServiceImpl implements DashBoardService {
         return dashboardLast7days;
     }
 
+    @Override
+    public DashboardLast7days getDashboardLast7DaysByCompany(Long companyId) {
+        List<Integer> list = bookingRepository.getAllBookingLast7DaysByCompanyId(companyId);
+        DashboardLast7days dashboardLast7days = new DashboardLast7days();
+        dashboardLast7days.setTotalBooking(list);
+        return dashboardLast7days;
+    }
+
 
 }

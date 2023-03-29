@@ -21,4 +21,6 @@ public interface DashBoardService<T> {
     List<RevenueByMonth> getRevenueByMonth(Long companyId);
 
     DashboardLast7days getDashboardLast7Days();
+
+    DashboardLast7days getDashboardLast7DaysByCompany(Long companyId);
 }

@@ -80,4 +80,10 @@ public class DashBoardController {
         return (T) dashBoardService.getDashboardLast7Days();
     }
 
+    @ApiOperation(value = "Get <T> last 7 days by company")
+    @GetMapping("/last7days/{id}")
+    public <T> T getLast7DaysByCompany(@PathVariable Long id, Class<T> clazz) {
+        return (T) dashBoardService.getDashboardLast7DaysByCompany(id);
+    }
+
 }

@@ -17,7 +17,7 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 //http://localhost:8080/swagger-ui/
-public class SwaggerConfig {
+public class    SwaggerConfig {
 
     @Bean
     public Docket api() {

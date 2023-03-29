@@ -80,4 +80,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE date(create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY)\n" +
             "GROUP BY DATE(create_booking_time) ", nativeQuery = true)
     List<Integer> getAllBookingLast7Days();
+
+
+    @Query(value = "SELECT count(b.booking_id) as booking_time FROM booking b\n" +
+            "INNER JOIN accounts a on a.id = b.account_id " +
+            "WHERE date(create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) " +
+            " b.account_id = ?1\n" +
+            "GROUP BY DATE(create_booking_time) ", nativeQuery = true)
+    List<Integer> getAllBookingLast7DaysByCompanyId(Long id);
+
+
 }
