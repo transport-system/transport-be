@@ -34,32 +34,30 @@ public class SchedulingTasks {
     public void autoUpdateTrip() {
         List<Trip> tripCheck = tripRepo.findAll();
         for (Trip trip : tripCheck) {
-            if(trip.getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())){
-                break;
+            if(trip.getStatus().equalsIgnoreCase(Status.Trip.ACTIVE.name()) || trip.getStatus().equalsIgnoreCase(Status.Trip.DOING.name())) {
+                System.out.println(trip.getId());
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                if (now.before(trip.getTimeArrival()) && now.after(trip.getTimeDeparture())) {
+                    System.out.println("fsdfsd");
+                    trip.setStatus(Status.Trip.DOING.name());
+                    tripRepo.save(trip);
+                }
+                else if (now.after(trip.getTimeArrival())) {
+                    System.out.println("12222");
+                    trip.setStatus(Status.Trip.INACTIVE.name());
+                    tripRepo.save(trip);
+                    //Change status when trip is done
+                    Vehicle vehicle = trip.getVehicle();
+                    vehicle.setStatus(Status.Vehicle.ACTIVE.name());
+                    vehicleRepository.save(vehicle);
+                }
+                if (trip.getVehicle().getSeatCapacity() <= 0) {
+                    Vehicle vehicle = trip.getVehicle();
+                    trip.setStatus(Status.Trip.INACTIVE.name());
+                    tripRepo.save(trip);
+                    vehicleRepository.save(vehicle);
+                }
             }
-            if(trip.getStatus().equalsIgnoreCase(Status.Trip.UPDATE.name())){
-                break;
-            }
-            Timestamp now = Timestamp.from(Instant.now());
-            if (trip.getTimeDeparture().after(now) && trip.getTimeArrival().before(now)) {
-                trip.setStatus(Status.Trip.DOING.name());
-                tripRepo.save(trip);
-            }
-            if (trip.getTimeArrival().after(now)) {
-                trip.setStatus(Status.Trip.INACTIVE.name());
-                tripRepo.save(trip);
-                //Change status when trip is done
-                Vehicle vehicle = trip.getVehicle();
-                vehicle.setStatus(Status.Vehicle.ACTIVE.name());
-                vehicleRepository.save(vehicle);
-            }
-            if(trip.getVehicle().getSeatCapacity() <= 0) {
-                Vehicle vehicle = trip.getVehicle();
-                trip.setStatus(Status.Trip.INACTIVE.name());
-                tripRepo.save(trip);
-                vehicleRepository.save(vehicle);
-            }
-
         }
         List<Booking> bookingcheck = bookingRepository.findAllByStatus(Status.Booking.PAYLATER.name());
         for(Booking booking: bookingcheck){
