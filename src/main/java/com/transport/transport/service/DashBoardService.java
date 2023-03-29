@@ -1,9 +1,6 @@
 package com.transport.transport.service;
 
-import com.transport.transport.model.response.dashboard.AdminResponse;
-import com.transport.transport.model.response.dashboard.CompanyResponse;
-import com.transport.transport.model.response.dashboard.DashboardLast7days;
-import com.transport.transport.model.response.dashboard.RevenueByMonth;
+import com.transport.transport.model.response.dashboard.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -23,4 +20,7 @@ public interface DashBoardService<T> {
     DashboardLast7days getDashboardLast7Days();
 
     DashboardLast7days getDashboardLast7DaysByCompany(Long companyId);
+
+    RevenueLast7Days getRevenueLast7Days();
+    RevenueLast7Days getRevenueLast7Days(Long companyId);
 }

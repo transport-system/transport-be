@@ -83,10 +83,19 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
     @Query(value = "SELECT count(b.booking_id) as booking_time FROM booking b\n" +
-            "WHERE date(create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) " +
+            "WHERE date(b.create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) " +
             "AND b.trip.company.id = ?1\n" +
-            "GROUP BY DATE(create_booking_time) ", nativeQuery = true)
+            "GROUP BY DATE(b.create_booking_time) ", nativeQuery = true)
     List<Integer> getAllBookingLast7DaysByCompanyId(Long id);
 
+    @Query(value = "SELECT SUM(b.booking.total_price) as booking_time FROM booking\n" +
+            "WHERE date(b.create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) and b.status in ('done', 'PAYLATER')\n" +
+            "GROUP BY DATE(b.create_booking_time) \n", nativeQuery = true)
+    List<BigDecimal> revenueByAdmin();
 
+    @Query(value = "SELECT SUM(b.booking.total_price) as booking_time FROM booking b\n" +
+            "WHERE date(b.create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) and b.status in ('done', 'PAYLATER')\n " +
+            "AND b.trip.company.id = ?1\n" +
+            "GROUP BY DATE(b.create_booking_time) \n", nativeQuery = true)
+    List<BigDecimal> revenueByCompanyId(Long id);
 }

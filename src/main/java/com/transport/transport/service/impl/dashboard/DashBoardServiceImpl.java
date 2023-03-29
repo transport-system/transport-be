@@ -5,10 +5,7 @@ import com.transport.transport.common.RoleEnum;
 import com.transport.transport.common.Status;
 import com.transport.transport.exception.NotFoundException;
 import com.transport.transport.model.entity.Booking;
-import com.transport.transport.model.response.dashboard.AdminResponse;
-import com.transport.transport.model.response.dashboard.CompanyResponse;
-import com.transport.transport.model.response.dashboard.DashboardLast7days;
-import com.transport.transport.model.response.dashboard.RevenueByMonth;
+import com.transport.transport.model.response.dashboard.*;
 import com.transport.transport.repository.*;
 import com.transport.transport.service.DashBoardService;
 import lombok.RequiredArgsConstructor;
@@ -188,6 +185,22 @@ public class DashBoardServiceImpl implements DashBoardService {
         DashboardLast7days dashboardLast7days = new DashboardLast7days();
         dashboardLast7days.setTotalBooking(list);
         return dashboardLast7days;
+    }
+
+    @Override
+    public RevenueLast7Days getRevenueLast7Days() {
+        List<BigDecimal> list = bookingRepository.revenueByAdmin();
+        RevenueLast7Days revenueLast7Days = new RevenueLast7Days();
+        revenueLast7Days.setRevenue(list);
+        return revenueLast7Days;
+    }
+
+    @Override
+    public RevenueLast7Days getRevenueLast7Days(Long companyId) {
+        List<BigDecimal> list = bookingRepository.revenueByCompanyId(companyId);
+        RevenueLast7Days revenueLast7Days = new RevenueLast7Days();
+        revenueLast7Days.setRevenue(list);
+        return revenueLast7Days;
     }
 
 

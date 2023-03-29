@@ -5,6 +5,7 @@ import com.transport.transport.common.EndpointConstant;
 import com.transport.transport.model.response.dashboard.AdminResponse;
 import com.transport.transport.model.response.dashboard.CompanyResponse;
 import com.transport.transport.model.response.dashboard.RevenueByMonth;
+import com.transport.transport.model.response.dashboard.RevenueLast7Days;
 import com.transport.transport.service.DashBoardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,4 +87,15 @@ public class DashBoardController {
         return (T) dashBoardService.getDashboardLast7DaysByCompany(id);
     }
 
+    @ApiOperation(value = "Get revenue last 7 days")
+    @GetMapping("/revenue/last7days")
+    public RevenueLast7Days getRevenueLast7Days() {
+        return dashBoardService.getRevenueLast7Days();
+    }
+
+    @ApiOperation(value = "Get revenue last 7 days by company")
+    @GetMapping("/revenue/last7days/{id}")
+    public RevenueLast7Days getRevenueLast7Days(@PathVariable Long id) {
+        return dashBoardService.getRevenueLast7Days(id);
+    }
 }
