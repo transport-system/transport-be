@@ -316,7 +316,7 @@ public class BookingServiceImp implements BookingService {
         //Nếu trip đã hoàn thành (status là INACTIVE) thì không thể refund
         if (!booking.getTrip().getStatus().equalsIgnoreCase(Status.Trip.INACTIVE.name())) {
             String status = booking.getStatus();
-            if (status.equalsIgnoreCase(Status.Booking.DONE.name()) || status.equalsIgnoreCase(Status.Booking.PAYLATER.name())) {
+            if (status.equalsIgnoreCase(Status.Booking.DONE.name()) || status.equalsIgnoreCase(Status.Booking.PAYLATER.name()) || status.equalsIgnoreCase(Status.Booking.PENDING.name())) {
                 Vehicle vehicle = booking.getTrip().getVehicle();
                 //FreeSeat
                 List<FreeSeat> numberSeat = booking.getFreeSeats();
