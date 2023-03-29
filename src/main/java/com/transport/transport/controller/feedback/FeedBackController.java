@@ -79,13 +79,13 @@ public class FeedBackController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @GetMapping("/admin/ApprovalReport/{id}")
+    @GetMapping("/admin/rejectReport/{id}")
     public ResponseEntity<?> rejectReport(@PathVariable(name = "id") Long id){
         feedbackService.rejectReport(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @GetMapping("/admin/ApprovalReport/{id}")
+    @GetMapping("/admin/reportFeeback/{id}")
     public ResponseEntity<?> reportFeeback(@PathVariable(name = "id") Long id){
         feedbackService.reportFeeback(id);
         return new ResponseEntity<>("Success", HttpStatus.OK);
