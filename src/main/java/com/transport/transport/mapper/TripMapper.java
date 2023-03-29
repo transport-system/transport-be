@@ -20,6 +20,7 @@ public interface TripMapper {
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
     @Mapping(source = "vehicle", target = "vehicle")
+    @Mapping(source = "allowPayLater", target = "allowPaylater")
     TripResponse mapTripResponseFromTrip(Trip trip);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -33,7 +34,7 @@ public interface TripMapper {
     @Mapping(source = "vehicle.seatCapacity", target = "vehicle.seatCapacity")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
-
+    @Mapping(source = "allowPayLater", target = "allowPaylater")
     TripResponeOfConpany mapTripResponseFromTripOfCompany(Trip trip);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -48,6 +49,7 @@ public interface TripMapper {
     @Mapping(source = "vehicle.vehicleType", target = "vehicle.vehicleType")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
+    @Mapping(source = "allowPayLater", target = "allowPaylater")
     TripForCustomer mapTripResponseFromTripOfCustomer(Trip trip);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -66,6 +68,7 @@ public interface TripMapper {
     @Mapping(source = "vehicle.vehicleType", target = "vehicleType")
     @Mapping(source = "route.city1.city", target = "arrival")
     @Mapping(source = "route.city2.city", target = "departure")
+    @Mapping(source = "allowPayLater", target = "allowPaylater")
     TripResponseForId mapTripResponseIdFromTrip(Trip trip);
 
 

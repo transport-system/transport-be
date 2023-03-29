@@ -32,4 +32,5 @@ public class TripResponse implements Serializable {
     private String arrival;
     private String departure;
     private VehicleResponse vehicle;
+    private  boolean allowPaylater;
 }

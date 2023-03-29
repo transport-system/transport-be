@@ -38,4 +38,6 @@ public class TripRequest implements Serializable {
     @NotNull
     private Long companyId;
 
+    private int allowPayLater;
+
 }

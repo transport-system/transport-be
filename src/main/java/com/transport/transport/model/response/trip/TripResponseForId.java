@@ -34,6 +34,7 @@ public class TripResponseForId {
     private Long companyId;
     private String companyName;
     private int companyRating;
+    private  boolean allowPaylater;
     private List<FeedBack> feadbacks;
 
 }

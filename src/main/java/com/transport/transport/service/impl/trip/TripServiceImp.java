@@ -196,6 +196,12 @@ public class TripServiceImp implements TripService {
                 .orElseThrow(() -> new NotFoundException("Company not found: " + trip.getCompanyId()));
         newTrip.setCompany(company);
 
+        //Set paylater
+        if(trip.getAllowPayLater() == 1){
+            newTrip.setAllowPayLater(true);
+        }else {
+            newTrip.setAllowPayLater(false);
+        }
 
         //set Vehicle
         Vehicle vehicle = vehicleRepository.findById(trip.getVehicleId())

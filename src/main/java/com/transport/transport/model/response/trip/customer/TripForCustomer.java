@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.mapstruct.Mapping;
 
 import java.sql.Timestamp;
 @Getter
@@ -33,4 +34,6 @@ public class TripForCustomer {
     private String departure;
 
     private VehicleResponse vehicle;
+
+    private  boolean allowPaylater;
 }

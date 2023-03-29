@@ -50,7 +50,8 @@ public class Trip {
     @Column(name = "status")
     private String status;
 
-
+    @Column(name = "allow_payLater ")
+    private boolean allowPayLater ;
     @JsonBackReference
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
