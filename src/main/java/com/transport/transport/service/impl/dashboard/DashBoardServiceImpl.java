@@ -175,13 +175,10 @@ public class DashBoardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public List<DashboardLast7days> getDashboardLast7Days() {
-        List<DashboardLast7days> dashboardLast7days = new ArrayList<>();
-        bookingRepository.getAllBookingLast7Days().forEach(obj -> {
-            DashboardLast7days dashboardLast7day = new DashboardLast7days();
-            dashboardLast7day.setTotalBooking(obj);
-            dashboardLast7days.add(dashboardLast7day);
-        });
+    public DashboardLast7days getDashboardLast7Days() {
+        List<Integer> list = bookingRepository.getAllBookingLast7Days();
+        DashboardLast7days dashboardLast7days = new DashboardLast7days();
+        dashboardLast7days.setTotalBooking(list);
         return dashboardLast7days;
     }
 
