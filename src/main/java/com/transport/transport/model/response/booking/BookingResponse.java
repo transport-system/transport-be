@@ -1,6 +1,7 @@
 package com.transport.transport.model.response.booking;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.transport.transport.model.entity.Voucher;
 import com.transport.transport.model.response.account.AccountResponse;
 import com.transport.transport.model.response.customer.CustomerResponse;
 import com.transport.transport.model.response.seat.SeatResponse;
@@ -58,4 +59,6 @@ public class BookingResponse {
 
     private TripResponse tripResponse;
     private List<SeatResponse> seatResponse;
+
+    private Voucher voucher;
 }

@@ -276,7 +276,7 @@ public class TripServiceImp implements TripService {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
 
-        if(trip.getTimeArrival().after(timestamp)){
+        if(trip.getTimeArrival().before(timestamp)){
             throw new BadRequestException("Cannot switch status, time arrival is past ");
         }
 
