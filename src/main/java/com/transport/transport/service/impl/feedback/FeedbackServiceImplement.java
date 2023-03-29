@@ -113,6 +113,36 @@ public class FeedbackServiceImplement implements FeedbackService {
     }
 
     @Override
+    public void reportFeeback(Long id) {
+        FeedBack change = feedbackRepository.findById(id).get();
+        if (change == null) {
+            throw new RuntimeException("Not Exit Feedback");
+        }
+        change.setStatus(Status.Feedback.REPORT.name());
+        feedbackRepository.save(change);
+    }
+
+    @Override
+    public void approveReport(Long id) {
+        FeedBack change = feedbackRepository.findById(id).get();
+        if (change == null) {
+            throw new RuntimeException("Not Exit Feedback");
+        }
+        change.setStatus(Status.Feedback.INACTIVE.name());
+        feedbackRepository.save(change);
+    }
+
+    @Override
+    public void rejectReport(Long id) {
+        FeedBack change = feedbackRepository.findById(id).get();
+        if (change == null) {
+            throw new RuntimeException("Not Exit Feedback");
+        }
+        change.setStatus(Status.Feedback.ACTIVE.name());
+        feedbackRepository.save(change);
+    }
+
+    @Override
     public List<FeedBack> getAll() {
         return feedbackRepository.findAll();
     }
