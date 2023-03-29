@@ -241,6 +241,11 @@ public class TripServiceImp implements TripService {
                 || trip.getTimeArrival().equals(trip.getTimeDeparture())) {
             throw new RuntimeException("Cannot update, because arrival time is before departure time");
         }
+        if(trip.getAllowPaylater() == 1){
+            tripU.setAllowPayLater(true);
+        }else{
+            tripU.setAllowPayLater(false);
+        }
         tripU.setTimeDeparture(trip.getTimeDeparture());
         tripU.setTimeArrival(trip.getTimeArrival());
         tripU.setTimeReturn(timeReturn(trip.getTimeDeparture()));
