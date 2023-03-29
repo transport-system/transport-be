@@ -26,7 +26,7 @@ public class TripServiceImp implements TripService {
     private final CompanyRepository companyRepository;
     private final VehicleRepository vehicleRepository;
     private final CityRepository cityRepository;
-
+    private final RouteRepository routeRepository;
     private final BookingRepository bookingRepository;
 
     public Timestamp timeReturn(Timestamp depatureTime) {
@@ -184,9 +184,10 @@ public class TripServiceImp implements TripService {
         if (trip.getCityArrival().equalsIgnoreCase(trip.getCityDeparture())) {
             throw new RuntimeException("City Departure cannot like City Arrival");
         }
-        List<Route> route = routeService.allRoute();
-        Route checkroute = routeService.create(trip.getCityDeparture(),trip.getCityArrival());
-        newTrip.setRoute(checkroute);
+        City departure = cityRepository.findByCity(trip.getCityDeparture());
+        City arival = cityRepository.findByCity(trip.getCityDeparture());
+        Route route = routeRepository.findByCity1_IdAndCity2_Id(arival.getId(), departure.getId());
+        newTrip.setRoute(route);
         if(newTrip.getRoute() == null){
             throw new RuntimeException("Not exsit route");
         }
