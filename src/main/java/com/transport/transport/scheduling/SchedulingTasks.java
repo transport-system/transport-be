@@ -25,7 +25,7 @@ import javax.transaction.Transactional;
 public class SchedulingTasks {
 
     private final TripRepository tripRepo;
-    VehicleRepository vehicleRepository;
+    private final VehicleRepository vehicleRepository;
     private final BookingRepository bookingRepository;
 
     @Async
@@ -38,16 +38,15 @@ public class SchedulingTasks {
                 System.out.println(trip.getId());
                 Timestamp now = new Timestamp(System.currentTimeMillis());
                 if (now.before(trip.getTimeArrival()) && now.after(trip.getTimeDeparture())) {
-                    System.out.println("fsdfsd");
                     trip.setStatus(Status.Trip.DOING.name());
                     tripRepo.save(trip);
                 }
                 else if (now.after(trip.getTimeArrival())) {
-                    System.out.println("12222");
                     trip.setStatus(Status.Trip.INACTIVE.name());
                     tripRepo.save(trip);
                     //Change status when trip is done
-                    Vehicle vehicle = trip.getVehicle();
+                    Long id = trip.getVehicle().getId();
+                    Vehicle vehicle = vehicleRepository.findById(id).get();
                     vehicle.setStatus(Status.Vehicle.ACTIVE.name());
                     vehicleRepository.save(vehicle);
                 }
@@ -61,7 +60,8 @@ public class SchedulingTasks {
         }
         List<Booking> bookingcheck = bookingRepository.findAllByStatus(Status.Booking.PAYLATER.name());
         for(Booking booking: bookingcheck){
-            if(booking.getTrip().getTimeDeparture().after(new Timestamp(System.currentTimeMillis()))){
+            System.out.println(booking.getId());
+            if(booking.getTrip().getStatus().equals(Status.Trip.DOING.name())){
                 booking.setStatus(Status.Booking.REFUNDED.name());
                 bookingRepository.save(booking);
             }
