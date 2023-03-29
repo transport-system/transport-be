@@ -19,6 +19,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByAccountId(Long id);
 
+    List<Booking> findAllByStatus(String status);
+
     Booking getBookingByVoucher_Id(Long id);
 
     //=======ADMIN=======
@@ -27,6 +29,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE' AND b.createBookingTime BETWEEN ?1 AND ?2")
     BigDecimal getRevenue(Timestamp from, Timestamp to);
+
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = 'DONE' AND b.createBookingTime = ?1")
+    BigDecimal getRevenueByDate(String date);
 
     @Query(value = "SELECT MONTH(b.createBookingTime) as month, SUM(b.totalPrice) as revenue FROM Booking b WHERE b.id IN (SELECT t.id FROM Trip t WHERE t.company.id = ?1) AND b.status = 'DONE' GROUP BY MONTH(b.createBookingTime)")
     List<Object[]> getRevenueByMonth(Long id);
