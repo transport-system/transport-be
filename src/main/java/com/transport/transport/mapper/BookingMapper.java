@@ -43,6 +43,7 @@ public interface BookingMapper {
     @Mapping(target = "paymentMethod", source ="paymentMethod")
     @Mapping(target = "voucher", source ="voucher")
     @Mapping(target = "trip.allowPaylater", source = "trip.allowPayLater")
+    @Mapping(target = "tripResponse.allowPaylater", source = "trip.allowPayLater")
 //    @Mapping(target = "seatResponse.seatId")
     BookingResponse createBookingResponseFromBooking(Booking booking);
 
