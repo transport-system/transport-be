@@ -66,5 +66,13 @@ public class SchedulingTasks {
                 bookingRepository.save(booking);
             }
         }
+        List<Booking> bookingcheck2 = bookingRepository.findAllByStatus(Status.Booking.REQUESTREFUND.name());
+        for(Booking booking: bookingcheck2){
+            System.out.println(booking.getId());
+            if(booking.getTrip().getStatus().equals(Status.Trip.DOING.name())){
+                booking.setStatus(Status.Booking.DONE.name());
+                bookingRepository.save(booking);
+            }
+        }
     }
 }
