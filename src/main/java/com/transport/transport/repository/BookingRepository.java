@@ -95,10 +95,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "GROUP BY DATE(create_booking_time) \n", nativeQuery = true)
     List<BigDecimal> revenueByAdmin();
 
-    @Query(value = "SELECT SUM(total_price) as total_revenue FROM booking b\n" +
+    @Query(value = "SELECT SUM(total_price) as total_revenue FROM booking\n" +
             "JOIN TRIP on trip.trip_id = booking.trip_id " +
             "JOIN COMPANY ON company.company_id = trip.company_id " +
-            "WHERE date(create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) and booking.status in ('done', 'PAYLATER')\n " +
+            "WHERE date(create_booking_time) >= DATE_ADD(CURDATE(), INTERVAL - 7 DAY) and status in ('done', 'PAYLATER')\n " +
             "AND company.company_id = ?1\n" +
             "GROUP BY DATE(create_booking_time) \n", nativeQuery = true)
     List<BigDecimal> revenueByCompanyId(Long id);
