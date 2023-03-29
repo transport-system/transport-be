@@ -185,7 +185,7 @@ public class TripServiceImp implements TripService {
             throw new RuntimeException("City Departure cannot like City Arrival");
         }
         City departure = cityRepository.findByCity(trip.getCityDeparture());
-        City arival = cityRepository.findByCity(trip.getCityDeparture());
+        City arival = cityRepository.findByCity(trip.getCityArrival());
         Route route = routeRepository.findByCity1_IdAndCity2_Id(arival.getId(), departure.getId());
         newTrip.setRoute(route);
         if(newTrip.getRoute() == null){
