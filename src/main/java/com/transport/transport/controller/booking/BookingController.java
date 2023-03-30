@@ -101,7 +101,7 @@ public class BookingController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
     @GetMapping("/cash/{id}")
-    public ResponseEntity<?> cash(@PathVariable("id") Long id, @RequestBody VoucherBookingRequest voucherRequest){
+    public ResponseEntity<?> cash(@PathVariable("id") Long id){
         bookingService.doneCash(id);
         return new ResponseEntity<>("Payment success", HttpStatus.OK);
     }
